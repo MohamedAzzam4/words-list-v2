@@ -490,7 +490,7 @@ Change word ID generation from `id: index` (numeric forEach counter) to a determ
 - **This is a breaking change**: All existing `known` and `favorites` arrays in localStorage and Firestore contain numeric IDs. A migration (WP-010) is required.
 
 #### Rollback Strategy
-Revert to `id: index`. Run reverse migration script to convert string IDs back to numbers.
+Revert to `id: index`. Restore from the `_backup_v1` arrays created during the WP-010 migration to recover the original numeric IDs with zero data loss.
 
 ---
 
@@ -519,21 +519,24 @@ WP-009 changes word IDs from numbers to strings. Without migration, all existing
 1. Create a migration function that maps old numeric IDs to new string IDs.
 2. The mapping is deterministic: old ID `N` maps to the new ID of the word at global index `N` in the vocabulary array.
 3. Build a lookup table: iterate through `levelConfig.vocabulary.flat()` with the OLD parser (id: index), creating a map of `oldId -> newId`.
-4. On app boot (in `_initEngines()` or `_onAuth()`), check if migration is needed by looking at the first element of `state.data.known`. If it's a number, run migration.
-5. The migration function:
-   - Takes `state.data.known` (array of numbers)
-   - Maps each number to the corresponding new string ID
-   - Replaces `state.data.known` with the mapped array
-   - Does the same for `state.data.favorites`
-   - Does the same for `state.data.flashcardErrors` (which uses word IDs as keys)
-   - Sets a `migrationVersion` field in state.data to prevent re-running
-   - Calls `_save()` to persist the migrated data
-6. For Firestore data: The migration runs on the client when the user loads the page. Since `_onAuth()` loads remote data and merges it, the migration should run AFTER the merge.
+4. **Migration version gate**: Check if migration is needed by checking `if ((state.data.migrationVersion || 0) < 1)`. This prevents accidental re-running.
+5. **Dry-run mode**: Implement a `dryRun` flag. If `dryRun` is true, simply log the old array and the mapped new array to the console (`console.table` or similar) to verify correctness without modifying `state.data` or calling `_save()`. Deploy this first to validate logic against real staging data.
+6. **Backup before migrate**: Before modifying the state, create backups of the original numeric arrays:
+   - `state.data._known_backup_v1 = [...(state.data.known || [])];`
+   - `state.data._favorites_backup_v1 = [...(state.data.favorites || [])];`
+   - `state.data._flashcardErrors_backup_v1 = { ...(state.data.flashcardErrors || {}) };`
+7. The actual migration function:
+   - Maps each number in `state.data.known` to the corresponding new string ID and replaces the array.
+   - Does the same for `state.data.favorites`.
+   - Re-keys `state.data.flashcardErrors` with the new string IDs.
+   - Sets `state.data.migrationVersion = 1` to prevent re-running.
+   - Calls `_save()` to persist the migrated data alongside the backups.
+8. For Firestore data: The migration runs on the client when the user loads the page. Since `_onAuth()` loads remote data and merges it, the migration should run AFTER the merge.
 
 #### Acceptance Criteria
 - A user with existing progress (e.g., `known: [0, 1, 2, 3]`) loads the page and their progress is automatically converted to the new ID format (e.g., `known: ["1-0", "1-1", "1-2", "1-3"]`).
 - The migration only runs once (tracked by `migrationVersion`).
-- Both localStorage and Firestore are updated with the new format.
+- Both localStorage and Firestore are updated with the new format, including the backup fields.
 - Progress percentages remain unchanged after migration.
 
 #### Risks
@@ -541,7 +544,7 @@ WP-009 changes word IDs from numbers to strings. Without migration, all existing
 - Edge case: A user has progress on an old version, the vocab data changes, then they visit with the new code. The migration maps old numeric IDs to new string IDs based on the NEW vocab order, which may not match the old order. Document this as a known limitation.
 
 #### Rollback Strategy
-If migration produces incorrect results, delete the `migrationVersion` flag and revert WP-009 to restore numeric IDs. User can re-mark words.
+If migration produces incorrect results, you can restore from the backup fields (`_known_backup_v1`, etc.), delete the `migrationVersion` flag, and revert WP-009 to restore numeric IDs. The backup guarantees zero data loss.
 
 ---
 

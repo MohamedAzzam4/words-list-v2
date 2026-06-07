@@ -23,13 +23,13 @@ const appId = levelConfig?.appId || `german-${level}-app`;
 // 2. Initialize Firebase (with graceful fallback)
 let auth = null, db = null;
 const firebaseConfig = {
-    apiKey: "AIzaSyDa0QJmnt7uiKDNhcD1oRm6xaq718MDSD8",
-    authDomain: "german-words-list-app.firebaseapp.com",
-    projectId: "german-words-list-app",
-    storageBucket: "german-words-list-app.firebasestorage.app",
-    messagingSenderId: "997179116756",
-    appId: "1:997179116756:web:31dddba4688485f9a23f41",
-    measurementId: "G-PW8LJZWW5T"
+    apiKey: "AIzaSyDqZ78cAPfbuD4cUBlAlfW7gqHlnvf7yfM",
+    authDomain: "german-words-list-v2.firebaseapp.com",
+    projectId: "german-words-list-v2",
+    storageBucket: "german-words-list-v2.firebasestorage.app",
+    messagingSenderId: "346436274259",
+    appId: "1:346436274259:web:af9d60923bddda2a985ea6",
+    measurementId: "G-L96R1MY189"
 };
 
 try {
