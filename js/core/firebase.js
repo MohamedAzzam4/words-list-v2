@@ -1,5 +1,5 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 let auth, db;
@@ -20,6 +20,18 @@ export const loginWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     return signInWithPopup(auth, provider);
+};
+
+export const loginWithEmailAndPassword = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const signUpWithEmailAndPassword = async (email, password, displayName) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    if (displayName) {
+        await updateProfile(userCredential.user, { displayName });
+    }
+    return userCredential;
 };
 
 export const logout = () => signOut(auth);

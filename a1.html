@@ -18,8 +18,11 @@
         </div>
 
         <div id="auth-section">
-            <button id="login-btn" class="btn primary" style="width: 100%;" onclick="window.app.loginWithGoogle()">
+            <button id="login-btn" class="btn primary" style="width: 100%; margin-bottom: 8px;" onclick="window.app.loginWithGoogle()">
                 🌐 Sign in with Google
+            </button>
+            <button id="login-email-btn" class="btn" style="width: 100%;" onclick="window.app.openEmailAuthModal()">
+                ✉️ Sign in with Email
             </button>
             <div id="user-info" class="hidden">
                 <img id="user-avatar" src="" alt="Avatar">
