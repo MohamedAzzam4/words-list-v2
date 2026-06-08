@@ -898,6 +898,13 @@ window.app = {
         // WP-017: Accumulate dark mode time on each save
         this._accumulateDarkModeTime();
 
+        // WP-018: Accumulate real elapsed study time
+        if (this._lastSaveTime) {
+            const elapsed = Date.now() - this._lastSaveTime;
+            state.data.totalStudyTimeMs = (state.data.totalStudyTimeMs || 0) + elapsed;
+        }
+        this._lastSaveTime = Date.now();
+
         // ── Sync live engine state back to state.data before saving ──
         // The engines hold the live in-memory truth (Sets/objects).
         // state.data is the persistence layer — it must be updated from engines.
