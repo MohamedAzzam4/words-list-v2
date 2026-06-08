@@ -3108,7 +3108,7 @@ const unitTitles = {
     1: "K1: Auftakt", 2: "K1: Modul 1", 3: "K1: Modul 2", 4: "K1: Modul 3", 5: "K1: Modul 4", 6: "K1: Porträt", 7: "K1: Grammatik",
     8: "K2: Auftakt", 9: "K2: Modul 1", 10: "K2: Modul 2", 11: "K2: Modul 3", 12: "K2: Modul 4", 13: "K2: Porträt", 14: "K2: Grammatik",
     15: "K3: Auftakt", 16: "K3: Modul 1", 17: "K3: Modul 2", 18: "K3: Modul 3", 19: "K3: Modul 4", 20: "K3: Porträt", 21: "K3: Grammatik",
-    22: "K4: Auftakt", 23: "K4: Modul 1", 24: "K4: Modul 2", 25: "K4: Modul 4", 26: "K4: Porträt", 27: "K4: Grammatik",
+    22: "K4: Auftakt", 23: "K4: Modul 1", 24: "K4: Modul 2", 25: "K4: Modul 3", 26: "K4: Porträt", 27: "K4: Grammatik",
     28: "K5: Auftakt", 29: "K5: Modul 1", 30: "K5: Modul 2", 31: "K5: Modul 3", 32: "K5: Modul 4", 33: "K5: Porträt", 34: "K5: Grammatik",
     35: "K6: Auftakt", 36: "K6: Modul 1", 37: "K6: Modul 2", 38: "K6: Modul 3", 39: "K6: Modul 4", 40: "K6: Porträt", 41: "K6: Grammatik",
     42: "K7: Auftakt", 43: "K7: Modul 1", 44: "K7: Modul 2", 45: "K7: Modul 3", 46: "K7: Modul 4", 47: "K7: Porträt", 48: "K7: Grammatik",
