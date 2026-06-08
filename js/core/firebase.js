@@ -102,26 +102,16 @@ export const batchSaveProgressAndLeaderboard = async (appId, uid, progressData, 
 };
 
 // ── LEADERBOARD SERVICES ──
+// WP-013: Removed getDoc read — now uses setDoc with merge:true (no read-before-write)
 export const updateLeaderboard = async (appId, uid, displayName, photoURL, knownCount) => {
     try {
         const ref = doc(db, `leaderboard/${uid}`);
-        const snap = await getDoc(ref);
-        const prev = snap.exists() ? snap.data() : { a1Count: 0, b2Count: 0 };
-        
-        let a1 = prev.a1Count || 0;
-        let b2 = prev.b2Count || 0;
-        
-        if (appId.includes('a1')) a1 = knownCount;
-        if (appId.includes('b2')) b2 = knownCount;
-        
-        const totalWords = a1 + b2;
+        const levelField = appId.includes('a1') ? 'a1Count' : 'b2Count';
         
         await setDoc(ref, {
             displayName: displayName || "Anonymous Linguist",
             photoURL: photoURL || "",
-            a1Count: a1,
-            b2Count: b2,
-            totalWords,
+            [levelField]: knownCount,
             lastActive: new Date().toISOString()
         }, { merge: true });
     } catch(e) {
@@ -131,9 +121,17 @@ export const updateLeaderboard = async (appId, uid, displayName, photoURL, known
 
 export const getLeaderboard = async () => {
     try {
-        const q = query(collection(db, "leaderboard"), orderBy("totalWords", "desc"), limit(50));
+        const q = query(collection(db, "leaderboard"), orderBy("lastActive", "desc"), limit(50));
         const qs = await getDocs(q);
-        return qs.docs.map((d, index) => ({ ...d.data(), rank: index + 1 }));
+        // WP-013: Compute totalWords from level count fields
+        const entries = qs.docs.map(d => {
+            const data = d.data();
+            const totalWords = (data.a1Count || 0) + (data.b2Count || 0);
+            return { ...data, totalWords };
+        });
+        // Sort by totalWords descending
+        entries.sort((a, b) => b.totalWords - a.totalWords);
+        return entries.map((d, index) => ({ ...d, rank: index + 1 }));
     } catch(e) {
         console.warn("Leaderboard fetch failed", e);
         return [];
