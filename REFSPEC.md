@@ -2043,13 +2043,13 @@ Revert to displayName comparison.
 - **WP-033** (Leaderboard schema) — ✅ APPROVED. Decision: **Approve dynamic `levels` map schema.** Execution deferred until after WP-009/WP-010 migration is validated.
 - **WP-015** (B2 type inference) — ✅ APPROVED. Decision: **Apply grammar-based type classification rules** (der/die/das → noun, -en/-ern/-eln → verb, multi-word phrases → expression). Safe fallback to `"Vocab"` for ambiguous words. Does not affect stored user data.
 
-### Tasks Requiring Senior Engineering Review
+### Tasks Requiring Senior Engineering Review — RESOLVED
 
-- **WP-011** (Save debouncing) — Concurrency and data loss implications.
-- **WP-012** (Firestore batching) — Firestore batch semantics and failure modes.
-- **WP-026 to WP-030** (app.js decomposition) — Module boundary decisions and shared state management.
-- **WP-031** (HTML deduplication) — Long-term architecture implications.
-- **WP-034** (XSS sanitization) — Security review of sanitization completeness.
+- **WP-011** (Save debouncing) — ✅ APPROVED. 3-second debounce for progress, 15-second for leaderboard. localStorage always saves instantly as safety net. `beforeunload` flushes pending remote writes. No data loss risk.
+- **WP-012** (Firestore batching) — ✅ APPROVED. Atomic batch is strictly better than separate writes. Eliminates the leaderboard read-before-write. Failed batches retry on next debounced save.
+- **WP-026 to WP-030** (app.js decomposition) — ✅ APPROVED. All modules share a single state reference (not copies). Execute in order: WP-026 → 027 → 028 → 029 → 030. Each step is individually rollback-able.
+- **WP-031** (HTML deduplication) — ✅ APPROVED. Option A (single `level.html?level=a1`). Scales for future A2/B1/C1/C2 levels.
+- **WP-034** (XSS sanitization) — ✅ APPROVED. sanitize() only escapes 5 HTML control characters (`< > & " '`). German characters (ä ö ü ß) are completely unaffected.
 
 ### Recommended Order of Execution
 
