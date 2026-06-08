@@ -1,4 +1,4 @@
-import { initFirebase, loginWithGoogle, logout, loadProgress, saveProgress, listenAuth, updateLeaderboard, getLeaderboard } from './firebase.js?v=3';
+import { initFirebase, loginWithGoogle, logout, loadProgress, saveProgress, listenAuth, updateLeaderboard, getLeaderboard, batchSaveProgressAndLeaderboard } from './firebase.js?v=3';
 import { getLocalProgress, saveLocalProgress, mergeProgress, clearLocalProgress, getDefaultProgressObj } from './storage.js?v=3';
 import { GlossaryEngine } from './glossary.js?v=3';
 import { FlashcardEngine } from './flashcards.js?v=3';
@@ -965,11 +965,11 @@ window.app = {
         }
     },
 
-    // WP-011: Debounced remote save — batches Firestore writes
+    // WP-011: Debounced remote save — batches Firestore writes (WP-012: uses batch)
     _scheduleRemoteSave: debounce(function(payload) {
         if (state.uid && auth) {
-            saveProgress(appId, state.uid, payload).catch(e => console.warn('Save to cloud failed:', e));
-            updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length).catch(e => console.warn('Leaderboard update failed:', e));
+            batchSaveProgressAndLeaderboard(appId, state.uid, payload, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length)
+                .catch(e => console.warn('Debounced batch save failed:', e));
         }
     }, 3000),
 

@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 let auth, db;
 
@@ -71,6 +71,33 @@ export const getOtherLevelProgress = async (otherAppId, uid) => {
         return snap.exists() ? snap.data() : null;
     } catch {
         return null;
+    }
+};
+
+// WP-012: Batch progress and leaderboard writes into a single Firestore batch
+export const batchSaveProgressAndLeaderboard = async (appId, uid, progressData, displayName, photoURL, knownCount) => {
+    try {
+        const batch = writeBatch(db);
+
+        // Progress document
+        const progressRef = doc(db, `artifacts/${appId}/users/${uid}/progress/main`);
+        batch.set(progressRef, { ...progressData, lastUpdated: new Date().toISOString() }, { merge: true });
+
+        // Leaderboard document
+        const leaderboardRef = doc(db, `leaderboard/${uid}`);
+        const levelField = appId.includes('a1') ? 'a1Count' : 'b2Count';
+        batch.set(leaderboardRef, {
+            displayName: displayName || "Anonymous Linguist",
+            photoURL: photoURL || "",
+            [levelField]: knownCount,
+            lastActive: new Date().toISOString()
+        }, { merge: true });
+
+        await batch.commit();
+    } catch (e) {
+        console.warn('Batch save failed:', e);
+        // Fallback: try individual writes
+        try { await saveProgress(appId, uid, progressData); } catch (e2) { /* ignore */ }
     }
 };
 
