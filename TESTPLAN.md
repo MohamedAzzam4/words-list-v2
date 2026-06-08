@@ -1147,21 +1147,21 @@ This matrix shows which test IDs must be re-run when each Work Package is implem
 9. **WP-037** — Remove 1 line, add toggle logic (3 lines).
 10. **WP-042** — Change 1 comparison in leaderboard rendering.
 
-### Tasks Requiring Human Review
+### Tasks Requiring Human Review — RESOLVED
 
-- **WP-009/010** — Review word ID migration strategy. Verify against real user data.
-- **WP-004** — Product decision: fix descriptions or fix thresholds?
-- **WP-015** — Review German word type classification rules.
-- **WP-031** — Approve HTML deduplication architecture.
-- **WP-033** — Approve leaderboard schema migration plan.
+- **WP-009/010** — ✅ APPROVED. Staging Firebase project created. Safety net: dry-run mode, migration version gate, pre-migration backups.
+- **WP-004** — ✅ APPROVED. Fix the code to match the descriptions.
+- **WP-015** — ✅ APPROVED. Apply grammar-based type classification. Safe fallback to "Vocab".
+- **WP-031** — ✅ APPROVED. Option A — single `level.html?level=a1` with URL parameter.
+- **WP-033** — ✅ APPROVED. Dynamic `levels` map schema. Deferred until after WP-009/010 validated.
 
-### Tasks Requiring Senior Engineering Review
+### Tasks Requiring Senior Engineering Review — RESOLVED
 
-- **WP-011** — Debouncing strategy and data loss implications.
-- **WP-012** — Firestore batch operation semantics.
-- **WP-026–030** — Module boundary decisions for app.js decomposition.
-- **WP-034** — Security review of XSS sanitization completeness.
-- **WP-031** — Long-term architecture for HTML template system.
+- **WP-011** — ✅ APPROVED. 3-second debounce for progress, 15-second for leaderboard. localStorage saves instantly as safety net.
+- **WP-012** — ✅ APPROVED. Atomic batch is strictly better than separate writes.
+- **WP-026–030** — ✅ APPROVED. Shared state reference. Execute in order: 026 → 027 → 028 → 029 → 030.
+- **WP-034** — ✅ APPROVED. sanitize() only escapes `< > & " '`. German characters unaffected.
+- **WP-031** — ✅ APPROVED. Option A scales for future A2/B1/C1/C2 levels.
 
 ### Recommended Order of Test Execution
 
