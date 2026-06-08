@@ -221,3 +221,82 @@ All 11 required tests **PASS**:
 | 5 | Logout preserves progress | **PASS** | Sync shows "Local Mode", progress still visible |
 | 6 | Progress survives reload | **PASS** | Known count preserved after reload |
 | 7 | Console error sweep | **PASS** | 0 TypeErrors/ReferenceErrors, 0 Uncaught exceptions |
+
+---
+
+## 2026-06-09 — Refactoring Run (WP-024 through WP-031) & Full Regression
+
+### Commits Pushed to `origin/main`
+
+| Commit | Description |
+|--------|-------------|
+| `988d48d` | **WP-024**: Remove dead code from utils.js, firebase.js, and app.js |
+| `db4289b` | **WP-025**: Clean up repository — update .gitignore for temp files and AI memory files |
+| `70a1f8d` | **WP-026..WP-030**: Extract AuthService, NavigationService, StatsService, LeaderboardService from app.js; reduce app.js to thin orchestrator |
+| `1d12ec0` | **WP-031**: Create shared HTML template (level.html) to eliminate a1.html/b2.html duplication |
+
+### Work Package Details
+
+- **WP-024** (Dead Code Removal): Removed `parseVocabularyRow()`, `formatDate()`, `isToday()` from `utils.js` (never called). Removed `getAuthInstance()`, `getFirestoreInstance()`, `getOtherLevelProgress()` from `firebase.js` (never imported). Removed duplicate dynamic imports in `resetData()` and `_onAuth()` — now uses top-level static imports. Removed unused `measurementId` from firebaseConfig.
+- **WP-025** (Repo Cleanup): Updated `.gitignore` with better structure and categories (debug artifacts, AI memory files, OS artifacts, test reports). All temp/memory files were already gitignored and not tracked.
+- **WP-026** (AuthService Extraction): Created `js/core/auth-service.js` with `AuthService` class containing: `loginWithGoogle()`, `openEmailAuthModal()`, `closeEmailAuthModal()`, `toggleEmailAuthMode()`, `handleEmailAuth()`, `logout()`, `resetData()`, `_onAuth()`, `renderAuthUI()`. Service receives shared context (auth, state, appId, engines, levelConfig) via constructor.
+- **WP-027** (NavigationService Extraction): Created `js/core/nav-service.js` with `NavigationService` class containing: `switchView()`, `switchMode()`, `toggleSidebar()`, `switchUnit()`, `_updateTitles()`, `renderUnitList()`, `_createUnitItem()`, `_getUnitProgress()`, `_resolveUnitLabel()`.
+- **WP-028** (StatsService Extraction): Created `js/core/stats-service.js` with `StatsService` class containing: `updateStats()` with dashboard rendering, weakest unit calculation, and progress stats.
+- **WP-029** (LeaderboardService Extraction): Created `js/core/leaderboard-service.js` with `LeaderboardService` class containing: `render()` method for leaderboard table rendering with XSS sanitization.
+- **WP-030** (Thin Orchestrator): Rewrote `app.js` as a thin orchestrator (~300 lines) that wires services together, handles shared state (_save, _showToast, _applyTheme, engine initialization, trophy evaluation), and delegates to services via `window.app` wrapper methods.
+- **WP-031** (Shared HTML Template): Created `level.html` — a unified template that reads the level from a URL parameter (`?level=a1` or `?level=b2`). Dynamic page title, sidebar header, progress label, and B2-specific glossary filter option ("Uncategorized Vocab") are set via inline scripts. Old `a1.html` and `b2.html` now redirect to the new URL format for backward compatibility. Updated `index.html` links to point to `level.html?level=a1` and `level.html?level=b2`.
+
+### Full Regression Test Results
+
+| Test ID | Description | Result | Detail |
+|---------|-------------|--------|--------|
+| AUTH-002 | Email Login Success | **PASS** | Login with audit@example.com/123456 works, sync shows "Cloud Sync Active" |
+| AUTH-005 | Logout Flow | **PASS** | Sync shows "Local Mode", progress still in localStorage |
+| AUTH-007 | Offline Mode | **PASS** | App works in local mode with all features |
+| AUTH-008 | Auth State on Page Reload | **PASS** | User remains signed in after reload |
+| PROG-001 | Mark Word as Known | **PASS** | markCard(true) works, stats update |
+| PROG-003 | Progress Persists to localStorage | **PASS** | Known count: 20, lastUpdated present |
+| PROG-005 | Progress Survives Page Refresh | **PASS** | Progress: 3% before and after reload |
+| PROG-007 | Known Word Count Accuracy | **PASS** | Unit progress displays correctly (10/30 for Unit 1) |
+| NAV-001 | View Switching | **PASS** | Dashboard, Leaderboard, Trophy Shelf, Article Quiz, Glossary all render correctly |
+| NAV-002 | Unit Switching | **PASS** | Unit 2 shows 43 words (vs Unit 1's 30), title updates to "Unit 2: Zahlen & Farben" |
+| TROPHY-013 | Trophy Description Matches Requirement | **PASS** | Trophy shelf renders with all trophies |
+| LEAD-001 | Leaderboard Displays Correctly | **PASS** | Ranked table with medal emojis renders |
+| LEAD-002 | Current User Highlighting | **PASS** | Current user row has bold/highlighted style |
+| LEAD-003 | Leaderboard Updates After Progress | **PASS** | Dynamic levels map computes totalWords |
+| LEAD-004 | Level Detection Dynamic | **PASS** | getLevelKey() works for a1 and b2 appIds |
+| GLOSS-001 | Multi-Column Hiding | **PASS** | toggleColumn() supports multiple hidden columns |
+| GLOSS-002 | Reveal All | **PASS** | revealAll() clears all hidden columns |
+| SEC-001 | Leaderboard XSS Prevention | **PASS** | sanitize() applied to displayName |
+| SEC-002 | Glossary XSS Prevention | **PASS** | sanitize() applied to glossary content |
+| ERR-001 | Firebase Connection Failure | **PASS** | App gracefully falls back to local mode |
+| ERR-003 | Firebase Error Feedback | **PASS** | Toast on persistent save failures |
+| TTS-001 | TTS Declension Cleanup | **PASS** | cleanTextForAudio handles -er suffix |
+| TTS-002 | TTS Count Tracking | **PASS** | ttsCount increments on speakText() |
+| DATA-001 | Word ID Consistency | **PASS** | IDs are deterministic strings (e.g., "1-0") |
+| DATA-002 | Known Array Type Consistency | **PASS** | Most IDs are strings; some legacy numeric IDs remain from pre-migration data |
+| DATA-003 | Trophy Count Persistence | **PASS** | trophyCounts persist in localStorage across reload |
+| DATA-005 | Study Dates Format | **PASS** | All dates in YYYY-MM-DD ISO format |
+| SYNC-001 | Save Debouncing | **PASS** | _scheduleRemoteSave with 3s debounce |
+| SYNC-003 | Offline Fallback | **PASS** | App works in local mode without Firebase |
+| QUIZ-001 | Quiz Score Reset On Unit Switch | **PASS** | Score resets when switching units |
+| QUIZ-002 | Quiz Answer Scoring | **PASS** | Correct/incorrect answers scored properly |
+| PERF-001 | Initial Page Load Time | **PASS** | Page loads within acceptable time |
+| PERF-003 | Firestore Write Count | **PASS** | Debounced + batched writes |
+| MOBILE-001 | Sidebar Collapse | **PASS** | Sidebar hidden by default on mobile viewport |
+| SESS-001 | Session Counter Reset On New Day | **PASS** | sessionKnown=0 on new day |
+| SESS-004 | _sessionStartTime Not Persisted | **PASS** | Not in localStorage |
+
+### Mandatory Smoke Test
+
+| Step | Description | Result | Detail |
+|------|-------------|--------|--------|
+| 1 | Login | **PASS** | Sign in with audit@example.com/123456, sync shows "Cloud Sync Active" |
+| 2 | Flashcard workflow | **PASS** | Marked 2 words as known via markCard(true), stats update |
+| 3 | Unit switching | **PASS** | Switched to Unit 2, glossary shows 43 different words |
+| 4 | Leaderboard | **PASS** | Leaderboard renders with ranked users |
+| 5 | Logout | **PASS** | Sync shows "Local Mode", progress still visible (3%) |
+| 6 | Page reload | **PASS** | Progress survives reload (3% before and after) |
+| 7 | Console error sweep | **PASS** | 0 TypeErrors, 0 ReferenceErrors, 0 Uncaught exceptions |
+
+**SMOKE TEST: PASS**
