@@ -1,3 +1,6 @@
+// WP-030: app.js — thin orchestrator
+// Wires services together; delegates to AuthService, NavigationService, StatsService, LeaderboardService
+
 import { initFirebase, loginWithGoogle, logout, loadProgress, saveProgress, listenAuth, updateLeaderboard, getLeaderboard, batchSaveProgressAndLeaderboard } from './firebase.js?v=3';
 import { getLocalProgress, saveLocalProgress, mergeProgress, clearLocalProgress, getDefaultProgressObj } from './storage.js?v=3';
 import { GlossaryEngine } from './glossary.js?v=3';
@@ -5,7 +8,11 @@ import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime } from './tts.js?v=3';
-import { debounce, sanitize } from './utils.js?v=3';
+import { debounce } from './utils.js?v=3';
+import { AuthService } from './auth-service.js?v=3';
+import { NavigationService } from './nav-service.js?v=3';
+import { StatsService } from './stats-service.js?v=3';
+import { LeaderboardService } from './leaderboard-service.js?v=3';
 
 // 1. Load Level Config
 const level = document.querySelector('script[data-level]')?.dataset?.level || 'a1';
@@ -58,340 +65,353 @@ const engines = {
     trophy: null
 };
 
-// 4. Global App Object
-window.app = {
-    _enginesReady: false, // Guard: ensures _initEngines() only runs once
+// ── Internal helpers (staying in orchestrator for shared state access) ──
 
-    // ── AUTH ──
-    async loginWithGoogle() {
-        if (!auth) {
-            alert('Firebase not configured. Please add your Firebase config to app.js');
-            return;
-        }
-        try {
-            await loginWithGoogle();
-            window.location.reload();
-        } catch (e) {
-            console.error('Login failed:', e);
-            alert('Login failed: ' + e.message);
-        }
-    },
+function _showToast(msg) {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toast-msg');
+    if (m) m.textContent = msg;
+    if (t) {
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 4000);
+    }
+    playChime(600, 150);
+    setTimeout(() => playChime(900, 150), 150);
+}
 
-    openEmailAuthModal() {
-        let modal = document.getElementById('email-auth-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'email-auth-modal';
-            modal.className = 'modal-overlay';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 id="modal-title">Sign In with Email</h3>
-                        <button class="modal-close" onclick="window.app.closeEmailAuthModal()">✕</button>
-                    </div>
-                    <form id="email-auth-form" onsubmit="window.app.handleEmailAuth(event)">
-                        <div class="form-group hidden" id="name-group">
-                            <label for="auth-name">Name</label>
-                            <input type="text" id="auth-name" class="form-input" placeholder="Your name">
-                        </div>
-                        <div class="form-group">
-                            <label for="auth-email">Email</label>
-                            <input type="email" id="auth-email" class="form-input" placeholder="you@example.com" required autocomplete="username">
-                        </div>
-                        <div class="form-group">
-                            <label for="auth-password">Password</label>
-                            <input type="password" id="auth-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
-                        </div>
-                        <div id="auth-error-msg" class="modal-error"></div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn primary" id="auth-submit-btn" style="width: 100%;">Sign In</button>
-                            <div class="modal-toggle-text" onclick="window.app.toggleEmailAuthMode()">
-                                Don't have an account? <span id="auth-toggle-link">Sign Up</span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
+function _applyTheme() {
+    const isDark = state.data?.darkMode || false;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
 
-        // Reset state
-        this._emailAuthMode = 'signin';
-        document.getElementById('name-group').classList.add('hidden');
-        document.getElementById('auth-name').removeAttribute('required');
-        document.getElementById('modal-title').textContent = 'Sign In with Email';
-        document.getElementById('auth-submit-btn').textContent = 'Sign In';
-        document.getElementById('auth-toggle-link').textContent = 'Sign Up';
-        document.getElementById('auth-error-msg').textContent = '';
-        document.getElementById('email-auth-form').reset();
+// WP-017: Accumulate elapsed dark mode time since last measurement
+function _accumulateDarkModeTime() {
+    if (state.data?.darkMode && window.app._darkModeStartTime) {
+        const elapsed = (Date.now() - window.app._darkModeStartTime) / 60000; // minutes
+        state.data.darkModeStudyMinutes = (state.data.darkModeStudyMinutes || 0) + elapsed;
+        window.app._darkModeStartTime = Date.now(); // Reset for next interval
+    }
+}
 
-        // Show modal with animation
-        setTimeout(() => modal.classList.add('open'), 10);
-    },
+function _save() {
+    if (!state.data) state.data = getLocalProgress(appId);
 
-    closeEmailAuthModal() {
-        const modal = document.getElementById('email-auth-modal');
-        if (modal) {
-            modal.classList.remove('open');
-        }
-    },
+    // WP-017: Accumulate dark mode time on each save
+    _accumulateDarkModeTime();
 
-    toggleEmailAuthMode() {
-        const nameGroup = document.getElementById('name-group');
-        const authName = document.getElementById('auth-name');
-        const modalTitle = document.getElementById('modal-title');
-        const submitBtn = document.getElementById('auth-submit-btn');
-        const toggleLink = document.getElementById('auth-toggle-link');
-        const errorMsg = document.getElementById('auth-error-msg');
-        
-        errorMsg.textContent = '';
-        
-        if (this._emailAuthMode === 'signin') {
-            this._emailAuthMode = 'signup';
-            nameGroup.classList.remove('hidden');
-            authName.setAttribute('required', 'true');
-            modalTitle.textContent = 'Create Account';
-            submitBtn.textContent = 'Sign Up';
-            toggleLink.textContent = 'Sign In';
-        } else {
-            this._emailAuthMode = 'signin';
-            nameGroup.classList.add('hidden');
-            authName.removeAttribute('required');
-            modalTitle.textContent = 'Sign In with Email';
-            submitBtn.textContent = 'Sign In';
-            toggleLink.textContent = 'Sign Up';
-        }
-    },
+    // WP-018: Accumate real elapsed study time
+    if (window.app._lastSaveTime) {
+        const elapsed = Date.now() - window.app._lastSaveTime;
+        state.data.totalStudyTimeMs = (state.data.totalStudyTimeMs || 0) + elapsed;
+    }
+    window.app._lastSaveTime = Date.now();
 
-    async handleEmailAuth(event) {
-        event.preventDefault();
-        const email = document.getElementById('auth-email').value;
-        const password = document.getElementById('auth-password').value;
-        const name = document.getElementById('auth-name').value;
-        const errorMsg = document.getElementById('auth-error-msg');
-        const submitBtn = document.getElementById('auth-submit-btn');
-        
-        errorMsg.textContent = '';
-        const originalBtnText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Processing... ⏳';
+    // ── Sync live engine state back to state.data before saving ──
+    const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
+    const favSet = engines.flashcard?.favoritesIds || engines.glossary?.favoritesIds;
 
-        try {
-            if (this._emailAuthMode === 'signup') {
-                const { signUpWithEmailAndPassword } = await import('./firebase.js?v=3');
-                await signUpWithEmailAndPassword(email, password, name);
-            } else {
-                const { loginWithEmailAndPassword } = await import('./firebase.js?v=3');
-                await loginWithEmailAndPassword(email, password);
-            }
-            this.closeEmailAuthModal();
-            window.location.reload();
-        } catch (e) {
-            console.error('Email authentication failed:', e);
-            let userFriendlyMsg = e.message;
-            if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
-                userFriendlyMsg = 'Incorrect email or password.';
-            } else if (e.code === 'auth/email-already-in-use') {
-                userFriendlyMsg = 'This email is already registered. Try logging in.';
-            } else if (e.code === 'auth/weak-password') {
-                userFriendlyMsg = 'Password should be at least 6 characters.';
-            } else if (e.code === 'auth/invalid-email') {
-                userFriendlyMsg = 'Please enter a valid email address.';
-            }
-            errorMsg.textContent = userFriendlyMsg;
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalBtnText;
-        }
-    },
+    if (knownSet) {
+        state.data.known = Array.from(knownSet);
+    }
+    if (favSet) {
+        state.data.favorites = Array.from(favSet);
+    }
+    if (engines.flashcard?.errors) {
+        state.data.flashcardErrors = { ...engines.flashcard.errors };
+    }
+    if (engines.trophy?.trophyCounts) {
+        state.data.trophyCounts = { ...engines.trophy.trophyCounts };
+    }
 
-    async logout() {
-        if (auth) {
-            try { await logout(); } catch (e) {}
-        }
-        // WP-006: Removed clearLocalProgress(appId) — progress data must persist in localStorage across logout/login
-        window.location.reload();
-    },
+    // WP-038: Prune studyDates to prevent unbounded growth (keep last 90)
+    if (state.data.studyDates && state.data.studyDates.length > 90) {
+        state.data.studyDates = [...new Set(state.data.studyDates)].sort().slice(-90);
+    }
 
-    async resetData() {
-        if (confirm("⚠️ Are you sure you want to completely RESET ALL your progress data? This cannot be undone!")) {
-            clearLocalProgress(appId);
-            if (auth && state.uid) {
-                try {
-                    await saveProgress(appId, state.uid, getDefaultProgressObj());
-                } catch (e) {
-                    console.warn("Failed to reset firebase.", e);
+    const payload = {
+        known: state.data.known || [],
+        favorites: state.data.favorites || [],
+        trophyCounts: state.data.trophyCounts || {},
+        sessionsCompleted: state.data.sessionsCompleted || 0,
+        sessionKnown: state.data.sessionKnown || 0,
+        sessionFlashcardErrors: state.data.sessionFlashcardErrors || 0,
+        sessionWordsReviewed: state.data.sessionWordsReviewed || 0,
+        lastSessionDate: state.data.lastSessionDate || '',
+        darkMode: state.data.darkMode || false,
+        darkModeStudyMinutes: state.data.darkModeStudyMinutes || 0,
+        totalStudyTimeMs: state.data.totalStudyTimeMs || 0,
+        ttsCount: state.data.ttsCount || 0,
+        columnHideCount: state.data.columnHideCount || 0,
+        darkModeToggleCount: state.data.darkModeToggleCount || 0,
+        flashcardErrors: state.data.flashcardErrors || {},
+        studyDates: state.data.studyDates || [],
+        migrationVersion: state.data.migrationVersion || 0,
+        lastUpdated: new Date().toISOString()
+    };
+
+    // WP-011: Save to localStorage immediately, debounce Firestore writes
+    // WP-019: Ensure _sessionStartTime and _lastSaveTime are NOT persisted
+    const localPayload = { ...state.data, ...payload };
+    delete localPayload._sessionStartTime;
+    delete localPayload._lastSaveTime;
+    saveLocalProgress(appId, localPayload);
+
+    // Debounced remote save
+    if (state.uid && auth) {
+        _scheduleRemoteSave(payload);
+    }
+}
+
+// WP-011: Debounced remote save — batches Firestore writes (WP-012: uses batch)
+const _scheduleRemoteSave = debounce(function(payload) {
+    if (state.uid && auth) {
+        batchSaveProgressAndLeaderboard(appId, state.uid, payload, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length)
+            .then(() => {
+                // WP-035: Reset failure counter on success
+                window.app._consecutiveSaveFailures = 0;
+            })
+            .catch(e => {
+                console.warn('Debounced batch save failed:', e);
+                // WP-035: Track consecutive failures and show toast
+                window.app._consecutiveSaveFailures = (window.app._consecutiveSaveFailures || 0) + 1;
+                if (window.app._consecutiveSaveFailures >= 3) {
+                    _showToast('⚠️ Cloud sync failed. Your progress is saved locally.');
                 }
-            }
-            window.location.reload();
-        }
-    },
-
-    async _onAuth(user) {
-        const prevUid = state.uid;
-        state.uid = user?.uid || null;
-
-        if (this._hasBootedAuth === undefined) {
-            this._hasBootedAuth = false;
-        }
-
-        if (prevUid !== null && state.uid !== null && prevUid !== state.uid) {
-            clearLocalProgress(appId);
-            window.location.reload();
-            return;
-        }
-
-        if (this._hasBootedAuth && prevUid === null && state.uid !== null) {
-            window.location.reload();
-            return;
-        }
-
-        this._hasBootedAuth = true;
-
-        if (user) {
-            console.log('✅ User signed in:', user.email);
-            document.getElementById('sync-status').textContent = '☁️ Cloud Sync Active';
-
-            try {
-                const remote = await loadProgress(appId, user.uid);
-                state.data = mergeProgress(state.data, remote);
-                // WP-007: Persist merged result to localStorage immediately (no Firestore writes needed here)
-                saveLocalProgress(appId, state.data);
-            } catch (e) {
-                console.warn('⚠️ Failed to load cloud progress:', e);
-                // WP-035: Show toast when cloud data cannot be loaded
-                this._showToast('⚠️ Could not load cloud data. Using local progress.');
-            }
-        } else {
-            console.log('📱 Using offline mode');
-            document.getElementById('sync-status').textContent = '💾 Local Mode';
-            state.data = getLocalProgress(appId);
-        }
-
-        this._applyTheme();
-        this._renderAuthUI();
-        this._initEngines();
-
-        // Immediately auto-publish progress to the server on load.
-        // This natively solves the "migration" problem: all existing users will be added to the leaderboard
-        // the very next time they simply open the site!
-        if (state.uid && auth) {
-            updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, state.data?.known?.length || 0).then(() => {
-                if (state.view === 'leaderboard') this._renderLeaderboard();
             });
-        }
-    },
+    }
+}, 3000);
 
-    // ── NAVIGATION ──
-    switchView(v) {
-        document.querySelectorAll('#content-area > div[id^="view-"]').forEach(el => el.classList.add('hidden'));
-        const target = document.getElementById(`view-${v}`);
-        if (target) {
-            target.classList.remove('hidden');
-            state.view = v;
-        }
-        
-        if (v === 'leaderboard') {
-            this._renderLeaderboard();
-        }
+// WP-011: Flush pending remote saves immediately (used by beforeunload)
+function _flushRemoteSave() {
+    if (state.uid && auth && state.data) {
+        const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
+        const knownCount = knownSet ? knownSet.size : (state.data.known?.length || 0);
+        saveProgress(appId, state.uid, state.data).catch(e => console.warn('Flush save failed:', e));
+    }
+}
 
-        if (window.innerWidth <= 768) {
-            document.getElementById('sidebar')?.classList.remove('open');
-            document.getElementById('sidebar-overlay')?.classList.remove('visible');
-        }
-    },
-
-    // ── LEADERBOARD ──
-    async _renderLeaderboard() {
-        const tbody = document.getElementById('leaderboard-tbody');
-        if (!tbody) return;
-        
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 20px;">Loading ranks... ⏳</td></tr>`;
-        
-        try {
-            const data = await getLeaderboard();
-            if (!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 20px; color: var(--text-muted);">No linguists found on the server. Be the first!</td></tr>`;
-                return;
+// ── Trophy evaluation helper ──
+async function _evaluateTrophies() {
+    if (engines.trophy) {
+        const allWords = levelConfig.vocabulary.flat();
+        const earned = await engines.trophy.evaluate(state.data, allWords);
+        if (earned && earned.length > 0) {
+            _save();
+            // WP-016: Clear returnedAfter7Days flag after "We're So Back" trophy is earned
+            if (earned.some(t => t.id === 'were_so_back')) {
+                state.data.returnedAfter7Days = false;
             }
-            
-            tbody.innerHTML = data.map(user => {
-                let badge = '';
-                if (user.rank === 1) badge = '🥇';
-                else if (user.rank === 2) badge = '🥈';
-                else if (user.rank === 3) badge = '🥉';
-                else badge = `#${user.rank}`;
-                
-                const isMe = user.uid === state.uid;
-                
-                return `<tr style="${isMe ? 'background-color: var(--surface-hover); font-weight: bold;' : ''}">
-                    <td style="text-align: center; font-size: 1.2rem;">${badge}</td>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${user.photoURL || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                            <span>${sanitize(user.displayName)}</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: var(--primary); font-weight: bold;">${user.totalWords}</td>
-                </tr>`;
-            }).join('');
-        } catch(e) {
-            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding: 20px; color: var(--warning);">Error fetching leaderboard data.</td></tr>`;
         }
-    },
+    }
+}
 
-    switchMode(m) {
-        const words = levelConfig?.vocabulary?.[state.unit] || [];
-        if (m === 'flashcard') {
-            engines.flashcard?.loadUnit(words);
-            this.switchView('flashcard');
-        } else {
-            engines.glossary?.loadUnit(words);
-            engines.glossary?.render();
-            this.switchView('glossary');
+// ── Instantiate Services ──
+const authService = new AuthService({
+    auth, state, appId, engines, levelConfig,
+    onSave: () => _save(),
+    showToast: (msg) => _showToast(msg)
+});
+
+const navService = new NavigationService({
+    state, engines, levelConfig,
+    onSave: () => _save(),
+    onUpdateStats: () => statsService.updateStats(),
+    onRenderUnitList: () => navService.renderUnitList()
+});
+
+const statsService = new StatsService({
+    state, engines, levelConfig,
+    onGetUnitProgress: (i) => navService._getUnitProgress(i),
+    onResolveUnitLabel: (i) => navService._resolveUnitLabel(i)
+});
+
+const leaderboardService = new LeaderboardService({ state });
+
+// ── Initialize Engines ──
+let _enginesReady = false;
+
+async function _initEngines() {
+    if (_enginesReady) {
+        console.log('ℹ️ Engines already initialized, skipping.');
+        return;
+    }
+    if (!levelConfig?.vocabulary) {
+        console.error('❌ No vocabulary data loaded!');
+        return;
+    }
+    _enginesReady = true;
+
+    // WP-014: Reset session counters on new day (matches "Words Studied Today" semantics)
+    if (state.data) {
+        const today = new Date().toISOString().split('T')[0];
+        if ((state.data.lastSessionDate || '') !== today) {
+            state.data.sessionKnown = 0;
+            state.data.sessionFlashcardErrors = 0;
+            state.data.sessionWordsReviewed = 0;
+            // WP-039: Reset modesUsed on new session
+            state.data.modesUsed = [];
+            state.data.lastSessionDate = today;
+            // Persist the reset immediately so it survives reload
+            saveLocalProgress(appId, state.data);
         }
-    },
+    }
 
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const isOpen = sidebar?.classList.toggle('open');
-        overlay?.classList.toggle('visible', isOpen);
-    },
+    // WP-016: Detect 7+ day gap and set returnedAfter7Days flag
+    if (state.data && !state.data.returnedAfter7Days) {
+        const studyDates = state.data.studyDates || [];
+        if (studyDates.length > 0) {
+            const lastStudyDate = new Date(studyDates[studyDates.length - 1]);
+            const now = new Date();
+            const daysSinceLastStudy = Math.floor((now - lastStudyDate) / 86400000);
+            if (daysSinceLastStudy >= 7) {
+                state.data.returnedAfter7Days = true;
+            }
+        }
+    }
 
-    // ── THEME (Fixed: null-safe) ──
+    // WP-010: Migrate numeric word IDs to deterministic string IDs
+    if (state.data && (state.data.migrationVersion || 0) < 1) {
+        const allWords = levelConfig.vocabulary.flat();
+
+        const oldIdToNewId = {};
+        let globalIndex = 0;
+        for (let u = 0; u < levelConfig.vocabulary.length; u++) {
+            const unitWords = levelConfig.vocabulary[u];
+            for (let w = 0; w < unitWords.length; w++) {
+                oldIdToNewId[globalIndex] = unitWords[w].id;
+                globalIndex++;
+            }
+        }
+
+        for (let i = 0; i < globalIndex; i++) {
+            oldIdToNewId[String(i)] = oldIdToNewId[i];
+        }
+
+        const oldKnown = [...(state.data.known || [])];
+        const oldFavorites = [...(state.data.favorites || [])];
+        const oldFlashcardErrors = { ...(state.data.flashcardErrors || {}) };
+
+        const newKnown = oldKnown
+            .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
+            .filter(id => id !== undefined);
+
+        const newFavorites = oldFavorites
+            .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
+            .filter(id => id !== undefined);
+
+        const newFlashcardErrors = {};
+        for (const [oldKey, value] of Object.entries(oldFlashcardErrors)) {
+            const newKey = oldIdToNewId[oldKey] !== undefined ? oldIdToNewId[oldKey] : oldKey;
+            newFlashcardErrors[newKey] = value;
+        }
+
+        // Create backups before modifying
+        state.data._known_backup_v1 = oldKnown;
+        state.data._favorites_backup_v1 = oldFavorites;
+        state.data._flashcardErrors_backup_v1 = oldFlashcardErrors;
+
+        // Apply migration
+        state.data.known = newKnown;
+        state.data.favorites = newFavorites;
+        state.data.flashcardErrors = newFlashcardErrors;
+        state.data.migrationVersion = 1;
+
+        // Persist migrated data
+        _save();
+        console.log('[WP-010] Migration complete. Version set to 1.');
+    }
+
+    const words = levelConfig.vocabulary[state.unit] || [];
+    const known = new Set(state.data?.known || []);
+    const favorites = new Set(state.data?.favorites || []);
+
+    engines.glossary = new GlossaryEngine('glossary-tbody', words, known, favorites, (t) => window.app.speakText(t));
+    engines.flashcard = new FlashcardEngine(
+        words, known, favorites, state.data?.flashcardErrors || {},
+        () => _save(),
+        () => {
+            // onSessionComplete: safely increment session counter and record today's date
+            if (!state.data) state.data = getLocalProgress(appId);
+            state.data.sessionsCompleted = (state.data.sessionsCompleted || 0) + 1;
+            const today = new Date().toISOString().split('T')[0];
+            if (!state.data.studyDates) state.data.studyDates = [];
+            if (!state.data.studyDates.includes(today)) {
+                state.data.studyDates.push(today);
+            }
+        }
+    );
+    engines.quiz = new QuizEngine(words, (s, t) => {
+        const el = document.getElementById('quiz-score');
+        if (el) el.textContent = `Score: ${s} / ${t}`;
+    });
+    engines.trophy = new TrophyEngine('trophy-container', state.data || {}, appId, (msg) => _showToast(msg));
+
+    navService.renderUnitList();
+    statsService.updateStats();
+
+    // Ensure the initial view is explicitly unhidden
+    navService.switchView(state.view);
+
+    // Also update the title
+    navService._updateTitles(state.unit);
+
+    // WP-001 + WP-002 + WP-003: Evaluate trophies on boot, using full level vocabulary
+    await _evaluateTrophies();
+
+    // WP-017: Initialize dark mode start time if currently active
+    if (state.data?.darkMode) {
+        window.app._darkModeStartTime = Date.now();
+    }
+
+    // WP-018: Initialize session time tracking
+    window.app._lastSaveTime = Date.now();
+
+    console.log(`✅ Engines initialized with ${words.length} words in Unit ${state.unit + 1}`);
+}
+
+// 4. Global App Object — thin delegating wrapper
+window.app = {
+    _enginesReady: false,
+    _darkModeStartTime: null,
+    _lastSaveTime: null,
+    _consecutiveSaveFailures: 0,
+
+    // ── AUTH ── (delegates to AuthService)
+    loginWithGoogle: () => authService.loginWithGoogle(),
+    openEmailAuthModal: () => authService.openEmailAuthModal(),
+    closeEmailAuthModal: () => authService.closeEmailAuthModal(),
+    toggleEmailAuthMode: () => authService.toggleEmailAuthMode(),
+    handleEmailAuth: (e) => authService.handleEmailAuth(e),
+    logout: () => authService.logout(),
+    resetData: () => authService.resetData(),
+
+    // ── NAVIGATION ── (delegates to NavigationService)
+    switchView: (v) => {
+        navService.switchView(v);
+        if (v === 'leaderboard') leaderboardService.render();
+    },
+    switchMode: (m) => navService.switchMode(m),
+    toggleSidebar: () => navService.toggleSidebar(),
+    switchUnit: (i) => navService.switchUnit(i).then(() => _evaluateTrophies()),
+
+    // ── LEADERBOARD ── (delegates to LeaderboardService)
+    _renderLeaderboard: () => leaderboardService.render(),
+
+    // ── THEME ──
     toggleDarkMode() {
-        // Initialize data if null
         if (!state.data) state.data = getLocalProgress(appId);
-
-        // WP-017: Accumulate dark mode time before toggling
-        this._accumulateDarkModeTime();
-
+        _accumulateDarkModeTime();
         state.data.darkMode = !state.data.darkMode;
-        this._applyTheme();
+        _applyTheme();
         state.data.darkModeToggleCount = (state.data.darkModeToggleCount || 0) + 1;
-        // WP-017: Start tracking time in new mode
         if (state.data.darkMode) {
             this._darkModeStartTime = Date.now();
         } else {
             this._darkModeStartTime = null;
         }
-        this._save();
-    },
-
-    // WP-017: Accumulate elapsed dark mode time since last measurement
-    _accumulateDarkModeTime() {
-        if (state.data?.darkMode && this._darkModeStartTime) {
-            const elapsed = (Date.now() - this._darkModeStartTime) / 60000; // minutes
-            state.data.darkModeStudyMinutes = (state.data.darkModeStudyMinutes || 0) + elapsed;
-            this._darkModeStartTime = Date.now(); // Reset for next interval
-        }
-    },
-
-    _applyTheme() {
-        const isDark = state.data?.darkMode || false;
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        const btn = document.getElementById('theme-btn');
-        if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+        _save();
     },
 
     // ── GLOSSARY ──
@@ -399,14 +419,14 @@ window.app = {
     hideTableColumn(col) {
         engines.glossary?.toggleColumn(col);
         state.data.columnHideCount = (state.data.columnHideCount || 0) + 1;
-        this._save();
+        _save();
     },
     revealAllTable() { engines.glossary?.revealAll(); },
     playUnitAudio() { engines.glossary?.speakAll(); },
     speakText(t) {
         speak(cleanTextForAudio(t));
         state.data.ttsCount = (state.data.ttsCount || 0) + 1;
-        this._save();
+        _save();
     },
 
     // ── FLASHCARDS ──
@@ -414,21 +434,16 @@ window.app = {
     speakCurrentCard() { engines.flashcard?.speak(); },
     async markCard(known) {
         engines.flashcard?.mark(known);
-        // WP-022: Record study date on every flashcard interaction (partial session tracking)
+        // WP-022: Record study date on every flashcard interaction
         if (!state.data.studyDates) state.data.studyDates = [];
         const today = new Date().toISOString().split('T')[0];
         if (!state.data.studyDates.includes(today)) {
             state.data.studyDates.push(today);
         }
-        this._save();
-        this._updateStats();
-        this._renderUnitList();
-        // WP-001 + WP-002 + WP-003: Evaluate trophies after marking card, using full level vocabulary
-        if (engines.trophy) {
-            const allWords = levelConfig.vocabulary.flat();
-            const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) this._save();
-        }
+        _save();
+        statsService.updateStats();
+        navService.renderUnitList();
+        await _evaluateTrophies();
     },
     async toggleFavorite(id) {
         if (engines.flashcard && engines.flashcard.favoritesIds) {
@@ -438,16 +453,10 @@ window.app = {
                 engines.flashcard.favoritesIds.add(id);
             }
         }
-        // Force synchronous repaint of current view
         if (state.view === 'glossary' && engines.glossary) engines.glossary.render();
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
-        this._save();
-        // WP-001 + WP-002 + WP-003: Evaluate trophies after toggling favorite
-        if (engines.trophy) {
-            const allWords = levelConfig.vocabulary.flat();
-            const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) this._save();
-        }
+        _save();
+        await _evaluateTrophies();
     },
     nextCard() { engines.flashcard?.next(); },
     prevCard() { engines.flashcard?.prev(); },
@@ -458,564 +467,19 @@ window.app = {
     // ── QUIZ ──
     async checkArticleAnswer(a, btn) {
         engines.quiz?.answer(a, btn);
-        this._save();
-        // WP-001 + WP-002 + WP-003: Evaluate trophies after quiz answer
-        if (engines.trophy) {
-            const allWords = levelConfig.vocabulary.flat();
-            const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) this._save();
-        }
+        _save();
+        await _evaluateTrophies();
     },
 
-    // ── UNIT SWITCHING ──
-    _updateTitles(i) {
-        const slabel = levelConfig.sectionLabel || 'Modul';
-        const sectionName = levelConfig.sectionLabels?.[i] ? `: ${levelConfig.sectionLabels[i]}` : '';
-        const label = `${slabel} ${i + 1}${sectionName}`;
-
-        let prefix = '';
-        if (!levelConfig.chapterGroups && levelConfig.modulesPerChapter) {
-            const ch = Math.floor(i / levelConfig.modulesPerChapter) + 1;
-            prefix = `Kapitel ${ch} - `;
-        }
-        
-        const gTitle = document.getElementById('glossary-title');
-        if (gTitle) gTitle.textContent = prefix + label;
-    },
-
-    async switchUnit(i) {
-        state.unit = i;
-        const words = levelConfig?.vocabulary?.[i] || [];
-
-        this._updateTitles(i);
-
-        // If user is on a "view-only" screen (dashboard/trophies), clicking a unit
-        // should navigate them back to the glossary for that unit.
-        if (state.view === 'dashboard' || state.view === 'trophies' || state.view === 'leaderboard') {
-            engines.glossary?.loadUnit(words);
-            engines.glossary?.render();
-            this.switchView('glossary'); // switchView already closes mobile sidebar
-        } else {
-            if (state.view === 'glossary') {
-                engines.glossary?.loadUnit(words);
-                engines.glossary?.render();
-            } else if (state.view === 'flashcard') {
-                engines.flashcard?.loadUnit(words);
-            } else if (state.view === 'article-quiz') {
-                engines.quiz?.loadUnit(words);
-            }
-            // Always close sidebar on mobile when selecting a unit
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar')?.classList.remove('open');
-            }
-        }
-
-        this._renderUnitList();
-        this._updateStats();
-        // WP-002 + WP-003: Pass ALL vocabulary words to evaluate, save if trophies earned
-        if (engines.trophy) {
-            const allWords = levelConfig.vocabulary.flat();
-            const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) this._save();
-        }
-    },
-
-    // ── INTERNAL HELPERS ──
-    _renderAuthUI() {
-        const sync = document.getElementById('sync-status');
-        const login = document.getElementById('login-btn');
-        const loginEmail = document.getElementById('login-email-btn');
-        const info = document.getElementById('user-info');
-
-        if (!login || !info) return;
-
-        if (state.uid && auth?.currentUser) {
-            if (sync) sync.textContent = '☁️ Cloud Sync Active';
-            login.classList.add('hidden');
-            if (loginEmail) loginEmail.classList.add('hidden');
-            info.classList.remove('hidden');
-
-            const avatar = document.getElementById('user-avatar');
-            const name = document.getElementById('user-name');
-            if (avatar) {
-                avatar.src = auth.currentUser.photoURL || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>';
-            }
-            if (name) name.textContent = auth.currentUser.displayName || auth.currentUser.email || 'Email User';
-        } else {
-            if (sync) sync.textContent = '💾 Local Mode';
-            login.classList.remove('hidden');
-            if (loginEmail) loginEmail.classList.remove('hidden');
-            info.classList.add('hidden');
-        }
-    },
-
-    async _initEngines() {
-        if (this._enginesReady) {
-            console.log('ℹ️ Engines already initialized, skipping.');
-            return;
-        }
-        if (!levelConfig?.vocabulary) {
-            console.error('❌ No vocabulary data loaded!');
-            return;
-        }
-        this._enginesReady = true;
-
-        // WP-014: Reset session counters on new day (matches "Words Studied Today" semantics)
-        if (state.data) {
-            const today = new Date().toISOString().split('T')[0];
-            if ((state.data.lastSessionDate || '') !== today) {
-                state.data.sessionKnown = 0;
-                state.data.sessionFlashcardErrors = 0;
-                state.data.sessionWordsReviewed = 0;
-                // WP-039: Reset modesUsed on new session (same mechanism as session counter reset)
-                state.data.modesUsed = [];
-                state.data.lastSessionDate = today;
-                // Persist the reset immediately so it survives reload
-                saveLocalProgress(appId, state.data);
-            }
-        }
-
-        // WP-016: Detect 7+ day gap and set returnedAfter7Days flag
-        if (state.data && !state.data.returnedAfter7Days) {
-            const studyDates = state.data.studyDates || [];
-            if (studyDates.length > 0) {
-                const lastStudyDate = new Date(studyDates[studyDates.length - 1]);
-                const now = new Date();
-                const daysSinceLastStudy = Math.floor((now - lastStudyDate) / 86400000);
-                if (daysSinceLastStudy >= 7) {
-                    state.data.returnedAfter7Days = true;
-                }
-            }
-        }
-
-        // WP-010: Migrate numeric word IDs to deterministic string IDs
-        if (state.data && (state.data.migrationVersion || 0) < 1) {
-            const dryRun = false; // Enable migration after dry-run validation
-            const allWords = levelConfig.vocabulary.flat();
-
-            // Build mapping: old numeric index -> new string ID
-            // The old IDs were global indices (forEach counter across all raw data)
-            // We need to reproduce the old indexing to build the map
-            const oldIdToNewId = {};
-            let globalIndex = 0;
-            for (let u = 0; u < levelConfig.vocabulary.length; u++) {
-                const unitWords = levelConfig.vocabulary[u];
-                for (let w = 0; w < unitWords.length; w++) {
-                    oldIdToNewId[globalIndex] = unitWords[w].id;
-                    globalIndex++;
-                }
-            }
-
-            // Also support string-number old IDs (e.g., "5" stored as string)
-            for (let i = 0; i < globalIndex; i++) {
-                oldIdToNewId[String(i)] = oldIdToNewId[i];
-            }
-
-            const oldKnown = [...(state.data.known || [])];
-            const oldFavorites = [...(state.data.favorites || [])];
-            const oldFlashcardErrors = { ...(state.data.flashcardErrors || {}) };
-
-            // Map known IDs
-            const newKnown = oldKnown
-                .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
-                .filter(id => id !== undefined);
-
-            // Map favorites IDs
-            const newFavorites = oldFavorites
-                .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
-                .filter(id => id !== undefined);
-
-            // Re-key flashcardErrors
-            const newFlashcardErrors = {};
-            for (const [oldKey, value] of Object.entries(oldFlashcardErrors)) {
-                const newKey = oldIdToNewId[oldKey] !== undefined ? oldIdToNewId[oldKey] : oldKey;
-                newFlashcardErrors[newKey] = value;
-            }
-
-            if (dryRun) {
-                console.log('[WP-010 DRY-RUN] Migration would transform:');
-                console.log('  known:', oldKnown.slice(0, 10), '→', newKnown.slice(0, 10));
-                console.log('  favorites:', oldFavorites.slice(0, 10), '→', newFavorites.slice(0, 10));
-                console.log('  flashcardErrors keys:', Object.keys(oldFlashcardErrors).slice(0, 10), '→', Object.keys(newFlashcardErrors).slice(0, 10));
-                console.log('  Mapping table size:', Object.keys(oldIdToNewId).length / 2, 'entries');
-            } else {
-                // Create backups before modifying
-                state.data._known_backup_v1 = oldKnown;
-                state.data._favorites_backup_v1 = oldFavorites;
-                state.data._flashcardErrors_backup_v1 = oldFlashcardErrors;
-
-                // Apply migration
-                state.data.known = newKnown;
-                state.data.favorites = newFavorites;
-                state.data.flashcardErrors = newFlashcardErrors;
-                state.data.migrationVersion = 1;
-
-                // Persist migrated data
-                this._save();
-                console.log('[WP-010] Migration complete. Version set to 1.');
-            }
-        }
-
-        const words = levelConfig.vocabulary[state.unit] || [];
-        const known = new Set(state.data?.known || []);
-        const favorites = new Set(state.data?.favorites || []);
-
-        engines.glossary = new GlossaryEngine('glossary-tbody', words, known, favorites, (t) => this.speakText(t));
-        engines.flashcard = new FlashcardEngine(
-            words, known, favorites, state.data?.flashcardErrors || {},
-            () => this._save(),
-            () => {
-                // onSessionComplete: safely increment session counter and record today's date
-                if (!state.data) state.data = getLocalProgress(appId);
-                state.data.sessionsCompleted = (state.data.sessionsCompleted || 0) + 1;
-                const today = new Date().toISOString().split('T')[0];
-                if (!state.data.studyDates) state.data.studyDates = [];
-                if (!state.data.studyDates.includes(today)) {
-                    state.data.studyDates.push(today);
-                }
-            }
-        );
-        engines.quiz = new QuizEngine(words, (s, t) => {
-            const el = document.getElementById('quiz-score');
-            if (el) el.textContent = `Score: ${s} / ${t}`;
-        });
-        engines.trophy = new TrophyEngine('trophy-container', state.data || {}, appId, (msg) => this._showToast(msg));
-
-        this._renderUnitList();
-        this._updateStats();
-
-        // 🚀 CRITICAL FIX: Ensure the initial view is explicitly unhidden
-        this.switchView(state.view);
-
-        // Also update the title
-        this._updateTitles(state.unit);
-
-        // WP-001 + WP-002 + WP-003: Evaluate trophies on boot, using full level vocabulary
-        if (engines.trophy) {
-            const allWords = levelConfig.vocabulary.flat();
-            const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) {
-                this._save();
-                // WP-016: Clear returnedAfter7Days flag after "We're So Back" trophy is earned
-                if (earned.some(t => t.id === 'were_so_back')) {
-                    state.data.returnedAfter7Days = false;
-                }
-            }
-        }
-
-        // WP-017: Initialize dark mode start time if currently active
-        if (state.data?.darkMode) {
-            this._darkModeStartTime = Date.now();
-        }
-
-        // WP-018: Initialize session time tracking
-        this._lastSaveTime = Date.now();
-
-        console.log(`✅ Engines initialized with ${words.length} words in Unit ${state.unit + 1}`);
-    }, _renderUnitList() {
-        const list = document.getElementById('unit-list');
-        if (!list || !levelConfig?.vocabulary) return;
-
-        let html = '';
-        const vocab = levelConfig.vocabulary;
-
-        if (levelConfig.unitTitles) {
-            // 🚀 B2 ARCHITECTURAL HANDOVER: Dynamic Grouping via unitTitles
-            let currentChapter = "";
-            const maxUnits = vocab.length;
-            
-            for (let i = 0; i < maxUnits; i++) {
-                const globalIndex = i + 1; // Since unitTitles dictionary starts at 1
-                if (!levelConfig.unitTitles[globalIndex]) {
-                    // Fallback to flat rendering for this item if no title exists
-                    html += this._createUnitItem(i, `Unit ${i + 1}`);
-                    continue;
-                }
-                
-                const titleStr = levelConfig.unitTitles[globalIndex];
-                const parts = titleStr.split(':');
-                const chapterPrefix = parts[0].trim();
-                
-                if (chapterPrefix !== currentChapter) {
-                    html += `<div style="padding: 10px 20px; font-weight: bold; color: var(--text-muted); margin-top: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; text-transform: uppercase;">
-            📖 ${chapterPrefix.replace('K', 'Kapitel ')}
-          </div>`;
-                    currentChapter = chapterPrefix;
-                }
-                
-                const cleanTitle = parts.slice(1).join(':').trim();
-                html += this._createUnitItem(i, cleanTitle);
-            }
-        } else if (levelConfig.chapterGroups && levelConfig.chapterGroups.length > 0) {
-            levelConfig.chapterGroups.forEach((chapter, chIndex) => {
-                const nextStart = levelConfig.chapterGroups[chIndex + 1]?.start || vocab.length;
-                html += `<div style="padding: 10px 20px; font-weight: bold; color: var(--text-muted); margin-top: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; text-transform: uppercase;">
-        ${chapter.title}
-      </div>`;
-                for (let i = chapter.start; i < nextStart && i < vocab.length; i++) {
-                    html += this._createUnitItem(i, null);
-                }
-            });
-        }
-        else if (levelConfig.modulesPerChapter) {
-            const perChapter = levelConfig.modulesPerChapter;
-            const totalChapters = Math.ceil(vocab.length / perChapter);
-
-            for (let ch = 0; ch < totalChapters; ch++) {
-                const startIdx = ch * perChapter;
-                const endIdx = Math.min(startIdx + perChapter, vocab.length);
-
-                html += `<div style="padding: 10px 20px; font-weight: bold; color: var(--text-muted); margin-top: 10px; border-bottom: 1px solid var(--border); font-size: 0.85rem; text-transform: uppercase;">
-        Kapitel ${ch + 1}
-      </div>`;
-
-                for (let i = startIdx; i < endIdx; i++) {
-                    html += this._createUnitItem(i, null);
-                }
-            }
-        } else {
-             // 📄 NO GROUPING: Render flat list 
-             for (let i = 0; i < vocab.length; i++) {
-                 html += this._createUnitItem(i, null);
-             }
-        }
-
-        list.innerHTML = html;
-    },
-
-    _createUnitItem(index, overrideLabel = null) {
-        const isActive = index === state.unit;
-        const prog = this._getUnitProgress(index);
-        
-        let label = '';
-        if (overrideLabel) {
-            label = overrideLabel;
-        } else if (levelConfig.exactLabels) {
-            label = levelConfig.sectionLabels?.[index] || `${levelConfig.sectionLabel || 'Modul'} ${index + 1}`;
-        } else {
-            const slabel = levelConfig.sectionLabel || 'Modul';
-            const sectionName = levelConfig.sectionLabels?.[index] ? `: ${levelConfig.sectionLabels[index]}` : '';
-            label = `${slabel} ${index + 1}${sectionName}`;
-        }
-
-        return `<div class="nav-item ${isActive ? 'active' : ''}" onclick="window.app.switchUnit(${index})" style="padding-left: 30px; font-size: 0.9rem;">
-    <span>${sanitize(label)}</span>
-    <span class="unit-progress">${prog.known}/${prog.total} (${prog.pct}%)</span>
-  </div>`;
-    },
-
-    _getUnitProgress(i) {
-        const unit = levelConfig?.vocabulary?.[i] || [];
-        if (!unit.length) return { pct: 0, known: 0, total: 0 };
-        // Use the live engine Set (always current), fall back to saved array on first load
-        const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
-        const known = knownSet
-            ? unit.filter(w => knownSet.has(w.id)).length
-            : unit.filter(w => state.data?.known?.includes(w.id)).length;
-        return {
-            pct: Math.round((known / unit.length) * 100),
-            known: known,
-            total: unit.length
-        };
-    },
-
-    // Returns { chapter, module } for any unit index, regardless of config type.
-    // Used by dashboard rendering and weakest-unit label to avoid 3-branch duplication.
-    _resolveUnitLabel(i) {
-        if (levelConfig.unitTitles) {
-            const titleStr = levelConfig.unitTitles[i + 1];
-            if (!titleStr) return { chapter: `Unit ${i + 1}`, module: '' };
-            const parts = titleStr.split(':');
-            return {
-                chapter: parts[0].trim().replace(/^K(\d+)$/, 'Kapitel $1'),
-                module: parts.slice(1).join(':').trim()
-            };
-        }
-        if (levelConfig.modulesPerChapter) {
-            const ch = Math.floor(i / levelConfig.modulesPerChapter) + 1;
-            const mod = levelConfig.sectionLabels?.[i] || `${levelConfig.sectionLabel || 'Modul'} ${i + 1}`;
-            return { chapter: `Kapitel ${ch}`, module: mod };
-        }
-        return { chapter: `Unit ${i + 1}`, module: levelConfig.sectionLabels?.[i] || '' };
-    },
-
-    _updateStats() {
-        const all = levelConfig?.vocabulary?.flat() || [];
-        // Always use the live engine Set — state.data.known can be stale during a session
-        const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
-        const knownCount = knownSet ? knownSet.size : (state.data?.known?.length || 0);
-        const pct = all.length ? Math.round((knownCount / all.length) * 100) : 0;
-
-        const setEl = (id, val) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = val;
-        };
-
-        setEl('stat-known', knownCount);
-        setEl('stat-total', all.length);
-        setEl('stat-percent', `${pct}%`);
-        setEl('overall-progress-text', `${pct}%`);
-
-        const fill = document.getElementById('overall-progress-fill');
-        if (fill) fill.style.width = `${pct}%`;
-
-        // 📊 DASHBOARD RENDERING
-        const statsTbody = document.getElementById('stats-tbody');
-        if (statsTbody && levelConfig?.vocabulary) {
-            const vocab = levelConfig.vocabulary;
-            const usesChapters = !!(levelConfig.unitTitles || levelConfig.modulesPerChapter);
-            let html = '';
-            for (let i = 0; i < vocab.length; i++) {
-                if (!vocab[i] || vocab[i].length === 0) continue;
-                const { chapter, module } = this._resolveUnitLabel(i);
-                const prog = this._getUnitProgress(i);
-                html += `<tr>
-                    <td>${chapter}</td>
-                    <td>${module}</td>
-                    <td>
-                        <div class="progress-bar-bg" style="width: 100%; height: 6px; margin-bottom: 4px;">
-                            <div class="progress-bar-fill" style="width: ${prog.pct}%;"></div>
-                        </div>
-                        <div style="font-size: 0.75rem; text-align: right; color: var(--text-muted);">${prog.known}/${prog.total} (${prog.pct}%)</div>
-                    </td>
-                </tr>`;
-            }
-            statsTbody.innerHTML = html;
-            const thead = statsTbody.closest('table')?.querySelector('thead tr');
-            if (thead) {
-                thead.innerHTML = usesChapters
-                    ? '<th>Chapter</th><th>Module</th><th>Progress</th>'
-                    : '<th>Unit</th><th>Topic</th><th>Progress</th>';
-            }
-        }
-
-        // Weakest unit
-        let weakestIdx = -1;
-        let lowestPct = 101;
-        for (let i = 0; i < (levelConfig?.vocabulary?.length || 0); i++) {
-            if (levelConfig.vocabulary[i]?.length > 0) {
-                const prog = this._getUnitProgress(i);
-                if (prog.pct < lowestPct) { lowestPct = prog.pct; weakestIdx = i; }
-            }
-        }
-        let weakestLabel = '-';
-        if (weakestIdx !== -1) {
-            const { chapter, module } = this._resolveUnitLabel(weakestIdx);
-            weakestLabel = module ? `${chapter}: ${module}` : chapter;
-        }
-        setEl('stat-weakest', weakestLabel);
-    },
-
-    _showToast(msg) {
-        const t = document.getElementById('toast');
-        const m = document.getElementById('toast-msg');
-        if (m) m.textContent = msg;
-        if (t) {
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 4000);
-        }
-        playChime(600, 150);
-        setTimeout(() => playChime(900, 150), 150);
-    },
-
-    _save() {
-        if (!state.data) state.data = getLocalProgress(appId);
-
-        // WP-017: Accumulate dark mode time on each save
-        this._accumulateDarkModeTime();
-
-        // WP-018: Accumulate real elapsed study time
-        if (this._lastSaveTime) {
-            const elapsed = Date.now() - this._lastSaveTime;
-            state.data.totalStudyTimeMs = (state.data.totalStudyTimeMs || 0) + elapsed;
-        }
-        this._lastSaveTime = Date.now();
-
-        // ── Sync live engine state back to state.data before saving ──
-        // The engines hold the live in-memory truth (Sets/objects).
-        // state.data is the persistence layer — it must be updated from engines.
-        const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
-        const favSet = engines.flashcard?.favoritesIds || engines.glossary?.favoritesIds;
-        
-        if (knownSet) {
-            state.data.known = Array.from(knownSet);
-        }
-        if (favSet) {
-            state.data.favorites = Array.from(favSet);
-        }
-        if (engines.flashcard?.errors) {
-            state.data.flashcardErrors = { ...engines.flashcard.errors };
-        }
-        if (engines.trophy?.trophyCounts) {
-            state.data.trophyCounts = { ...engines.trophy.trophyCounts };
-        }
-
-        // WP-038: Prune studyDates to prevent unbounded growth (keep last 90)
-        if (state.data.studyDates && state.data.studyDates.length > 90) {
-            state.data.studyDates = [...new Set(state.data.studyDates)].sort().slice(-90);
-        }
-
-        const payload = {
-            known: state.data.known || [],
-            favorites: state.data.favorites || [],
-            trophyCounts: state.data.trophyCounts || {},
-            sessionsCompleted: state.data.sessionsCompleted || 0,
-            sessionKnown: state.data.sessionKnown || 0,
-            sessionFlashcardErrors: state.data.sessionFlashcardErrors || 0,
-            sessionWordsReviewed: state.data.sessionWordsReviewed || 0,
-            lastSessionDate: state.data.lastSessionDate || '',
-            darkMode: state.data.darkMode || false,
-            darkModeStudyMinutes: state.data.darkModeStudyMinutes || 0,
-            totalStudyTimeMs: state.data.totalStudyTimeMs || 0,
-            ttsCount: state.data.ttsCount || 0,
-            columnHideCount: state.data.columnHideCount || 0,
-            darkModeToggleCount: state.data.darkModeToggleCount || 0,
-            flashcardErrors: state.data.flashcardErrors || {},
-            studyDates: state.data.studyDates || [],
-            migrationVersion: state.data.migrationVersion || 0,
-            lastUpdated: new Date().toISOString()
-        };
-
-        // WP-011: Save to localStorage immediately, debounce Firestore writes
-        // WP-019: Ensure _sessionStartTime and _lastSaveTime are NOT persisted
-        const localPayload = { ...state.data, ...payload };
-        delete localPayload._sessionStartTime;
-        delete localPayload._lastSaveTime;
-        saveLocalProgress(appId, localPayload);
-
-        // Debounced remote save
-        if (state.uid && auth) {
-            this._scheduleRemoteSave(payload);
-        }
-    },
-
-    // WP-011: Debounced remote save — batches Firestore writes (WP-012: uses batch)
-    _scheduleRemoteSave: debounce(function(payload) {
-        if (state.uid && auth) {
-            batchSaveProgressAndLeaderboard(appId, state.uid, payload, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length)
-                .then(() => {
-                    // WP-035: Reset failure counter on success
-                    this._consecutiveSaveFailures = 0;
-                })
-                .catch(e => {
-                    console.warn('Debounced batch save failed:', e);
-                    // WP-035: Track consecutive failures and show toast
-                    this._consecutiveSaveFailures = (this._consecutiveSaveFailures || 0) + 1;
-                    if (this._consecutiveSaveFailures >= 3) {
-                        this._showToast('⚠️ Cloud sync failed. Your progress is saved locally.');
-                    }
-                });
-        }
-    }, 3000),
-
-    // WP-011: Flush pending remote saves immediately (used by beforeunload)
-    _flushRemoteSave() {
-        if (state.uid && auth && state.data) {
-            const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
-            const knownCount = knownSet ? knownSet.size : (state.data.known?.length || 0);
-            saveProgress(appId, state.uid, state.data).catch(e => console.warn('Flush save failed:', e));
-        }
-    }
+    // ── INTERNAL (exposed for backward compatibility) ──
+    _save,
+    _showToast,
+    _applyTheme,
+    _initEngines,
+    _renderAuthUI: () => authService.renderAuthUI(),
+    _renderUnitList: () => navService.renderUnitList(),
+    _updateStats: () => statsService.updateStats(),
+    _flushRemoteSave
 };
 
 // WP-008: Ensure pending data is saved when the page unloads
@@ -1030,23 +494,37 @@ window.addEventListener('beforeunload', () => {
 
 // 5. Boot Sequence
 if (auth) {
-    listenAuth(u => window.app._onAuth(u));
+    listenAuth(u => {
+        authService._onAuth(u, [
+            () => _applyTheme(),
+            () => authService.renderAuthUI(),
+            () => _initEngines(),
+            () => {
+                // Immediately auto-publish progress to the server on load
+                if (state.uid && auth) {
+                    updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, state.data?.known?.length || 0).then(() => {
+                        if (state.view === 'leaderboard') leaderboardService.render();
+                    });
+                }
+            }
+        ]);
+    });
 } else {
     console.log('⚠️ Running in offline mode (no Firebase)');
     // Initialize immediately without auth
-    window.app._onAuth(null);
+    authService._onAuth(null, [
+        () => _applyTheme(),
+        () => authService.renderAuthUI(),
+        () => _initEngines()
+    ]);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 DOM loaded.');
     if (!state.data) state.data = getLocalProgress(appId);
-    // Apply theme early so there's no flash of unstyled content.
-    // _initEngines() is already triggered by the boot sequence above (_onAuth),
-    // but the _enginesReady guard prevents any double-init if DOMContentLoaded
-    // fires after the boot sequence in a slow environment.
-    window.app._applyTheme();
-    if (!auth && !window.app._enginesReady) {
-        window.app._renderAuthUI();
-        window.app._initEngines();
+    _applyTheme();
+    if (!auth && !_enginesReady) {
+        authService.renderAuthUI();
+        _initEngines();
     }
 });
