@@ -7,9 +7,9 @@ export const TROPHIES = [
     { id: 'bronze', tier: 1, name: 'Bronze Learner', desc: 'Learn 25% of all words', icon: '🥉', req: p => { const t = p.totalWords || 1; return ((p.known?.length || 0) / t) >= 0.25; } },
     { id: 'silver', tier: 1, name: 'Silver Learner', desc: 'Learn 50% of all words', icon: '🥈', req: p => { const t = p.totalWords || 1; return ((p.known?.length || 0) / t) >= 0.5; } },
     { id: 'gold', tier: 1, name: 'Gold Learner', desc: 'Learn 75% of all words', icon: '🥇', req: p => { const t = p.totalWords || 1; return ((p.known?.length || 0) / t) >= 0.75; } },
-    { id: 'unit_master', tier: 1, name: 'Module Champion', desc: 'Get 100% in any single module', icon: '🎯', req: p => false }, // Checked per-unit
-    { id: 'a1_conqueror', tier: 1, name: 'A1 Conqueror', desc: 'Master all A1 words', icon: '👑', req: p => false, levelOnly: 'a1' },
-    { id: 'b2_boss', tier: 1, name: 'B2 Boss', desc: 'Complete 100% of all B2 modules', icon: '👑', req: p => false, levelOnly: 'b2' },
+    { id: 'unit_master', tier: 1, name: 'Module Champion', desc: 'Get 100% in any single module', icon: '🎯', req: p => p.unitPerfect }, // Checked per-unit via app.js
+    { id: 'a1_conqueror', tier: 1, name: 'A1 Conqueror', desc: 'Master all A1 words', icon: '👑', req: p => p.known?.length >= (p.totalWords || Infinity), levelOnly: 'a1' },
+    { id: 'b2_boss', tier: 1, name: 'B2 Boss', desc: 'Complete 100% of all B2 modules', icon: '👑', req: p => p.known?.length >= (p.totalWords || Infinity), levelOnly: 'b2' },
     { id: 'verb_veteran', tier: 1, name: 'Verb Master', desc: 'Learn 30 verbs', icon: '🏃‍♂️', req: p => (p.known?.filter?.(w => w.type === 'v').length || 0) >= 30 },
     { id: 'noun_ninja', tier: 1, name: 'Noun Collector', desc: 'Learn 50 nouns', icon: '📦', req: p => (p.known?.filter?.(w => w.type === 'n').length || 0) >= 50 },
     { id: 'expression_expert', tier: 1, name: 'Chatterbox', desc: 'Learn 20 expressions', icon: '🗣️', req: p => (p.known?.filter?.(w => w.type === 'e').length || 0) >= 20 },
@@ -19,9 +19,9 @@ export const TROPHIES = [
     // Tier 2 - Gen Z / Meme
     { id: 'bro_studied', tier: 2, name: 'Bro Actually Studied', desc: 'Complete your first flashcard session', icon: '😮‍💨', req: p => (p.sessionsCompleted || 0) >= 1, multi: true, milestones: [1, 5, 15, 30] },
     { id: 'skibidi_sprecher', tier: 2, name: 'Skibidi Sprecher', desc: 'Use text-to-speech 25 times', icon: '🗣️', req: p => (p.ttsCount || 0) >= 25 },
-    { id: 'ohio_behavior', tier: 2, name: 'Ohio Behavior', desc: 'Hide columns 10 times in glossary mode', icon: '🙈', req: p => false }, // Tracked via streak
+    { id: 'ohio_behavior', tier: 2, name: 'Ohio Behavior', desc: 'Hide columns 10 times in glossary mode', icon: '🙈', req: p => (p.columnHideCount || 0) >= 10 },
     { id: 'rizzed_up_dark_mode', tier: 2, name: 'Rizzed Up Dark Mode', desc: 'Switch to dark mode', icon: '🌚', req: p => (p.darkModeStudyMinutes || 0) >= 30 },
-    { id: 'npc_arc', tier: 2, name: 'NPC Arc', desc: 'Get the same word wrong 10+ times', icon: '🤖', req: p => false }, // Streak logic
+    { id: 'npc_arc', tier: 2, name: 'NPC Arc', desc: 'Get the same word wrong 10+ times', icon: '🤖', req: p => { const vals = Object.values(p.flashcardErrors || {}); return vals.length > 0 ? Math.max(...vals) >= 10 : false; } },
     { id: 'touch_grass', tier: 2, name: 'Touch Grass', desc: 'Accumulate 3+ hours of total study time', icon: '🌱', req: p => (p.totalStudyTimeMs || 0) >= 3 * 60 * 60 * 1000 },
     { id: 'academic_weapon', tier: 2, name: 'Academic Weapon', desc: 'Complete 25 flashcard sessions', icon: '🎓', req: p => (p.sessionsCompleted || 0) >= 25 },
     { id: 'brain_rot_activated', tier: 2, name: 'Brain Rot Activated', desc: 'Spend 30 min in flashcards in one sitting', icon: '🧠', req: p => (p.totalStudyTimeMs || 0) >= 30 * 60 * 1000 },
@@ -35,11 +35,11 @@ export const TROPHIES = [
     { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 10, multi: true, milestones: [10, 25, 50] },
 
     // Tier 4 - Secret / Hidden
-    { id: 'night_owl', tier: 4, name: 'Sigma Night Owl', desc: 'Study between 10 PM and 4 AM', icon: '🦉', req: p => false, secret: true },
-    { id: 'early_bird', tier: 4, name: 'Early Bird', desc: 'Study before 8 AM', icon: '🌅', req: p => false, secret: true },
-    { id: 'weekend_warrior', tier: 4, name: 'Weekend Warrior', desc: 'Study on a weekend', icon: '🏕️', req: p => false, secret: true },
+    { id: 'night_owl', tier: 4, name: 'Sigma Night Owl', desc: 'Study between 10 PM and 4 AM', icon: '🦉', req: p => { const h = new Date().getHours(); return h >= 22 || h < 4; }, secret: true },
+    { id: 'early_bird', tier: 4, name: 'Early Bird', desc: 'Study before 8 AM', icon: '🌅', req: p => new Date().getHours() < 8, secret: true },
+    { id: 'weekend_warrior', tier: 4, name: 'Weekend Warrior', desc: 'Study on a weekend', icon: '🏕️', req: p => { const d = new Date().getDay(); return d === 0 || d === 6; }, secret: true },
     { id: 'google_scholar', tier: 4, name: 'Google Scholar', desc: 'Sign in with Google', icon: '🌐', req: p => !!p.uid, secret: true },
-    { id: 'chaotic_neutral', tier: 4, name: 'Chaotic Neutral', desc: 'Toggle dark mode 10 times', icon: '🌓', req: p => false, secret: true },
+    { id: 'chaotic_neutral', tier: 4, name: 'Chaotic Neutral', desc: 'Toggle dark mode 10 times', icon: '🌓', req: p => (p.darkModeToggleCount || 0) >= 10, secret: true },
     { id: 'were_so_back', tier: 4, name: "We're So Back", desc: 'Return after 7+ days away', icon: '🔄', req: p => !!p.returnedAfter7Days, secret: true },
     {
         id: 'portal_walker', tier: 4, name: 'Portal Walker', desc: 'Have progress in at least 2 levels', icon: '🚶', req: async () => {
@@ -118,6 +118,18 @@ export class TrophyEngine {
     async evaluate(progress, words = []) {
         const newlyEarned = [];
 
+        // WP-032: Compute unitPerfect for unit_master trophy
+        const knownIds = new Set(progress.known || []);
+        // Group words by unit (word IDs like "1-0" → unit 1)
+        const unitMap = {};
+        for (const w of words) {
+            const unitKey = typeof w.id === 'string' ? w.id.split('-')[0] : Math.floor(w.id / 100);
+            if (!unitMap[unitKey]) unitMap[unitKey] = { total: 0, known: 0 };
+            unitMap[unitKey].total++;
+            if (knownIds.has(w.id)) unitMap[unitKey].known++;
+        }
+        const unitPerfect = Object.values(unitMap).some(u => u.total > 0 && u.known >= u.total);
+
         for (const t of TROPHIES) {
             // Skip level-specific trophies
             if (t.levelOnly && t.levelOnly !== this.appId.replace('german-', '').replace('-app', '')) continue;
@@ -128,7 +140,7 @@ export class TrophyEngine {
             // Check requirement
             let met = false;
             try {
-                met = t.req({ ...progress, totalWords: words.length, known: words.filter(w => progress.known?.includes(w.id)) });
+                met = t.req({ ...progress, totalWords: words.length, known: words.filter(w => progress.known?.includes(w.id)), unitPerfect });
             } catch { met = false; }
 
             if (met) {
