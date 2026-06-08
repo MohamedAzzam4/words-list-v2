@@ -5,7 +5,7 @@ import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime } from './tts.js?v=3';
-import { debounce } from './utils.js?v=3';
+import { debounce, sanitize } from './utils.js?v=3';
 
 // 1. Load Level Config
 const level = document.querySelector('script[data-level]')?.dataset?.level || 'a1';
@@ -323,14 +323,14 @@ window.app = {
                 else if (user.rank === 3) badge = '🥉';
                 else badge = `#${user.rank}`;
                 
-                const isMe = user.displayName === auth?.currentUser?.displayName;
+                const isMe = user.uid === state.uid;
                 
                 return `<tr style="${isMe ? 'background-color: var(--surface-hover); font-weight: bold;' : ''}">
                     <td style="text-align: center; font-size: 1.2rem;">${badge}</td>
                     <td>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <img src="${user.photoURL || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2364748b\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                            <span>${user.displayName}</span>
+                            <span>${sanitize(user.displayName)}</span>
                         </div>
                     </td>
                     <td style="text-align: center; color: var(--primary); font-weight: bold;">${user.totalWords}</td>
@@ -799,7 +799,7 @@ window.app = {
         }
 
         return `<div class="nav-item ${isActive ? 'active' : ''}" onclick="window.app.switchUnit(${index})" style="padding-left: 30px; font-size: 0.9rem;">
-    <span>${label}</span>
+    <span>${sanitize(label)}</span>
     <span class="unit-progress">${prog.known}/${prog.total} (${prog.pct}%)</span>
   </div>`;
     },
