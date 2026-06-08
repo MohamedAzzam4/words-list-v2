@@ -1,7 +1,8 @@
 # REFSPEC.md — Master Implementation Blueprint
 
-**Project:** German-Words-List2  
-**Repository:** https://github.com/MohamedAzzam4/German-Words-List2  
+**Project:** words-list-v2  
+**Repository:** https://github.com/MohamedAzzam4/words-list-v2  
+**Live Website:** https://mohamedazzam4.github.io/words-list-v2/  
 **Date:** 2026-06-07  
 **Author:** Principal Engineer / Software Architect / Technical Program Manager  
 **Purpose:** Convert all engineering audit findings into an executable, task-by-task implementation plan suitable for delegation to smaller coding models (GLM, Gemini Flash, coding agents).
