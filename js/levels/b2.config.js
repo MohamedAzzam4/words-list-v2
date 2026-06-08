@@ -3047,9 +3047,31 @@ function parseRawB2Data(rawArray) {
         if (isNaN(unitNum)) return;
 
 
-        const tType = parts[1] && parts[1].trim() !== '' ? parts[1].trim() : 'Vocab';
+        let tType = parts[1] && parts[1].trim() !== '' ? parts[1].trim() : '';
 
         let rawDe = parts[2] ? parts[2].trim() : '';
+
+        // WP-015: Grammar-based type inference for B2 words with empty type
+        if (!tType) {
+            const deLower = rawDe.toLowerCase().trim();
+            if (/^(der|die|das)\s/.test(deLower)) {
+                tType = 'n'; // noun (starts with article)
+            } else if (/(?:ieren|igen|lichen|elen|ernen)$/.test(deLower) || /\s[-–—]?(en|ern|eln)\b/.test(deLower)) {
+                // Verb infinitive patterns: -ieren, -igen, -lichen, -elen, -ernen
+                // or declension markers like " -en", " -ern", " -eln"
+                tType = 'v';
+            } else if (/^\S+(en|ern|eln)$/.test(deLower) && deLower.length > 4) {
+                // Short word ending in -en/-ern/-eln is likely a verb infinitive
+                // (e.g., "verstehen", "entdecken", "erzählen")
+                tType = 'v';
+            } else if (deLower.includes(' ') && !/^(der|die|das)\s/.test(deLower)) {
+                // Multi-word phrase without article → expression
+                tType = 'e';
+            } else {
+                // Fallback for ambiguous words
+                tType = 'Vocab';
+            }
+        }
         let deMain = rawDe;
         let deContext = "";
 
