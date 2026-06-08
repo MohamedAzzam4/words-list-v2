@@ -234,7 +234,7 @@ None.
 
 #### Detailed Implementation Plan
 1. Open `js/core/trophies.js`.
-2. Fix each mismatch by updating EITHER the description OR the requirement to be consistent. The preferred approach is to fix the requirement to match the description (the description represents the intended design):
+2. **APPROVED DECISION**: Fix the requirement code to match the descriptions (descriptions represent the intended user contract). For each mismatch, update the `req` function:
 
    **Trophy: `bro_studied`** (line ~20)
    - Current desc: "Complete your first flashcard session"
@@ -2035,13 +2035,13 @@ Revert to displayName comparison.
 9. **WP-037** (Multi-column hide) — Remove 1 line, add 3 lines.
 10. **WP-042** (Leaderboard UID) — Change 1 comparison operator.
 
-### Tasks Requiring Human Review
+### Tasks Requiring Human Review — RESOLVED
 
-- **WP-009/WP-010** (Word ID migration) — Review migration strategy before execution. Verify against real user data.
-- **WP-004** (Trophy desc/req fix) — Product decision: Should descriptions match code, or code match descriptions?
-- **WP-031** (HTML deduplication) — Architecture decision: URL parameter vs. shared template approach.
-- **WP-033** (Leaderboard schema) — Review backward compatibility strategy.
-- **WP-015** (B2 type inference) — Review type classification rules against German grammar.
+- **WP-009/WP-010** (Word ID migration) — ✅ APPROVED. Staging Firebase project (`german-words-list-v2`) created. Safety net strategy added: dry-run mode, migration version gate, pre-migration backups (`_known_backup_v1`, `_favorites_backup_v1`, `_flashcardErrors_backup_v1`).
+- **WP-004** (Trophy desc/req fix) — ✅ APPROVED. Decision: **Fix the code to match the descriptions.** Descriptions represent the intended user-facing contract.
+- **WP-031** (HTML deduplication) — ✅ APPROVED. Decision: **Option A — single `level.html?level=a1` with URL parameter.** Redirects from old URLs for backward compatibility.
+- **WP-033** (Leaderboard schema) — ✅ APPROVED. Decision: **Approve dynamic `levels` map schema.** Execution deferred until after WP-009/WP-010 migration is validated.
+- **WP-015** (B2 type inference) — ✅ APPROVED. Decision: **Apply grammar-based type classification rules** (der/die/das → noun, -en/-ern/-eln → verb, multi-word phrases → expression). Safe fallback to `"Vocab"` for ambiguous words. Does not affect stored user data.
 
 ### Tasks Requiring Senior Engineering Review
 
