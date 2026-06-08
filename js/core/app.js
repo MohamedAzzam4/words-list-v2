@@ -514,6 +514,17 @@ window.app = {
         }
         this._enginesReady = true;
 
+        // WP-014: Reset session counters on new day (matches "Words Studied Today" semantics)
+        if (state.data) {
+            const today = new Date().toISOString().split('T')[0];
+            if ((state.data.lastSessionDate || '') !== today) {
+                state.data.sessionKnown = 0;
+                state.data.sessionFlashcardErrors = 0;
+                state.data.sessionWordsReviewed = 0;
+                state.data.lastSessionDate = today;
+            }
+        }
+
         const words = levelConfig.vocabulary[state.unit] || [];
         const known = new Set(state.data?.known || []);
         const favorites = new Set(state.data?.favorites || []);
