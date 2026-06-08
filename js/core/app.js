@@ -208,8 +208,7 @@ window.app = {
         if (auth) {
             try { await logout(); } catch (e) {}
         }
-        const { clearLocalProgress } = await import('./storage.js');
-        clearLocalProgress(appId);
+        // WP-006: Removed clearLocalProgress(appId) — progress data must persist in localStorage across logout/login
         window.location.reload();
     },
 
