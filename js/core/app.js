@@ -934,11 +934,14 @@ window.app = {
             sessionWordsReviewed: state.data.sessionWordsReviewed || 0,
             lastSessionDate: state.data.lastSessionDate || '',
             darkMode: state.data.darkMode || false,
+            darkModeStudyMinutes: state.data.darkModeStudyMinutes || 0,
+            totalStudyTimeMs: state.data.totalStudyTimeMs || 0,
             ttsCount: state.data.ttsCount || 0,
             columnHideCount: state.data.columnHideCount || 0,
             darkModeToggleCount: state.data.darkModeToggleCount || 0,
             flashcardErrors: state.data.flashcardErrors || {},
             studyDates: state.data.studyDates || [],
+            migrationVersion: state.data.migrationVersion || 0,
             lastUpdated: new Date().toISOString()
         };
 
@@ -946,7 +949,11 @@ window.app = {
             saveProgress(appId, state.uid, payload).catch(e => console.warn('Save to cloud failed:', e));
             updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length).catch(e => console.warn('Leaderboard update failed:', e));
         }
-        saveLocalProgress(appId, { ...state.data, ...payload });
+        // WP-019: Ensure _sessionStartTime and _lastSaveTime are NOT persisted
+        const localPayload = { ...state.data, ...payload };
+        delete localPayload._sessionStartTime;
+        delete localPayload._lastSaveTime;
+        saveLocalProgress(appId, localPayload);
     }
 };
 
