@@ -262,6 +262,8 @@ window.app = {
                 saveLocalProgress(appId, state.data);
             } catch (e) {
                 console.warn('⚠️ Failed to load cloud progress:', e);
+                // WP-035: Show toast when cloud data cannot be loaded
+                this._showToast('⚠️ Could not load cloud data. Using local progress.');
             }
         } else {
             console.log('📱 Using offline mode');
@@ -988,7 +990,18 @@ window.app = {
     _scheduleRemoteSave: debounce(function(payload) {
         if (state.uid && auth) {
             batchSaveProgressAndLeaderboard(appId, state.uid, payload, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length)
-                .catch(e => console.warn('Debounced batch save failed:', e));
+                .then(() => {
+                    // WP-035: Reset failure counter on success
+                    this._consecutiveSaveFailures = 0;
+                })
+                .catch(e => {
+                    console.warn('Debounced batch save failed:', e);
+                    // WP-035: Track consecutive failures and show toast
+                    this._consecutiveSaveFailures = (this._consecutiveSaveFailures || 0) + 1;
+                    if (this._consecutiveSaveFailures >= 3) {
+                        this._showToast('⚠️ Cloud sync failed. Your progress is saved locally.');
+                    }
+                });
         }
     }, 3000),
 
