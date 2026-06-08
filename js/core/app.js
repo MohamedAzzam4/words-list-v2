@@ -571,6 +571,8 @@ window.app = {
                 state.data.sessionKnown = 0;
                 state.data.sessionFlashcardErrors = 0;
                 state.data.sessionWordsReviewed = 0;
+                // WP-039: Reset modesUsed on new session (same mechanism as session counter reset)
+                state.data.modesUsed = [];
                 state.data.lastSessionDate = today;
                 // Persist the reset immediately so it survives reload
                 saveLocalProgress(appId, state.data);
