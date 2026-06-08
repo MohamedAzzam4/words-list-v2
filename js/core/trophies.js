@@ -17,7 +17,7 @@ export const TROPHIES = [
     { id: 'tts_titan', tier: 1, name: 'TTS Titan', desc: 'Use text-to-speech 100 times', icon: '🔊', req: p => (p.ttsCount || 0) >= 100 },
 
     // Tier 2 - Gen Z / Meme
-    { id: 'bro_studied', tier: 2, name: 'Bro Actually Studied', desc: 'Complete your first flashcard session', icon: '😮‍💨', req: p => (p.sessionsCompleted || 0) >= 1, multi: true },
+    { id: 'bro_studied', tier: 2, name: 'Bro Actually Studied', desc: 'Complete your first flashcard session', icon: '😮‍💨', req: p => (p.sessionsCompleted || 0) >= 1, multi: true, milestones: [1, 5, 15, 30] },
     { id: 'skibidi_sprecher', tier: 2, name: 'Skibidi Sprecher', desc: 'Use text-to-speech 25 times', icon: '🗣️', req: p => (p.ttsCount || 0) >= 25 },
     { id: 'ohio_behavior', tier: 2, name: 'Ohio Behavior', desc: 'Hide columns 10 times in glossary mode', icon: '🙈', req: p => false }, // Tracked via streak
     { id: 'rizzed_up_dark_mode', tier: 2, name: 'Rizzed Up Dark Mode', desc: 'Switch to dark mode', icon: '🌚', req: p => (p.darkModeStudyMinutes || 0) >= 30 },
@@ -26,13 +26,13 @@ export const TROPHIES = [
     { id: 'academic_weapon', tier: 2, name: 'Academic Weapon', desc: 'Complete 25 flashcard sessions', icon: '🎓', req: p => (p.sessionsCompleted || 0) >= 25 },
     { id: 'brain_rot_activated', tier: 2, name: 'Brain Rot Activated', desc: 'Spend 30 min in flashcards in one sitting', icon: '🧠', req: p => (p.totalStudyTimeMs || 0) >= 30 * 60 * 1000 },
     { id: 'i_am_so_cooked', tier: 2, name: 'I Am So Cooked', desc: 'Fail the same card 5 times in one session', icon: '😵', req: p => { const vals = Object.values(p.flashcardErrors || {}); return vals.length > 0 ? Math.max(...vals) >= 5 : false; } },
-    { id: 'on_fire', tier: 2, name: 'On Fire', desc: 'Review 50 words in one session', icon: '🔥', req: p => false, multi: true }, // Streak-based
+    { id: 'on_fire', tier: 2, name: 'On Fire', desc: 'Review 50 words in one session', icon: '🔥', req: p => (p.sessionWordsReviewed || 0) >= 50, multi: true, milestones: [50, 100, 200] },
 
     // Tier 3 - Consistency & Streaks — WP-021: now using calcStreak with dedup
     { id: 'streak_3', tier: 3, name: 'Locked TF In', desc: '3-day study streak', icon: '🔒', req: p => calcStreak(p.studyDates || []) >= 3 },
     { id: 'streak_7', tier: 3, name: 'Creature of Habit', desc: '7-day study streak', icon: '🔗', req: p => calcStreak(p.studyDates || []) >= 7 },
     { id: 'streak_30', tier: 3, name: 'Dedicated Learner', desc: '30-day study streak', icon: '🧘', req: p => calcStreak(p.studyDates || []) >= 30 },
-    { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 10, multi: true },
+    { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 10, multi: true, milestones: [10, 25, 50] },
 
     // Tier 4 - Secret / Hidden
     { id: 'night_owl', tier: 4, name: 'Sigma Night Owl', desc: 'Study between 10 PM and 4 AM', icon: '🦉', req: p => false, secret: true },
@@ -133,10 +133,49 @@ export class TrophyEngine {
 
             if (met) {
                 const currentCount = this.trophyCounts[t.id] || 0;
-                // Multi-earn is disabled — every trophy is earned at most once
-                if (currentCount === 0) {
-                    this.trophyCounts[t.id] = 1;
-                    newlyEarned.push(t);
+                if (t.multi && t.milestones) {
+                    // Multi-earn with milestones: count = number of milestones achieved
+                    // Count how many milestones are reached
+                    let reachedMilestones = 0;
+                    for (const m of t.milestones) {
+                        if (t.req({ ...progress, totalWords: words.length, known: words.filter(w => progress.known?.includes(w.id)) })) {
+                            // The req is already met (we're inside the `if (met)` block)
+                            // Check which milestone level we're at by the metric value
+                            reachedMilestones++;
+                        }
+                    }
+                    // Determine the correct milestone count based on the actual progress value
+                    // For session-based milestones, check sessionsCompleted directly
+                    let newCount = 0;
+                    if (t.id === 'bro_studied' || t.id === 'session_stacker') {
+                        const val = progress.sessionsCompleted || 0;
+                        for (const m of t.milestones) {
+                            if (val >= m) newCount++; else break;
+                        }
+                    } else if (t.id === 'on_fire') {
+                        const val = progress.sessionWordsReviewed || 0;
+                        for (const m of t.milestones) {
+                            if (val >= m) newCount++; else break;
+                        }
+                    } else {
+                        newCount = currentCount || 1;
+                    }
+                    if (newCount > currentCount) {
+                        this.trophyCounts[t.id] = newCount;
+                        if (currentCount === 0) newlyEarned.push(t);
+                    }
+                } else if (t.multi) {
+                    // Multi-earn without milestones: simple increment on each evaluate
+                    if (currentCount === 0) {
+                        this.trophyCounts[t.id] = 1;
+                        newlyEarned.push(t);
+                    }
+                } else {
+                    // Single-earn: trophy can only be earned once
+                    if (currentCount === 0) {
+                        this.trophyCounts[t.id] = 1;
+                        newlyEarned.push(t);
+                    }
                 }
             }
         }
