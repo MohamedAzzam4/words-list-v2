@@ -545,6 +545,8 @@ window.app = {
                 state.data.sessionFlashcardErrors = 0;
                 state.data.sessionWordsReviewed = 0;
                 state.data.lastSessionDate = today;
+                // Persist the reset immediately so it survives reload
+                saveLocalProgress(appId, state.data);
             }
         }
 
@@ -823,6 +825,10 @@ window.app = {
             favorites: state.data.favorites || [],
             trophyCounts: state.data.trophyCounts || {},
             sessionsCompleted: state.data.sessionsCompleted || 0,
+            sessionKnown: state.data.sessionKnown || 0,
+            sessionFlashcardErrors: state.data.sessionFlashcardErrors || 0,
+            sessionWordsReviewed: state.data.sessionWordsReviewed || 0,
+            lastSessionDate: state.data.lastSessionDate || '',
             darkMode: state.data.darkMode || false,
             ttsCount: state.data.ttsCount || 0,
             columnHideCount: state.data.columnHideCount || 0,
