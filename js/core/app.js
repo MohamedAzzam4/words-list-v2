@@ -963,6 +963,13 @@ window.app = {
     }
 };
 
+// WP-008: Ensure pending data is saved when the page unloads
+window.addEventListener('beforeunload', () => {
+    if (window.app && window.app._save) {
+        try { window.app._save(); } catch (e) { /* best effort */ }
+    }
+});
+
 // 5. Boot Sequence
 if (auth) {
     listenAuth(u => window.app._onAuth(u));
