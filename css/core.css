@@ -53,14 +53,6 @@ h3 {
     color: var(--text-main);
 }
 
-.flex {
-    display: flex;
-}
-
-.items-center {
-    align-items: center;
-}
-
 .hidden {
     display: none !important;
 }
