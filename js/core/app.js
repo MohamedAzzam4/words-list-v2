@@ -526,7 +526,7 @@ window.app = {
         }
     },
 
-    _initEngines() {
+    async _initEngines() {
         if (this._enginesReady) {
             console.log('ℹ️ Engines already initialized, skipping.');
             return;
