@@ -395,7 +395,7 @@ window.app = {
     // ── FLASHCARDS ──
     flipCard() { engines.flashcard?.flip(); },
     speakCurrentCard() { engines.flashcard?.speak(); },
-    markCard(known) {
+    async markCard(known) {
         engines.flashcard?.mark(known);
         this._save();
         this._updateStats();
@@ -403,11 +403,11 @@ window.app = {
         // WP-001 + WP-002 + WP-003: Evaluate trophies after marking card, using full level vocabulary
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
-            const earned = engines.trophy.evaluate(state.data, allWords);
+            const earned = await engines.trophy.evaluate(state.data, allWords);
             if (earned && earned.length > 0) this._save();
         }
     },
-    toggleFavorite(id) {
+    async toggleFavorite(id) {
         if (engines.flashcard && engines.flashcard.favoritesIds) {
             if (engines.flashcard.favoritesIds.has(id)) {
                 engines.flashcard.favoritesIds.delete(id);
@@ -422,7 +422,7 @@ window.app = {
         // WP-001 + WP-002 + WP-003: Evaluate trophies after toggling favorite
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
-            const earned = engines.trophy.evaluate(state.data, allWords);
+            const earned = await engines.trophy.evaluate(state.data, allWords);
             if (earned && earned.length > 0) this._save();
         }
     },
@@ -433,13 +433,13 @@ window.app = {
     setCardFace(f) { engines.flashcard?.setFace(f); },
 
     // ── QUIZ ──
-    checkArticleAnswer(a, btn) {
+    async checkArticleAnswer(a, btn) {
         engines.quiz?.answer(a, btn);
         this._save();
         // WP-001 + WP-002 + WP-003: Evaluate trophies after quiz answer
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
-            const earned = engines.trophy.evaluate(state.data, allWords);
+            const earned = await engines.trophy.evaluate(state.data, allWords);
             if (earned && earned.length > 0) this._save();
         }
     },
@@ -460,7 +460,7 @@ window.app = {
         if (gTitle) gTitle.textContent = prefix + label;
     },
 
-    switchUnit(i) {
+    async switchUnit(i) {
         state.unit = i;
         const words = levelConfig?.vocabulary?.[i] || [];
 
@@ -492,7 +492,7 @@ window.app = {
         // WP-002 + WP-003: Pass ALL vocabulary words to evaluate, save if trophies earned
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
-            const earned = engines.trophy.evaluate(state.data, allWords);
+            const earned = await engines.trophy.evaluate(state.data, allWords);
             if (earned && earned.length > 0) this._save();
         }
     },
@@ -587,7 +587,7 @@ window.app = {
         // WP-001 + WP-002 + WP-003: Evaluate trophies on boot, using full level vocabulary
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
-            const earned = engines.trophy.evaluate(state.data, allWords);
+            const earned = await engines.trophy.evaluate(state.data, allWords);
             if (earned && earned.length > 0) this._save();
         }
 
