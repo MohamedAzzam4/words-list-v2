@@ -550,6 +550,74 @@ window.app = {
             }
         }
 
+        // WP-010: Migrate numeric word IDs to deterministic string IDs
+        if (state.data && (state.data.migrationVersion || 0) < 1) {
+            const dryRun = true; // Set to false after validating with real data
+            const allWords = levelConfig.vocabulary.flat();
+
+            // Build mapping: old numeric index -> new string ID
+            // The old IDs were global indices (forEach counter across all raw data)
+            // We need to reproduce the old indexing to build the map
+            const oldIdToNewId = {};
+            let globalIndex = 0;
+            for (let u = 0; u < levelConfig.vocabulary.length; u++) {
+                const unitWords = levelConfig.vocabulary[u];
+                for (let w = 0; w < unitWords.length; w++) {
+                    oldIdToNewId[globalIndex] = unitWords[w].id;
+                    globalIndex++;
+                }
+            }
+
+            // Also support string-number old IDs (e.g., "5" stored as string)
+            for (let i = 0; i < globalIndex; i++) {
+                oldIdToNewId[String(i)] = oldIdToNewId[i];
+            }
+
+            const oldKnown = [...(state.data.known || [])];
+            const oldFavorites = [...(state.data.favorites || [])];
+            const oldFlashcardErrors = { ...(state.data.flashcardErrors || {}) };
+
+            // Map known IDs
+            const newKnown = oldKnown
+                .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
+                .filter(id => id !== undefined);
+
+            // Map favorites IDs
+            const newFavorites = oldFavorites
+                .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
+                .filter(id => id !== undefined);
+
+            // Re-key flashcardErrors
+            const newFlashcardErrors = {};
+            for (const [oldKey, value] of Object.entries(oldFlashcardErrors)) {
+                const newKey = oldIdToNewId[oldKey] !== undefined ? oldIdToNewId[oldKey] : oldKey;
+                newFlashcardErrors[newKey] = value;
+            }
+
+            if (dryRun) {
+                console.log('[WP-010 DRY-RUN] Migration would transform:');
+                console.log('  known:', oldKnown.slice(0, 10), '→', newKnown.slice(0, 10));
+                console.log('  favorites:', oldFavorites.slice(0, 10), '→', newFavorites.slice(0, 10));
+                console.log('  flashcardErrors keys:', Object.keys(oldFlashcardErrors).slice(0, 10), '→', Object.keys(newFlashcardErrors).slice(0, 10));
+                console.log('  Mapping table size:', Object.keys(oldIdToNewId).length / 2, 'entries');
+            } else {
+                // Create backups before modifying
+                state.data._known_backup_v1 = oldKnown;
+                state.data._favorites_backup_v1 = oldFavorites;
+                state.data._flashcardErrors_backup_v1 = oldFlashcardErrors;
+
+                // Apply migration
+                state.data.known = newKnown;
+                state.data.favorites = newFavorites;
+                state.data.flashcardErrors = newFlashcardErrors;
+                state.data.migrationVersion = 1;
+
+                // Persist migrated data
+                this._save();
+                console.log('[WP-010] Migration complete. Version set to 1.');
+            }
+        }
+
         const words = levelConfig.vocabulary[state.unit] || [];
         const known = new Set(state.data?.known || []);
         const favorites = new Set(state.data?.favorites || []);
