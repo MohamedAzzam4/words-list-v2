@@ -1,11 +1,11 @@
 {
   "SESS-002": {
     "passed": true,
-    "detail": "darkModeStudyMinutes=0.1003 (expected ~0.083 for 5s, should be < 1)"
+    "detail": "darkModeStudyMinutes=0.1002 (expected ~0.083 for 5s, should be < 1)"
   },
   "SESS-003": {
     "passed": true,
-    "detail": "totalStudyTimeMs=12003 (12.0s, should be > 0 and reasonable)"
+    "detail": "totalStudyTimeMs=11994 (12.0s, should be > 0 and reasonable)"
   },
   "SESS-004": {
     "passed": true,
@@ -37,23 +37,23 @@
   },
   "LEAD-003": {
     "passed": false,
-    "detail": "Known before: 12, after: 12"
+    "detail": "Known before: 20, after: 20"
   },
   "PROG-001": {
     "passed": false,
-    "detail": "Initial: 12, After: 12, Stats: 12"
+    "detail": "Initial: 20, After: 20, Stats: 20"
   },
   "PROG-003": {
     "passed": true,
-    "detail": "Known: 14, lastUpdated: true"
+    "detail": "Known: 20, lastUpdated: true"
   },
   "PROG-005": {
     "passed": true,
-    "detail": "Before: 14, After: 14"
+    "detail": "Before: 20, After: 20"
   },
   "PROG-006": {
     "passed": true,
-    "detail": "Data exists: true, known: 14"
+    "detail": "Data exists: true, known: 20"
   },
   "TROPHY-001": {
     "passed": true,
