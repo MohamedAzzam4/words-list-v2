@@ -400,6 +400,12 @@ window.app = {
         this._save();
         this._updateStats();
         this._renderUnitList();
+        // WP-001 + WP-002 + WP-003: Evaluate trophies after marking card, using full level vocabulary
+        if (engines.trophy) {
+            const allWords = levelConfig.vocabulary.flat();
+            const earned = engines.trophy.evaluate(state.data, allWords);
+            if (earned && earned.length > 0) this._save();
+        }
     },
     toggleFavorite(id) {
         if (engines.flashcard && engines.flashcard.favoritesIds) {
@@ -413,6 +419,12 @@ window.app = {
         if (state.view === 'glossary' && engines.glossary) engines.glossary.render();
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
         this._save();
+        // WP-001 + WP-002 + WP-003: Evaluate trophies after toggling favorite
+        if (engines.trophy) {
+            const allWords = levelConfig.vocabulary.flat();
+            const earned = engines.trophy.evaluate(state.data, allWords);
+            if (earned && earned.length > 0) this._save();
+        }
     },
     nextCard() { engines.flashcard?.next(); },
     prevCard() { engines.flashcard?.prev(); },
@@ -424,6 +436,12 @@ window.app = {
     checkArticleAnswer(a, btn) {
         engines.quiz?.answer(a, btn);
         this._save();
+        // WP-001 + WP-002 + WP-003: Evaluate trophies after quiz answer
+        if (engines.trophy) {
+            const allWords = levelConfig.vocabulary.flat();
+            const earned = engines.trophy.evaluate(state.data, allWords);
+            if (earned && earned.length > 0) this._save();
+        }
     },
 
     // ── UNIT SWITCHING ──
@@ -471,7 +489,12 @@ window.app = {
 
         this._renderUnitList();
         this._updateStats();
-        if (engines.trophy) engines.trophy.evaluate(state.data, words);
+        // WP-002 + WP-003: Pass ALL vocabulary words to evaluate, save if trophies earned
+        if (engines.trophy) {
+            const allWords = levelConfig.vocabulary.flat();
+            const earned = engines.trophy.evaluate(state.data, allWords);
+            if (earned && earned.length > 0) this._save();
+        }
     },
 
     // ── INTERNAL HELPERS ──
@@ -558,6 +581,13 @@ window.app = {
 
         // Also update the title
         this._updateTitles(state.unit);
+
+        // WP-001 + WP-002 + WP-003: Evaluate trophies on boot, using full level vocabulary
+        if (engines.trophy) {
+            const allWords = levelConfig.vocabulary.flat();
+            const earned = engines.trophy.evaluate(state.data, allWords);
+            if (earned && earned.length > 0) this._save();
+        }
 
         console.log(`✅ Engines initialized with ${words.length} words in Unit ${state.unit + 1}`);
     }, _renderUnitList() {
