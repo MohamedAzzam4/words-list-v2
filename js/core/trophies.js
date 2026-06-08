@@ -40,7 +40,7 @@ export const TROPHIES = [
     { id: 'weekend_warrior', tier: 4, name: 'Weekend Warrior', desc: 'Study on a weekend', icon: '🏕️', req: p => false, secret: true },
     { id: 'google_scholar', tier: 4, name: 'Google Scholar', desc: 'Sign in with Google', icon: '🌐', req: p => !!p.uid, secret: true },
     { id: 'chaotic_neutral', tier: 4, name: 'Chaotic Neutral', desc: 'Toggle dark mode 10 times', icon: '🌓', req: p => false, secret: true },
-    { id: 'were_so_back', tier: 4, name: "We're So Back", desc: 'Return after 7+ days away', icon: '🔄', req: p => false, secret: true },
+    { id: 'were_so_back', tier: 4, name: "We're So Back", desc: 'Return after 7+ days away', icon: '🔄', req: p => !!p.returnedAfter7Days, secret: true },
     {
         id: 'portal_walker', tier: 4, name: 'Portal Walker', desc: 'Have progress in at least 2 levels', icon: '🚶', req: async () => {
             // Cross-level check: requires firebase getDoc from other level

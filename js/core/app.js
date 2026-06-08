@@ -575,6 +575,19 @@ window.app = {
             }
         }
 
+        // WP-016: Detect 7+ day gap and set returnedAfter7Days flag
+        if (state.data && !state.data.returnedAfter7Days) {
+            const studyDates = state.data.studyDates || [];
+            if (studyDates.length > 0) {
+                const lastStudyDate = new Date(studyDates[studyDates.length - 1]);
+                const now = new Date();
+                const daysSinceLastStudy = Math.floor((now - lastStudyDate) / 86400000);
+                if (daysSinceLastStudy >= 7) {
+                    state.data.returnedAfter7Days = true;
+                }
+            }
+        }
+
         // WP-010: Migrate numeric word IDs to deterministic string IDs
         if (state.data && (state.data.migrationVersion || 0) < 1) {
             const dryRun = false; // Enable migration after dry-run validation
@@ -681,7 +694,13 @@ window.app = {
         if (engines.trophy) {
             const allWords = levelConfig.vocabulary.flat();
             const earned = await engines.trophy.evaluate(state.data, allWords);
-            if (earned && earned.length > 0) this._save();
+            if (earned && earned.length > 0) {
+                this._save();
+                // WP-016: Clear returnedAfter7Days flag after "We're So Back" trophy is earned
+                if (earned.some(t => t.id === 'were_so_back')) {
+                    state.data.returnedAfter7Days = false;
+                }
+            }
         }
 
         // WP-017: Initialize dark mode start time if currently active
