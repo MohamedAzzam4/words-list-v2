@@ -3053,22 +3053,23 @@ function parseRawB2Data(rawArray) {
 
         // WP-015: Grammar-based type inference for B2 words with empty type
         if (!tType) {
-            const deLower = rawDe.toLowerCase().trim();
-            if (/^(der|die|das)\s/.test(deLower)) {
-                tType = 'n'; // noun (starts with article)
-            } else if (/(?:ieren|igen|lichen|elen|ernen)$/.test(deLower) || /\s[-–—]?(en|ern|eln)\b/.test(deLower)) {
-                // Verb infinitive patterns: -ieren, -igen, -lichen, -elen, -ernen
-                // or declension markers like " -en", " -ern", " -eln"
-                tType = 'v';
-            } else if (/^\S+(en|ern|eln)$/.test(deLower) && deLower.length > 4) {
-                // Short word ending in -en/-ern/-eln is likely a verb infinitive
-                // (e.g., "verstehen", "entdecken", "erzählen")
-                tType = 'v';
-            } else if (deLower.includes(' ') && !/^(der|die|das)\s/.test(deLower)) {
-                // Multi-word phrase without article → expression
-                tType = 'e';
+            const deTrimmed = rawDe.trim();
+            const isCapitalized = /^[A-ZÄÖÜ]/.test(deTrimmed);
+            // Matches article + anything, but we'll add a check so sentences starting with "Das " (like "Das war...") aren't counted as nouns unless they are short.
+            const hasArticle = /^(der|die|das)\s/i.test(deTrimmed);
+            const hasComma = deTrimmed.includes(',');
+            const hasSpace = deTrimmed.includes(' ');
+
+            // If it has an article (and isn't a long sentence starting with "Das"), or it's capitalized and is either a single word or has plural comma
+            if ((hasArticle && !deTrimmed.includes('...')) || (isCapitalized && (!hasSpace || hasComma))) {
+                tType = 'n'; // noun
+            } else if (/\b(sich)\b/i.test(deTrimmed) || /^[a-zäöüß]+(en|ern|eln)(,|\s|\(|$)/.test(deTrimmed)) {
+                tType = 'v'; // verb
+            } else if (!hasSpace) {
+                tType = 'a'; // adjective/adverb (single lowercase word)
+            } else if (hasSpace) {
+                tType = 'e'; // expression (multiple lowercase words, or sentences)
             } else {
-                // Fallback for ambiguous words
                 tType = 'Vocab';
             }
         }
