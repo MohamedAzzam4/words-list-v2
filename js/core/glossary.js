@@ -23,9 +23,10 @@ export class GlossaryEngine {
     }
 
     toggleColumn(col) {
-        const wasHidden = this.hiddenCols.has(col);
-        this.hiddenCols.clear();
-        if (!wasHidden) {
+        // WP-037: Toggle column visibility — allows multiple columns to be hidden
+        if (this.hiddenCols.has(col)) {
+            this.hiddenCols.delete(col);
+        } else {
             this.hiddenCols.add(col);
         }
         this.render();
