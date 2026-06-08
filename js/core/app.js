@@ -415,6 +415,12 @@ window.app = {
     speakCurrentCard() { engines.flashcard?.speak(); },
     async markCard(known) {
         engines.flashcard?.mark(known);
+        // WP-022: Record study date on every flashcard interaction (partial session tracking)
+        if (!state.data.studyDates) state.data.studyDates = [];
+        const today = new Date().toISOString().split('T')[0];
+        if (!state.data.studyDates.includes(today)) {
+            state.data.studyDates.push(today);
+        }
         this._save();
         this._updateStats();
         this._renderUnitList();
