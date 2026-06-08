@@ -22,16 +22,16 @@ export const TROPHIES = [
     { id: 'ohio_behavior', tier: 2, name: 'Ohio Behavior', desc: 'Hide columns 10 times in glossary mode', icon: '🙈', req: p => false }, // Tracked via streak
     { id: 'rizzed_up_dark_mode', tier: 2, name: 'Rizzed Up Dark Mode', desc: 'Switch to dark mode', icon: '🌚', req: p => (p.darkModeStudyMinutes || 0) >= 30 },
     { id: 'npc_arc', tier: 2, name: 'NPC Arc', desc: 'Get the same word wrong 10+ times', icon: '🤖', req: p => false }, // Streak logic
-    { id: 'touch_grass', tier: 2, name: 'Touch Grass', desc: 'Accumulate 3+ hours of total study time', icon: '🌱', req: p => false }, // Gap detection
+    { id: 'touch_grass', tier: 2, name: 'Touch Grass', desc: 'Accumulate 3+ hours of total study time', icon: '🌱', req: p => (p.totalStudyTimeMs || 0) >= 3 * 60 * 60 * 1000 },
     { id: 'academic_weapon', tier: 2, name: 'Academic Weapon', desc: 'Complete 25 flashcard sessions', icon: '🎓', req: p => (p.sessionKnown || 0) >= 100 },
     { id: 'brain_rot_activated', tier: 2, name: 'Brain Rot Activated', desc: 'Spend 30 min in flashcards in one sitting', icon: '🧠', req: p => Object.values(p.flashcardErrors || {}).reduce((a, b) => a + b, 0) >= 50 },
     { id: 'i_am_so_cooked', tier: 2, name: 'I Am So Cooked', desc: 'Fail the same card 5 times in one session', icon: '😵', req: p => false }, // Streak
     { id: 'on_fire', tier: 2, name: 'On Fire', desc: 'Review 50 words in one session', icon: '🔥', req: p => false, multi: true }, // Streak-based
 
-    // Tier 3 - Consistency & Streaks
-    { id: 'streak_3', tier: 3, name: 'Locked TF In', desc: '3-day study streak', icon: '🔒', req: p => false }, // Date array logic
-    { id: 'streak_7', tier: 3, name: 'Creature of Habit', desc: '7-day study streak', icon: '🔗', req: p => false },
-    { id: 'streak_30', tier: 3, name: 'Dedicated Learner', desc: '30-day study streak', icon: '🧘', req: p => false },
+    // Tier 3 - Consistency & Streaks — WP-021: now using calcStreak with dedup
+    { id: 'streak_3', tier: 3, name: 'Locked TF In', desc: '3-day study streak', icon: '🔒', req: p => calcStreak(p.studyDates || []) >= 3 },
+    { id: 'streak_7', tier: 3, name: 'Creature of Habit', desc: '7-day study streak', icon: '🔗', req: p => calcStreak(p.studyDates || []) >= 7 },
+    { id: 'streak_30', tier: 3, name: 'Dedicated Learner', desc: '30-day study streak', icon: '🧘', req: p => calcStreak(p.studyDates || []) >= 30 },
     { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 20, multi: true },
 
     // Tier 4 - Secret / Hidden
@@ -48,6 +48,33 @@ export const TROPHIES = [
         }, secret: true, crossLevel: true
     }
 ];
+
+// WP-021: Calculate study streak from dates, handling duplicates
+export function calcStreak(dates) {
+    if (!dates || dates.length === 0) return 0;
+
+    // Deduplicate and sort descending (most recent first)
+    const uniqueDates = [...new Set(dates)].sort().reverse();
+
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+    // Streak must include today or yesterday to be active
+    if (uniqueDates[0] !== today && uniqueDates[0] !== yesterday) return 0;
+
+    let streak = 1;
+    for (let i = 1; i < uniqueDates.length; i++) {
+        const current = new Date(uniqueDates[i - 1]);
+        const prev = new Date(uniqueDates[i]);
+        const diffDays = Math.round((current - prev) / 86400000);
+        if (diffDays === 1) {
+            streak++;
+        } else {
+            break; // Gap breaks the streak
+        }
+    }
+    return streak;
+}
 
 export class TrophyEngine {
     constructor(containerId, userData, appId, onAward) {
