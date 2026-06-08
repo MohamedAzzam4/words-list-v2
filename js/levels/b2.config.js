@@ -3063,7 +3063,7 @@ function parseRawB2Data(rawArray) {
 
         if (!units[unitNum]) units[unitNum] = [];
         units[unitNum].push({
-            id: index,
+            id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
             de: deMain,
             deContext: deContext,
             en: parts[3] ? parts[3].trim() : '',

@@ -725,7 +725,7 @@ function parseRawData(rawArray) {
 
         if (!units[unitNum]) units[unitNum] = [];
         units[unitNum].push({
-            id: index,
+            id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
             de: de,
             en: en,
             type: type || 'Vocab',
