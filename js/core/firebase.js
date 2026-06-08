@@ -13,8 +13,6 @@ export const initFirebase = (config, appId) => {
     return { auth, db };
 };
 
-export const getAuthInstance = () => auth;
-export const getFirestoreInstance = () => db;
 
 export const loginWithGoogle = () => {
     const provider = new GoogleAuthProvider();
@@ -63,16 +61,6 @@ export const saveProgress = async (appId, uid, data) => {
 export const listenAuth = (callback) =>
     onAuthStateChanged(auth, callback);
 
-// Cross-level helper for "Portal Walker" trophy
-export const getOtherLevelProgress = async (otherAppId, uid) => {
-    try {
-        const ref = doc(db, `artifacts/${otherAppId}/users/${uid}/progress/main`);
-        const snap = await getDoc(ref);
-        return snap.exists() ? snap.data() : null;
-    } catch {
-        return null;
-    }
-};
 
 // WP-033: Dynamic level detection from appId
 function getLevelKey(appId) {

@@ -29,8 +29,7 @@ const firebaseConfig = {
     projectId: "german-words-list-v2",
     storageBucket: "german-words-list-v2.firebasestorage.app",
     messagingSenderId: "346436274259",
-    appId: "1:346436274259:web:af9d60923bddda2a985ea6",
-    measurementId: "G-L96R1MY189"
+    appId: "1:346436274259:web:af9d60923bddda2a985ea6"
 };
 
 try {
@@ -215,11 +214,9 @@ window.app = {
 
     async resetData() {
         if (confirm("⚠️ Are you sure you want to completely RESET ALL your progress data? This cannot be undone!")) {
-            const { clearLocalProgress, getDefaultProgressObj } = await import('./storage.js');
             clearLocalProgress(appId);
             if (auth && state.uid) {
                 try {
-                    const { saveProgress } = await import('./firebase.js');
                     await saveProgress(appId, state.uid, getDefaultProgressObj());
                 } catch (e) {
                     console.warn("Failed to reset firebase.", e);
@@ -238,7 +235,6 @@ window.app = {
         }
 
         if (prevUid !== null && state.uid !== null && prevUid !== state.uid) {
-            const { clearLocalProgress } = await import('./storage.js');
             clearLocalProgress(appId);
             window.location.reload();
             return;
