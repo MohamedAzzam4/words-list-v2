@@ -1879,6 +1879,42 @@ Revert to displayName comparison.
 
 ---
 
+### WP-043 — Fix leaderboard unit switching navigation bug
+
+#### Objective
+Ensure that clicking a unit in the sidebar while on the Leaderboard view successfully navigates away from the leaderboard and loads the unit glossary.
+
+#### Why It Exists
+**BUG-NEW**: The `switchUnit(i)` function checks `if (state.view === 'dashboard' || state.view === 'trophies')` to navigate "view-only" screens back to the glossary. It omits `leaderboard`, causing the app to silently get stuck on the leaderboard view while loading the unit in the background.
+
+#### Priority
+**Medium**
+
+#### Estimated Complexity
+**Low**
+
+#### Files Likely Affected
+- `js/core/app.js`
+
+#### Dependencies
+None.
+
+#### Detailed Implementation Plan
+1. In `js/core/app.js`, locate `switchUnit(i)` (around line 471).
+2. Find the condition: `if (state.view === 'dashboard' || state.view === 'trophies')`.
+3. Add the leaderboard to the condition: `if (state.view === 'dashboard' || state.view === 'trophies' || state.view === 'leaderboard')`.
+
+#### Acceptance Criteria
+- Clicking any unit in the sidebar while on the Leaderboard immediately switches the view to the glossary.
+
+#### Risks
+None.
+
+#### Rollback Strategy
+Remove the `|| state.view === 'leaderboard'` condition.
+
+---
+
 ## 3. Rejected and Deferred Items
 
 ### Rejected
@@ -1968,7 +2004,7 @@ Revert to displayName comparison.
 ---
 
 ### Phase 6: Performance
-**Work Packages:** WP-036, WP-037, WP-038, WP-039, WP-040, WP-041, WP-042  
+**Work Packages:** WP-036, WP-037, WP-038, WP-039, WP-040, WP-041, WP-042, WP-043  
 **Why this phase:** Small optimizations and fixes that improve the user experience without major architectural changes.
 
 **Why before Phase 7:** Clean up remaining issues before scaling.
@@ -2059,7 +2095,7 @@ Phase 0 → WP-020 → WP-023 → WP-025 → WP-006 → WP-007 → WP-014 →
 WP-001 → WP-002 → WP-003 → WP-009 → WP-010 → WP-017 → WP-018 →
 WP-019 → WP-021 → WP-022 → WP-008 → WP-011 → WP-004 → WP-005 →
 WP-015 → WP-016 → WP-032 → WP-033 → WP-034 → WP-035 → WP-024 →
-WP-036 → WP-037 → WP-038 → WP-039 → WP-040 → WP-041 → WP-042 →
+WP-036 → WP-037 → WP-038 → WP-039 → WP-040 → WP-041 → WP-042 → WP-043 →
 WP-026 → WP-027 → WP-028 → WP-029 → WP-030 → WP-031
 ```
 
