@@ -1,93 +1,182 @@
-{
-  "QUIZ-001": {
+[
+  {
+    "testId": "TROPHY-009",
+    "description": "bro_studied threshold",
     "passed": true,
-    "detail": "Before: \"Score: 0 / 1\", After: \"Score: 0 / 0\""
+    "detail": "desc=\"Complete your first flashcard session\""
   },
-  "SESS-001": {
+  {
+    "testId": "TROPHY-013",
+    "description": "All desc/req match",
     "passed": true,
-    "detail": "sessionKnown=0, sessionFlashcardErrors=0, sessionWordsReviewed=0, lastSessionDate=2026-06-08"
+    "detail": "all match"
   },
-  "PROG-001": {
+  {
+    "testId": "TROPHY-012",
+    "description": "Multi-earn functionality",
     "passed": true,
-    "detail": "Initial: 0, After: 1, Stats: 1"
+    "detail": "multi-earn structure present (milestones defined in trophy definitions)"
   },
-  "PROG-003": {
-    "passed": true,
-    "detail": "Known: 4, lastUpdated: true"
-  },
-  "PROG-005": {
-    "passed": true,
-    "detail": "Before: 4, After: 4, Stats: 4"
-  },
-  "AUTH-005": {
-    "passed": true,
-    "detail": "Preserved: true, LocalMode: true, known before: 5, known after: 5"
-  },
-  "AUTH-006": {
-    "passed": true,
-    "detail": "Cloud: true, hasData: true, known: 5"
-  },
-  "PROG-006": {
-    "passed": true,
-    "detail": "Data exists: true, known: 5"
-  },
-  "TROPHY-001": {
-    "passed": true,
-    "detail": "first_steps=1, known=10"
-  },
-  "TROPHY-002": {
-    "passed": true,
-    "detail": "first_steps earned with 10 total words (cross-unit): true"
-  },
-  "TROPHY-003": {
-    "passed": true,
-    "detail": "Before: {\"first_steps\":1}, After: {\"first_steps\":1}"
-  },
-  "SMOKE": {
+  {
+    "testId": "TROPHY-008",
+    "description": "verb_veteran in B2 (type inference)",
     "passed": false,
-    "steps": [
-      {
-        "step": 1,
-        "name": "No JS errors",
-        "passed": true,
-        "detail": "0 errors"
-      },
-      {
-        "step": 2,
-        "name": "Views render",
-        "passed": true,
-        "detail": "[{\"view\":\"glossary\",\"visible\":true},{\"view\":\"flashcard\",\"visible\":true},{\"view\":\"dashboard\",\"visible\":true},{\"view\":\"trophies\",\"visible\":true}]"
-      },
-      {
-        "step": 3,
-        "name": "Unit switching",
-        "passed": true,
-        "detail": "Title: \"Unit 2: Zahlen & Farben\""
-      },
-      {
-        "step": 4,
-        "name": "Flashcard mark known",
-        "passed": false,
-        "detail": "Before: 10, After: 10"
-      },
-      {
-        "step": 5,
-        "name": "localStorage writes",
-        "passed": true,
-        "detail": "lastUpdated: true"
-      },
-      {
-        "step": 6,
-        "name": "Auth UI",
-        "passed": true,
-        "detail": "Login: true, UserInfo: true"
-      },
-      {
-        "step": 7,
-        "name": "Dark mode toggle",
-        "passed": true,
-        "detail": "\"light\" -> \"dark\""
-      }
-    ]
+    "detail": "B2 types: {\"n\":3,\"\":1}"
+  },
+  {
+    "testId": "TROPHY-010",
+    "description": "streak_3 trophy",
+    "passed": true,
+    "detail": "desc=\"3-day study streak\""
+  },
+  {
+    "testId": "TROPHY-011",
+    "description": "google_scholar trophy",
+    "passed": false,
+    "detail": "desc=\"not found\""
+  },
+  {
+    "testId": "LEAD-001",
+    "description": "Leaderboard displays correctly",
+    "passed": true,
+    "detail": "tbody content: <tr style=\"\">\n                    <td style=\"text-align: cen"
+  },
+  {
+    "testId": "LEAD-003",
+    "description": "Leaderboard updates after progress",
+    "passed": true,
+    "detail": "Dynamic levels map computes totalWords correctly"
+  },
+  {
+    "testId": "LEAD-004",
+    "description": "Level detection dynamic",
+    "passed": true,
+    "detail": "getLevelKey() extracts level from appId dynamically"
+  },
+  {
+    "testId": "SEC-001",
+    "description": "Leaderboard XSS prevention",
+    "passed": true,
+    "detail": "sanitize() escapes < > & \" ' — direct eval not possible — verify by code review"
+  },
+  {
+    "testId": "SEC-002",
+    "description": "Glossary XSS prevention",
+    "passed": true,
+    "detail": "sanitize() applied to word/en/context in glossary rendering"
+  },
+  {
+    "testId": "ERR-003",
+    "description": "Error feedback for Firebase failures",
+    "passed": true,
+    "detail": "Toast on 3+ consecutive save failures + cloud load failure"
+  },
+  {
+    "testId": "TTS-001",
+    "description": "TTS declension cleanup - er suffix",
+    "passed": true,
+    "detail": "result=\"das Haus\""
+  },
+  {
+    "testId": "GLOSS-001",
+    "description": "Multi-column hiding",
+    "passed": true,
+    "detail": "toggleColumn() no longer calls hiddenCols.clear() — supports multiple hidden columns"
+  },
+  {
+    "testId": "GLOSS-002",
+    "description": "Reveal All",
+    "passed": true,
+    "detail": "revealAll() clears all hidden columns"
+  },
+  {
+    "testId": "NAV-002",
+    "description": "B2 unitTitles entry #25",
+    "passed": true,
+    "detail": "entry25=\"K4: Modul 3\""
+  },
+  {
+    "testId": "LEAD-002",
+    "description": "Leaderboard UID highlighting",
+    "passed": true,
+    "detail": "Uses UID comparison: true"
+  },
+  {
+    "testId": "PROG-001",
+    "description": "Mark word as known",
+    "passed": true,
+    "detail": "before=0, after=1"
+  },
+  {
+    "testId": "PROG-003",
+    "description": "Progress persists to localStorage",
+    "passed": true,
+    "detail": "known: 1, lastUpdated: true"
+  },
+  {
+    "testId": "PROG-005",
+    "description": "Progress survives page refresh",
+    "passed": true,
+    "detail": "before=1, after=1"
+  },
+  {
+    "testId": "DATA-001",
+    "description": "Word ID consistency",
+    "passed": true,
+    "detail": "known: 1, stringIds: true, allStrings: true, migrationVersion: 1"
+  },
+  {
+    "testId": "DATA-002",
+    "description": "Known array type consistency",
+    "passed": true,
+    "detail": "known: 1, stringIds: true, allStrings: true, migrationVersion: 1"
+  },
+  {
+    "testId": "SYNC-001",
+    "description": "Debouncing present",
+    "passed": true,
+    "detail": "_scheduleRemoteSave with 3s debounce exists in app.js"
+  },
+  {
+    "testId": "SMOKE-1",
+    "description": "Login works",
+    "passed": true,
+    "detail": "sync=\"💾 Local Mode\""
+  },
+  {
+    "testId": "SMOKE-2",
+    "description": "Flashcard workflow",
+    "passed": true,
+    "detail": "flashcard visible: true, known: 1"
+  },
+  {
+    "testId": "SMOKE-3",
+    "description": "Unit switching",
+    "passed": true,
+    "detail": "title=\"Unit 2: Zahlen & Farben\""
+  },
+  {
+    "testId": "SMOKE-4",
+    "description": "Leaderboard renders",
+    "passed": true,
+    "detail": "tbody exists: true"
+  },
+  {
+    "testId": "SMOKE-5",
+    "description": "Logout preserves progress",
+    "passed": true,
+    "detail": "sync=\"💾 Local Mode\""
+  },
+  {
+    "testId": "SMOKE-6",
+    "description": "Progress survives reload",
+    "passed": true,
+    "detail": "known=1"
+  },
+  {
+    "testId": "SMOKE-7",
+    "description": "No console errors",
+    "passed": true,
+    "detail": "0 TypeErrors/ReferenceErrors"
   }
-}
+]
