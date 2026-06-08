@@ -364,10 +364,28 @@ window.app = {
         // Initialize data if null
         if (!state.data) state.data = getLocalProgress(appId);
 
+        // WP-017: Accumulate dark mode time before toggling
+        this._accumulateDarkModeTime();
+
         state.data.darkMode = !state.data.darkMode;
         this._applyTheme();
         state.data.darkModeToggleCount = (state.data.darkModeToggleCount || 0) + 1;
+        // WP-017: Start tracking time in new mode
+        if (state.data.darkMode) {
+            this._darkModeStartTime = Date.now();
+        } else {
+            this._darkModeStartTime = null;
+        }
         this._save();
+    },
+
+    // WP-017: Accumulate elapsed dark mode time since last measurement
+    _accumulateDarkModeTime() {
+        if (state.data?.darkMode && this._darkModeStartTime) {
+            const elapsed = (Date.now() - this._darkModeStartTime) / 60000; // minutes
+            state.data.darkModeStudyMinutes = (state.data.darkModeStudyMinutes || 0) + elapsed;
+            this._darkModeStartTime = Date.now(); // Reset for next interval
+        }
     },
 
     _applyTheme() {
@@ -659,6 +677,14 @@ window.app = {
             if (earned && earned.length > 0) this._save();
         }
 
+        // WP-017: Initialize dark mode start time if currently active
+        if (state.data?.darkMode) {
+            this._darkModeStartTime = Date.now();
+        }
+
+        // WP-018: Initialize session time tracking
+        this._lastSaveTime = Date.now();
+
         console.log(`✅ Engines initialized with ${words.length} words in Unit ${state.unit + 1}`);
     }, _renderUnitList() {
         const list = document.getElementById('unit-list');
@@ -868,6 +894,9 @@ window.app = {
 
     _save() {
         if (!state.data) state.data = getLocalProgress(appId);
+
+        // WP-017: Accumulate dark mode time on each save
+        this._accumulateDarkModeTime();
 
         // ── Sync live engine state back to state.data before saving ──
         // The engines hold the live in-memory truth (Sets/objects).
