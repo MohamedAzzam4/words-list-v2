@@ -74,6 +74,13 @@ export const getOtherLevelProgress = async (otherAppId, uid) => {
     }
 };
 
+// WP-033: Dynamic level detection from appId
+function getLevelKey(appId) {
+    // Extract level from appId like 'german-a1-app' → 'a1', 'german-b2-app' → 'b2'
+    const match = appId.match(/german-([a-z0-9]+)-app/i);
+    return match ? match[1].toLowerCase() : appId;
+}
+
 // WP-012: Batch progress and leaderboard writes into a single Firestore batch
 export const batchSaveProgressAndLeaderboard = async (appId, uid, progressData, displayName, photoURL, knownCount) => {
     try {
@@ -83,13 +90,13 @@ export const batchSaveProgressAndLeaderboard = async (appId, uid, progressData, 
         const progressRef = doc(db, `artifacts/${appId}/users/${uid}/progress/main`);
         batch.set(progressRef, { ...progressData, lastUpdated: new Date().toISOString() }, { merge: true });
 
-        // Leaderboard document
+        // Leaderboard document — WP-033: dynamic levels map
         const leaderboardRef = doc(db, `leaderboard/${uid}`);
-        const levelField = appId.includes('a1') ? 'a1Count' : 'b2Count';
+        const levelKey = getLevelKey(appId);
         batch.set(leaderboardRef, {
             displayName: displayName || "Anonymous Linguist",
             photoURL: photoURL || "",
-            [levelField]: knownCount,
+            levels: { [levelKey]: knownCount },
             lastActive: new Date().toISOString()
         }, { merge: true });
 
@@ -103,15 +110,16 @@ export const batchSaveProgressAndLeaderboard = async (appId, uid, progressData, 
 
 // ── LEADERBOARD SERVICES ──
 // WP-013: Removed getDoc read — now uses setDoc with merge:true (no read-before-write)
+// WP-033: Dynamic level map instead of hardcoded a1Count/b2Count
 export const updateLeaderboard = async (appId, uid, displayName, photoURL, knownCount) => {
     try {
         const ref = doc(db, `leaderboard/${uid}`);
-        const levelField = appId.includes('a1') ? 'a1Count' : 'b2Count';
+        const levelKey = getLevelKey(appId);
         
         await setDoc(ref, {
             displayName: displayName || "Anonymous Linguist",
             photoURL: photoURL || "",
-            [levelField]: knownCount,
+            levels: { [levelKey]: knownCount },
             lastActive: new Date().toISOString()
         }, { merge: true });
     } catch(e) {
@@ -119,15 +127,37 @@ export const updateLeaderboard = async (appId, uid, displayName, photoURL, known
     }
 };
 
+// WP-033: Compute totalWords from dynamic levels map (backward-compatible with old a1Count/b2Count)
+function computeTotalWords(data) {
+    let total = 0;
+    // New format: levels map
+    if (data.levels && typeof data.levels === 'object') {
+        for (const val of Object.values(data.levels)) {
+            total += (typeof val === 'number' ? val : 0);
+        }
+    }
+    // Backward-compatible: old a1Count/b2Count fields
+    if (data.a1Count) total += data.a1Count;
+    if (data.b2Count) total += data.b2Count;
+    // Avoid double-counting if both formats exist
+    if (data.levels && (data.a1Count || data.b2Count)) {
+        // Prefer new format, ignore old fields
+        total = 0;
+        for (const val of Object.values(data.levels)) {
+            total += (typeof val === 'number' ? val : 0);
+        }
+    }
+    return total;
+}
+
 export const getLeaderboard = async () => {
     try {
         const q = query(collection(db, "leaderboard"), orderBy("lastActive", "desc"), limit(50));
         const qs = await getDocs(q);
-        // WP-013: Compute totalWords from level count fields
         const entries = qs.docs.map(d => {
             const data = d.data();
-            const totalWords = (data.a1Count || 0) + (data.b2Count || 0);
-            return { ...data, totalWords };
+            const totalWords = computeTotalWords(data);
+            return { ...data, totalWords, uid: d.id };
         });
         // Sort by totalWords descending
         entries.sort((a, b) => b.totalWords - a.totalWords);
