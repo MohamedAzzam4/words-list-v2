@@ -13,26 +13,26 @@ export const TROPHIES = [
     { id: 'verb_veteran', tier: 1, name: 'Verb Master', desc: 'Learn 30 verbs', icon: '🏃‍♂️', req: p => (p.known?.filter?.(w => w.type === 'v').length || 0) >= 30 },
     { id: 'noun_ninja', tier: 1, name: 'Noun Collector', desc: 'Learn 50 nouns', icon: '📦', req: p => (p.known?.filter?.(w => w.type === 'n').length || 0) >= 50 },
     { id: 'expression_expert', tier: 1, name: 'Chatterbox', desc: 'Learn 20 expressions', icon: '🗣️', req: p => (p.known?.filter?.(w => w.type === 'e').length || 0) >= 20 },
-    { id: 'mode_explorer', tier: 1, name: 'Mode Explorer', desc: 'Use glossary and flashcard modes in one session', icon: '🔀', req: p => (p.modesUsed?.length || 0) >= 3 },
+    { id: 'mode_explorer', tier: 1, name: 'Mode Explorer', desc: 'Use glossary and flashcard modes in one session', icon: '🔀', req: p => (p.modesUsed?.length || 0) >= 2 },
     { id: 'tts_titan', tier: 1, name: 'TTS Titan', desc: 'Use text-to-speech 100 times', icon: '🔊', req: p => (p.ttsCount || 0) >= 100 },
 
     // Tier 2 - Gen Z / Meme
-    { id: 'bro_studied', tier: 2, name: 'Bro Actually Studied', desc: 'Complete your first flashcard session', icon: '😮‍💨', req: p => (p.sessionsCompleted || 0) >= 5, multi: true },
-    { id: 'skibidi_sprecher', tier: 2, name: 'Skibidi Sprecher', desc: 'Use text-to-speech 25 times', icon: '🗣️', req: p => (p.quizCorrect || 0) >= 10 },
+    { id: 'bro_studied', tier: 2, name: 'Bro Actually Studied', desc: 'Complete your first flashcard session', icon: '😮‍💨', req: p => (p.sessionsCompleted || 0) >= 1, multi: true },
+    { id: 'skibidi_sprecher', tier: 2, name: 'Skibidi Sprecher', desc: 'Use text-to-speech 25 times', icon: '🗣️', req: p => (p.ttsCount || 0) >= 25 },
     { id: 'ohio_behavior', tier: 2, name: 'Ohio Behavior', desc: 'Hide columns 10 times in glossary mode', icon: '🙈', req: p => false }, // Tracked via streak
     { id: 'rizzed_up_dark_mode', tier: 2, name: 'Rizzed Up Dark Mode', desc: 'Switch to dark mode', icon: '🌚', req: p => (p.darkModeStudyMinutes || 0) >= 30 },
     { id: 'npc_arc', tier: 2, name: 'NPC Arc', desc: 'Get the same word wrong 10+ times', icon: '🤖', req: p => false }, // Streak logic
     { id: 'touch_grass', tier: 2, name: 'Touch Grass', desc: 'Accumulate 3+ hours of total study time', icon: '🌱', req: p => (p.totalStudyTimeMs || 0) >= 3 * 60 * 60 * 1000 },
-    { id: 'academic_weapon', tier: 2, name: 'Academic Weapon', desc: 'Complete 25 flashcard sessions', icon: '🎓', req: p => (p.sessionKnown || 0) >= 100 },
-    { id: 'brain_rot_activated', tier: 2, name: 'Brain Rot Activated', desc: 'Spend 30 min in flashcards in one sitting', icon: '🧠', req: p => Object.values(p.flashcardErrors || {}).reduce((a, b) => a + b, 0) >= 50 },
-    { id: 'i_am_so_cooked', tier: 2, name: 'I Am So Cooked', desc: 'Fail the same card 5 times in one session', icon: '😵', req: p => false }, // Streak
+    { id: 'academic_weapon', tier: 2, name: 'Academic Weapon', desc: 'Complete 25 flashcard sessions', icon: '🎓', req: p => (p.sessionsCompleted || 0) >= 25 },
+    { id: 'brain_rot_activated', tier: 2, name: 'Brain Rot Activated', desc: 'Spend 30 min in flashcards in one sitting', icon: '🧠', req: p => (p.totalStudyTimeMs || 0) >= 30 * 60 * 1000 },
+    { id: 'i_am_so_cooked', tier: 2, name: 'I Am So Cooked', desc: 'Fail the same card 5 times in one session', icon: '😵', req: p => { const vals = Object.values(p.flashcardErrors || {}); return vals.length > 0 ? Math.max(...vals) >= 5 : false; } },
     { id: 'on_fire', tier: 2, name: 'On Fire', desc: 'Review 50 words in one session', icon: '🔥', req: p => false, multi: true }, // Streak-based
 
     // Tier 3 - Consistency & Streaks — WP-021: now using calcStreak with dedup
     { id: 'streak_3', tier: 3, name: 'Locked TF In', desc: '3-day study streak', icon: '🔒', req: p => calcStreak(p.studyDates || []) >= 3 },
     { id: 'streak_7', tier: 3, name: 'Creature of Habit', desc: '7-day study streak', icon: '🔗', req: p => calcStreak(p.studyDates || []) >= 7 },
     { id: 'streak_30', tier: 3, name: 'Dedicated Learner', desc: '30-day study streak', icon: '🧘', req: p => calcStreak(p.studyDates || []) >= 30 },
-    { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 20, multi: true },
+    { id: 'session_stacker', tier: 3, name: 'Session Stacker', desc: 'Complete 10 total sessions', icon: '📊', req: p => (p.sessionsCompleted || 0) >= 10, multi: true },
 
     // Tier 4 - Secret / Hidden
     { id: 'night_owl', tier: 4, name: 'Sigma Night Owl', desc: 'Study between 10 PM and 4 AM', icon: '🦉', req: p => false, secret: true },
