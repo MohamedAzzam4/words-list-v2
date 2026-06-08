@@ -552,7 +552,7 @@ window.app = {
 
         // WP-010: Migrate numeric word IDs to deterministic string IDs
         if (state.data && (state.data.migrationVersion || 0) < 1) {
-            const dryRun = true; // Set to false after validating with real data
+            const dryRun = false; // Enable migration after dry-run validation
             const allWords = levelConfig.vocabulary.flat();
 
             // Build mapping: old numeric index -> new string ID
