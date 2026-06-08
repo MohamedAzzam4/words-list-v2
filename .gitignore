@@ -1,8 +1,17 @@
-AIMemoryContext.md
-app_fetch.txt
-gemini_memory.md
-qwen_memory_theFounder.md
-godfather_memory.md
+# Debug artifacts
 temp_debug.js
-New folder
+app_fetch.txt
+
+# AI memory files
+*_memory*.md
+AIMemoryContext.md
+
+# Test reports
 German-Words-List2_Test_Report.md
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Misc
+New folder/
