@@ -952,6 +952,11 @@ window.app = {
             state.data.trophyCounts = { ...engines.trophy.trophyCounts };
         }
 
+        // WP-038: Prune studyDates to prevent unbounded growth (keep last 90)
+        if (state.data.studyDates && state.data.studyDates.length > 90) {
+            state.data.studyDates = [...new Set(state.data.studyDates)].sort().slice(-90);
+        }
+
         const payload = {
             known: state.data.known || [],
             favorites: state.data.favorites || [],
