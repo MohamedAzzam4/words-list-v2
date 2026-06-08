@@ -11,7 +11,10 @@ export class QuizEngine {
 
     loadUnit(newWords) {
         this.words = newWords || [];
+        this.score = 0;
+        this.total = 0;
         this.nouns = this.words.filter(w => /^(der|die|das)\s+/i.test(w.de));
+        if (this.onUpdateScore) this.onUpdateScore(this.score, this.total);
         this._render();
     }
 
