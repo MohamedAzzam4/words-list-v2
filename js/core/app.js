@@ -495,7 +495,7 @@ window.app = {
 
         // If user is on a "view-only" screen (dashboard/trophies), clicking a unit
         // should navigate them back to the glossary for that unit.
-        if (state.view === 'dashboard' || state.view === 'trophies') {
+        if (state.view === 'dashboard' || state.view === 'trophies' || state.view === 'leaderboard') {
             engines.glossary?.loadUnit(words);
             engines.glossary?.render();
             this.switchView('glossary'); // switchView already closes mobile sidebar
