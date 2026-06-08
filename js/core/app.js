@@ -257,6 +257,8 @@ window.app = {
             try {
                 const remote = await loadProgress(appId, user.uid);
                 state.data = mergeProgress(state.data, remote);
+                // WP-007: Persist merged result to localStorage immediately (no Firestore writes needed here)
+                saveLocalProgress(appId, state.data);
             } catch (e) {
                 console.warn('⚠️ Failed to load cloud progress:', e);
             }
