@@ -5,6 +5,7 @@ import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime } from './tts.js?v=3';
+import { debounce } from './utils.js?v=3';
 
 // 1. Load Level Config
 const level = document.querySelector('script[data-level]')?.dataset?.level || 'a1';
@@ -951,15 +952,34 @@ window.app = {
             lastUpdated: new Date().toISOString()
         };
 
-        if (state.uid && auth) {
-            saveProgress(appId, state.uid, payload).catch(e => console.warn('Save to cloud failed:', e));
-            updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length).catch(e => console.warn('Leaderboard update failed:', e));
-        }
+        // WP-011: Save to localStorage immediately, debounce Firestore writes
         // WP-019: Ensure _sessionStartTime and _lastSaveTime are NOT persisted
         const localPayload = { ...state.data, ...payload };
         delete localPayload._sessionStartTime;
         delete localPayload._lastSaveTime;
         saveLocalProgress(appId, localPayload);
+
+        // Debounced remote save
+        if (state.uid && auth) {
+            this._scheduleRemoteSave(payload);
+        }
+    },
+
+    // WP-011: Debounced remote save — batches Firestore writes
+    _scheduleRemoteSave: debounce(function(payload) {
+        if (state.uid && auth) {
+            saveProgress(appId, state.uid, payload).catch(e => console.warn('Save to cloud failed:', e));
+            updateLeaderboard(appId, state.uid, auth.currentUser?.displayName, auth.currentUser?.photoURL, payload.known.length).catch(e => console.warn('Leaderboard update failed:', e));
+        }
+    }, 3000),
+
+    // WP-011: Flush pending remote saves immediately (used by beforeunload)
+    _flushRemoteSave() {
+        if (state.uid && auth && state.data) {
+            const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
+            const knownCount = knownSet ? knownSet.size : (state.data.known?.length || 0);
+            saveProgress(appId, state.uid, state.data).catch(e => console.warn('Flush save failed:', e));
+        }
     }
 };
 
@@ -967,6 +987,9 @@ window.app = {
 window.addEventListener('beforeunload', () => {
     if (window.app && window.app._save) {
         try { window.app._save(); } catch (e) { /* best effort */ }
+    }
+    if (window.app && window.app._flushRemoteSave) {
+        try { window.app._flushRemoteSave(); } catch (e) { /* best effort */ }
     }
 });
 
