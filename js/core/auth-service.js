@@ -160,7 +160,8 @@ export class AuthService {
         if (this.auth) {
             try { await logout(); } catch (e) {}
         }
-        // WP-006: Removed clearLocalProgress — progress data must persist in localStorage across logout/login
+        // Fix: We must clear local progress on explicit sign out to prevent data leaking to the next account
+        clearLocalProgress(this.appId);
         window.location.reload();
     }
 
