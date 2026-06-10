@@ -293,13 +293,13 @@ async function _initEngines() {
         const oldFavorites = [...(state.data.favorites || [])];
         const oldFlashcardErrors = { ...(state.data.flashcardErrors || {}) };
 
-        const newKnown = oldKnown
+        const newKnown = [...new Set(oldKnown
             .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
-            .filter(id => id !== undefined);
+            .filter(id => id !== undefined))];
 
-        const newFavorites = oldFavorites
+        const newFavorites = [...new Set(oldFavorites
             .map(oldId => oldIdToNewId[oldId] !== undefined ? oldIdToNewId[oldId] : oldId)
-            .filter(id => id !== undefined);
+            .filter(id => id !== undefined))];
 
         const newFlashcardErrors = {};
         for (const [oldKey, value] of Object.entries(oldFlashcardErrors)) {
