@@ -156,7 +156,7 @@ function _save() {
     const localPayload = { ...state.data, ...payload };
     delete localPayload._sessionStartTime;
     delete localPayload._lastSaveTime;
-    saveLocalProgress(appId, localPayload);
+    saveLocalProgress(appId, localPayload, state.uid);
 
     // Debounced remote save
     if (state.uid && auth) {
@@ -254,7 +254,7 @@ async function _initEngines() {
             state.data.modesUsed = [];
             state.data.lastSessionDate = today;
             // Persist the reset immediately so it survives reload
-            saveLocalProgress(appId, state.data);
+            saveLocalProgress(appId, state.data, state.uid);
         }
     }
 

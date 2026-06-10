@@ -2,7 +2,7 @@
 // Handles all authentication-related operations: login, logout, email auth, auth state
 
 import { loginWithGoogle, logout, loadProgress, saveProgress, loginWithEmailAndPassword, signUpWithEmailAndPassword } from './firebase.js?v=3';
-import { getLocalProgress, saveLocalProgress, mergeProgress, clearLocalProgress, getDefaultProgressObj } from './storage.js?v=3';
+import { getLocalProgress, getLocalProgressForUser, saveLocalProgress, mergeProgress, clearLocalProgress, getDefaultProgressObj } from './storage.js?v=3';
 
 export class AuthService {
     constructor({ auth, state, appId, engines, levelConfig, onSave, showToast }) {
@@ -201,10 +201,12 @@ export class AuthService {
             document.getElementById('sync-status').textContent = '☁️ Cloud Sync Active';
 
             try {
+                // Only merge local data if it actually belongs to this user
+                const safeLocal = getLocalProgressForUser(this.appId, user.uid);
                 const remote = await loadProgress(this.appId, user.uid);
-                this.state.data = mergeProgress(this.state.data, remote);
-                // WP-007: Persist merged result to localStorage immediately (no Firestore writes needed here)
-                saveLocalProgress(this.appId, this.state.data);
+                this.state.data = mergeProgress(safeLocal, remote);
+                // Tag localStorage with the current user's UID
+                saveLocalProgress(this.appId, this.state.data, user.uid);
             } catch (e) {
                 console.warn('⚠️ Failed to load cloud progress:', e);
                 // WP-035: Show toast when cloud data cannot be loaded

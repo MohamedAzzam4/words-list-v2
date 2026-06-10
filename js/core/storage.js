@@ -12,12 +12,34 @@ export const getLocalProgress = (appId) => {
     }
 };
 
-export const saveLocalProgress = (appId, data) => {
+export const saveLocalProgress = (appId, data, uid) => {
     try {
-        localStorage.setItem(STORAGE_KEY(appId), JSON.stringify(data));
+        const payload = { ...data };
+        if (uid) payload._ownerUid = uid;
+        localStorage.setItem(STORAGE_KEY(appId), JSON.stringify(payload));
     } catch (e) {
         console.warn('localStorage save failed:', e);
     }
+};
+
+/**
+ * Returns local progress ONLY if it belongs to the given UID.
+ * If it belongs to a different user (or the old website with no UID tag),
+ * the stale data is discarded and a clean default is returned.
+ */
+export const getLocalProgressForUser = (appId, uid) => {
+    const local = getLocalProgress(appId);
+    if (local._ownerUid && local._ownerUid !== uid) {
+        console.warn(`⚠️ LocalStorage belongs to ${local._ownerUid}, not ${uid}. Discarding stale data.`);
+        clearLocalProgress(appId);
+        return getDefaultProgress();
+    }
+    if (!local._ownerUid && local.known?.length > 0) {
+        console.warn('⚠️ LocalStorage has no owner UID (likely from old website). Discarding stale data.');
+        clearLocalProgress(appId);
+        return getDefaultProgress();
+    }
+    return local;
 };
 
 export const clearLocalProgress = (appId) => {
