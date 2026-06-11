@@ -483,7 +483,10 @@ window.app = {
 };
 
 // WP-008: Ensure pending data is saved when the page unloads
+// Fix: Skip save during explicit logout to prevent RAM data from being written back to localStorage
+// after clearLocalProgress() has already wiped it (cross-account data leak prevention)
 window.addEventListener('beforeunload', () => {
+    if (window._isLoggingOut) return;
     if (window.app && window.app._save) {
         try { window.app._save(); } catch (e) { /* best effort */ }
     }

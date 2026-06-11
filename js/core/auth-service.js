@@ -162,6 +162,8 @@ export class AuthService {
         }
         // Fix: We must clear local progress on explicit sign out to prevent data leaking to the next account
         clearLocalProgress(this.appId);
+        // Set flag to prevent beforeunload from re-saving RAM data to localStorage during logout reload
+        window._isLoggingOut = true;
         window.location.reload();
     }
 
