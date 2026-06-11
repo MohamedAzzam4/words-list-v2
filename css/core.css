@@ -232,9 +232,9 @@ select {
 }
 
 .progress-bar-bg {
-    height: 10px; border-radius: 5px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    height: 10px; 
+    background: var(--border);
+    border-radius: 5px;
     overflow: hidden;
 }
 
