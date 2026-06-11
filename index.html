@@ -11,14 +11,14 @@
 
         :root {
             --bg: #F8FAFC;
-            --surface: #FFFFFF;
+            --surface: rgba(255, 255, 255, 0.7); /* glassmorphism */
             --text-main: #0F172A;
             --text-muted: #475569;
             --primary: #4F46E5;
             --border: #E2E8F0;
             --shadow: 0 4px 15px -3px rgb(0 0 0 / 0.05), 0 2px 6px -2px rgb(0 0 0 / 0.025);
-            --shadow-hover: 0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
-            --radius-card: 16px;
+            --shadow-hover: 0 15px 30px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05), 0 0 0 2px rgba(79, 70, 229, 0.2);
+            --radius-card: 20px;
         }
 
         * {
@@ -35,164 +35,304 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
         }
 
-        .header {
+        /* Hero Section */
+        .hero {
+            width: 100%;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #6366F1 100%);
+            padding: 80px 20px 60px;
             text-align: center;
-            margin-bottom: 40px;
+            position: relative;
         }
 
         .header h1 {
             font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: var(--text-main);
-            font-weight: 600;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #FFFFFF;
+            font-weight: 700;
         }
 
         .header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
+            color: #FFFFFF;
+            opacity: 0.85;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+        /* Wave SVG Divider */
+        .wave-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+        }
+
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 60px;
+        }
+
+        .wave-divider .shape-fill {
+            fill: var(--bg);
+        }
+
+        /* Main Content Grid */
+        .main-content {
             width: 100%;
             max-width: 900px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            z-index: 1;
         }
 
+        /* Horizontal Card Layout */
         .card {
             background: var(--surface);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--border);
             border-radius: var(--radius-card);
             padding: 24px;
-            text-align: center;
             text-decoration: none;
             color: inherit;
-            transition: all 0.2s ease-out;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--shadow);
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
+            min-height: 160px;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: scale(1.02) translateY(-2px);
             box-shadow: var(--shadow-hover);
-            border-color: var(--primary);
+        }
+
+        /* Accent Borders */
+        .card.a1-card { border-left: 4px solid #3b82f6; }
+        .card.a2-card { border-left: 4px solid #0ea5e9; }
+        .card.b1-card { border-left: 4px solid #10b981; }
+        .card.b2-card { border-left: 4px solid #8b5cf6; }
+
+        .card-left {
+            flex-shrink: 0;
         }
 
         .level-badge {
-            font-size: 2rem;
-            font-weight: bold;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+            font-size: 2.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
             color: white;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
-        /* Level Colors */
-        .a1-color {
-            background-color: #3b82f6;
+        /* Gradient Badges */
+        .a1-color { background: linear-gradient(135deg, #60A5FA, #2563EB); }
+        .a2-color { background: linear-gradient(135deg, #38BDF8, #0284C7); }
+        .b1-color { background: linear-gradient(135deg, #34D399, #059669); }
+        .b2-color { background: linear-gradient(135deg, #A78BFA, #6D28D9); }
+
+        .card-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        /* Blue */
-        .a2-color {
-            background-color: #0ea5e9;
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
         }
-
-        /* Light Blue */
-        .b1-color {
-            background-color: #10b981;
-        }
-
-        /* Green */
-        .b2-color {
-            background-color: #8b5cf6;
-        }
-
-        /* Purple */
 
         .card h2 {
             font-family: 'Poppins', sans-serif;
-            margin-bottom: 8px;
+            font-size: 1.5rem;
             font-weight: 600;
+            color: var(--text-main);
         }
 
         .card p {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
         }
 
-        .status-badge {
-            background: var(--bg);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border: 1px solid var(--border);
+        /* Decorative Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+        
+        .a1-fill { width: 100%; background: #3b82f6; }
+        .a2-fill { width: 0%; background: #0ea5e9; }
+        .b1-fill { width: 0%; background: #10b981; }
+        .b2-fill { width: 45%; background: #8b5cf6; }
+
+        /* Redesigned Status Badges */
+        .status-chip {
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .status-ready {
-            color: #16a34a;
-            border-color: #bbf7d0;
-            background: #f0fdf4;
+            background: #F0FDF4;
+            color: #16A34A;
+            border: 1px solid #BBF7D0;
+            border-left: 4px solid #16A34A;
         }
 
         .status-soon {
-            color: #d97706;
-            border-color: #fef08a;
-            background: #fffbeb;
+            background: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FEF08A;
+            border-left: 4px solid #D97706;
+            animation: pulse-amber 2s infinite;
+        }
+
+        @keyframes pulse-amber {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            .card-header-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .card-left {
+                margin: 0 auto;
+            }
+            .level-badge {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            .hero {
+                padding: 60px 20px 40px;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>🇩🇪 German Mastery Portal</h1>
-        <p>Select your learning level to continue</p>
+    <div class="hero">
+        <div class="header">
+            <h1>🇩🇪 German Mastery Portal</h1>
+            <p>Select your learning level to continue your journey</p>
+        </div>
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C79.44,79.52,159.2,69.57,240.2,60.8,267.43,57.8,294.69,56.9,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
     </div>
 
-    <div class="grid">
+    <div class="main-content">
         <!-- A1 Card -->
-        <a href="level.html?level=a1" class="card">
-            <div class="level-badge a1-color">A1</div>
-            <h2>Menschen A1</h2>
-            <p>Beginner vocabulary, basic grammar, and everyday expressions.</p>
-            <span class="status-badge status-ready">✅ Ready to Study</span>
+        <a href="level.html?level=a1" class="card a1-card">
+            <div class="card-left">
+                <div class="level-badge a1-color">A1</div>
+            </div>
+            <div class="card-right">
+                <div class="card-header-row">
+                    <h2>Menschen A1</h2>
+                    <span class="status-chip status-ready">🚀 Ready to Study</span>
+                </div>
+                <p>Beginner vocabulary, basic grammar, and everyday expressions.</p>
+                <div class="progress-track"><div class="progress-fill a1-fill"></div></div>
+            </div>
         </a>
 
         <!-- A2 Card -->
-        <a href="A2.html" class="card" style="opacity: 0.7;">
-            <div class="level-badge a2-color">A2</div>
-            <h2>Menschen A2</h2>
-            <p>Elementary vocabulary, deeper grammar, and extended phrases.</p>
-            <span class="status-badge status-soon">🚧 Coming Soon</span>
+        <a href="A2.html" class="card a2-card" style="opacity: 0.85;">
+            <div class="card-left">
+                <div class="level-badge a2-color">A2</div>
+            </div>
+            <div class="card-right">
+                <div class="card-header-row">
+                    <h2>Menschen A2</h2>
+                    <span class="status-chip status-soon">🚧 Coming Soon</span>
+                </div>
+                <p>Elementary vocabulary, deeper grammar, and extended phrases.</p>
+                <div class="progress-track"><div class="progress-fill a2-fill"></div></div>
+            </div>
         </a>
 
         <!-- B1 Card -->
-        <a href="B1.html" class="card" style="opacity: 0.7;">
-            <div class="level-badge b1-color">B1</div>
-            <h2>B1 Intermediate</h2>
-            <p>Intermediate vocabulary for daily life, travel, and work.</p>
-            <span class="status-badge status-soon">🚧 Coming Soon</span>
+        <a href="B1.html" class="card b1-card" style="opacity: 0.85;">
+            <div class="card-left">
+                <div class="level-badge b1-color">B1</div>
+            </div>
+            <div class="card-right">
+                <div class="card-header-row">
+                    <h2>B1 Intermediate</h2>
+                    <span class="status-chip status-soon">🚧 Coming Soon</span>
+                </div>
+                <p>Intermediate vocabulary for daily life, travel, and work.</p>
+                <div class="progress-track"><div class="progress-fill b1-fill"></div></div>
+            </div>
         </a>
 
         <!-- B2 Card -->
-        <a href="level.html?level=b2" class="card">
-            <div class="level-badge b2-color">B2</div>
-            <h2>Aspekte B2</h2>
-            <p>Advanced vocabulary, complex texts, and academic expressions.</p>
-            <span class="status-badge status-ready">✅ Ready to Study</span>
+        <a href="level.html?level=b2" class="card b2-card">
+            <div class="card-left">
+                <div class="level-badge b2-color">B2</div>
+            </div>
+            <div class="card-right">
+                <div class="card-header-row">
+                    <h2>Aspekte B2</h2>
+                    <span class="status-chip status-ready">🚀 Ready to Study</span>
+                </div>
+                <p>Advanced vocabulary, complex texts, and academic expressions.</p>
+                <div class="progress-track"><div class="progress-fill b2-fill"></div></div>
+            </div>
         </a>
     </div>
 
