@@ -84,7 +84,7 @@ export class GlossaryEngine {
           </td>
           <td>
             <span class="${hideEN ? 'hidden-word' : ''} hideable" style="cursor: pointer;" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(w.en || '-')}</span>
-            ${isKnown ? '<span style="color:var(--success);margin-left:8px;font-weight:bold;">✅</span>' : ''}
+            ${isKnown ? '<span style="color:var(--success);margin-left:8px;" title="Known"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom;"><polyline points="20 6 9 17 4 12"></polyline></svg></span>' : ''}
           </td>
           <td><span class="type-badge">${w.type || 'Vocab'}</span></td>
           <td>
