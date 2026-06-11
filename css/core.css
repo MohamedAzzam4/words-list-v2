@@ -79,7 +79,61 @@ select {
     border-radius: var(--radius-btn);
 }
 
-/* Sidebar Navigation */
+/* ========== Custom Scrollbars ========== */
+
+/* Modern browsers (Firefox) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+
+/* Webkit browsers (Chrome, Edge, Safari) — Global */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+/* Sidebar-specific scrollbar — light thumb on dark background */
+#sidebar {
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 8px 0;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== Sidebar Navigation ========== */
 #sidebar {
     width: 280px;
     background: linear-gradient(180deg, #1E1B4B 0%, #312E81 100%); color: #E0E7FF;
