@@ -324,6 +324,28 @@ async function _initEngines() {
         console.log('[WP-010] Migration complete. Version set to 1.');
     }
 
+    // Prune stale/phantom IDs from state.data
+    if (state.data) {
+        const allValidIds = new Set();
+        levelConfig.vocabulary.forEach(unit => {
+            unit.forEach(w => allValidIds.add(w.id));
+        });
+        
+        if (state.data.known) {
+            state.data.known = state.data.known.filter(id => allValidIds.has(id));
+        }
+        if (state.data.favorites) {
+            state.data.favorites = state.data.favorites.filter(id => allValidIds.has(id));
+        }
+        if (state.data.flashcardErrors) {
+            for (const id in state.data.flashcardErrors) {
+                if (!allValidIds.has(id)) {
+                    delete state.data.flashcardErrors[id];
+                }
+            }
+        }
+    }
+
     const words = levelConfig.vocabulary[state.unit] || [];
     const known = new Set(state.data?.known || []);
     const favorites = new Set(state.data?.favorites || []);
@@ -458,6 +480,12 @@ window.app = {
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
         _save();
         await _evaluateTrophies();
+    },
+    async toggleCurrentCardFavorite() {
+        if (engines.flashcard?.queue) {
+            const id = engines.flashcard.queue[engines.flashcard.index]?.id;
+            if (id) await this.toggleFavorite(id);
+        }
     },
     nextCard() { engines.flashcard?.next(); },
     prevCard() { engines.flashcard?.prev(); },

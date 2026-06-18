@@ -14,7 +14,13 @@ export class StatsService {
         const all = this.levelConfig?.vocabulary?.flat() || [];
         // Always use the live engine Set — state.data.known can be stale during a session
         const knownSet = this.engines.flashcard?.knownIds || this.engines.glossary?.knownIds;
-        const knownCount = knownSet ? knownSet.size : new Set(this.state.data?.known || []).size;
+        let knownCount = 0;
+        if (knownSet) {
+            knownCount = all.filter(w => knownSet.has(w.id)).length;
+        } else {
+            const savedKnown = new Set(this.state.data?.known || []);
+            knownCount = all.filter(w => savedKnown.has(w.id)).length;
+        }
         const pct = all.length ? Math.round((knownCount / all.length) * 100) : 0;
 
         const setEl = (id, val) => {
