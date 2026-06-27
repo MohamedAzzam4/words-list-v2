@@ -15,8 +15,11 @@ export class FlashcardEngine {
         this._buildQueue();
     }
 
-    loadUnit(newWords) {
+    loadUnit(newWords, newKnownIds = null, newFavoritesIds = null, newErrors = null) {
         this.words = newWords || [];
+        if (newKnownIds !== null) this.knownIds = newKnownIds;
+        if (newFavoritesIds !== null) this.favoritesIds = newFavoritesIds;
+        if (newErrors !== null) this.errors = newErrors;
         this._buildQueue();
         this.index = 0;
         this.flipped = false;

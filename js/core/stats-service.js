@@ -13,7 +13,7 @@ export class StatsService {
     updateStats() {
         const all = this.levelConfig?.vocabulary?.flat() || [];
         // Always use the live engine Set — state.data.known can be stale during a session
-        const knownSet = this.engines.flashcard?.knownIds || this.engines.glossary?.knownIds;
+        const knownSet = (this.state.flashcardSource === 'words' && this.engines.flashcard?.knownIds) || this.engines.glossary?.knownIds;
         let knownCount = 0;
         if (knownSet) {
             knownCount = all.filter(w => knownSet.has(w.id)).length;

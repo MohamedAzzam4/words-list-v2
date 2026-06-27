@@ -28,14 +28,37 @@ export class NavigationService {
     }
 
     switchMode(m) {
-        const words = this.levelConfig?.vocabulary?.[this.state.unit] || [];
         if (m === 'flashcard') {
-            this.engines.flashcard?.loadUnit(words);
+            if (this.state.tab === 'phrases') {
+                this.state.flashcardSource = 'phrases';
+                const phrases = this.state.activePhrases || [];
+                const knownPhrases = new Set(this.state.data?.knownPhrases || []);
+                const favoritePhrases = new Set(this.state.data?.favoritePhrases || []);
+                const phraseErrors = this.state.data?.phraseErrors || {};
+                this.engines.flashcard?.loadUnit(phrases, knownPhrases, favoritePhrases, phraseErrors);
+            } else {
+                this.state.flashcardSource = 'words';
+                const words = this.levelConfig?.vocabulary?.[this.state.unit] || [];
+                const known = new Set(this.state.data?.known || []);
+                const favorites = new Set(this.state.data?.favorites || []);
+                const errors = this.state.data?.flashcardErrors || {};
+                this.engines.flashcard?.loadUnit(words, known, favorites, errors);
+            }
             this.switchView('flashcard');
         } else {
-            this.engines.glossary?.loadUnit(words);
-            this.engines.glossary?.render();
             this.switchView('glossary');
+            if (this.state.tab === 'phrases') {
+                if (window.app && typeof window.app.switchUnitTab === 'function') {
+                    window.app.switchUnitTab('phrases');
+                }
+            } else {
+                if (window.app && typeof window.app.switchUnitTab === 'function') {
+                    window.app.switchUnitTab('words');
+                }
+                const words = this.levelConfig?.vocabulary?.[this.state.unit] || [];
+                this.engines.glossary?.loadUnit(words);
+                this.engines.glossary?.render();
+            }
         }
     }
 
@@ -48,6 +71,9 @@ export class NavigationService {
 
     async switchUnit(i) {
         this.state.unit = i;
+        if (window.app && typeof window.app.switchUnitTab === 'function') {
+            window.app.switchUnitTab('words');
+        }
         const words = this.levelConfig?.vocabulary?.[i] || [];
 
         this._updateTitles(i);
@@ -187,7 +213,7 @@ export class NavigationService {
         const unit = this.levelConfig?.vocabulary?.[i] || [];
         if (!unit.length) return { pct: 0, known: 0, total: 0 };
         // Use the live engine Set (always current), fall back to saved array on first load
-        const knownSet = this.engines.flashcard?.knownIds || this.engines.glossary?.knownIds;
+        const knownSet = (this.state.flashcardSource === 'words' && this.engines.flashcard?.knownIds) || this.engines.glossary?.knownIds;
         const known = knownSet
             ? unit.filter(w => knownSet.has(w.id)).length
             : unit.filter(w => this.state.data?.known?.includes(w.id)).length;

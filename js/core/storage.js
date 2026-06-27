@@ -67,6 +67,18 @@ export const mergeProgress = (local, remote) => {
         ...(remote.favorites || [])
     ]));
 
+    // Deep merge arrays (known phrases)
+    merged.knownPhrases = Array.from(new Set([
+        ...(local.knownPhrases || []),
+        ...(remote.knownPhrases || [])
+    ]));
+
+    // Deep merge arrays (favorite phrases)
+    merged.favoritePhrases = Array.from(new Set([
+        ...(local.favoritePhrases || []),
+        ...(remote.favoritePhrases || [])
+    ]));
+
     // Merge trophy counts (keep higher)
     merged.trophyCounts = { ...(local.trophyCounts || {}), ...(remote.trophyCounts || {}) };
     for (const k in local.trophyCounts) {
@@ -80,6 +92,14 @@ export const mergeProgress = (local, remote) => {
     for (const k in local.flashcardErrors) {
         if ((merged.flashcardErrors[k] || 0) < local.flashcardErrors[k]) {
             merged.flashcardErrors[k] = local.flashcardErrors[k];
+        }
+    }
+
+    // Merge phrase errors (keep higher counts)
+    merged.phraseErrors = { ...(local.phraseErrors || {}), ...(remote.phraseErrors || {}) };
+    for (const k in local.phraseErrors) {
+        if ((merged.phraseErrors[k] || 0) < local.phraseErrors[k]) {
+            merged.phraseErrors[k] = local.phraseErrors[k];
         }
     }
 
@@ -102,6 +122,8 @@ export const mergeProgress = (local, remote) => {
 const getDefaultProgress = () => ({
     known: [],
     favorites: [],
+    knownPhrases: [],
+    favoritePhrases: [],
     trophies: [],
     trophyCounts: {},
     sessionCount: 0,
@@ -117,6 +139,7 @@ const getDefaultProgress = () => ({
     studyDates: [],
     totalStudyTimeMs: 0,
     flashcardErrors: {},
+    phraseErrors: {},
     lastUpdated: new Date().toISOString(),
     lastStudyDate: null,
     quizCorrect: 0,

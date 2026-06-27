@@ -7,12 +7,13 @@ import { GlossaryEngine } from './glossary.js?v=3';
 import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
-import { speak, cleanTextForAudio, playChime } from './tts.js?v=3';
+import { speak, cleanTextForAudio, playChime, SpeechQueue } from './tts.js?v=3';
 import { debounce } from './utils.js?v=3';
 import { AuthService } from './auth-service.js?v=3';
 import { NavigationService } from './nav-service.js?v=3';
 import { StatsService } from './stats-service.js?v=3';
 import { LeaderboardService } from './leaderboard-service.js?v=3';
+import { ContentLoader } from './content-parser.js?v=3';
 
 // 1. Load Level Config
 const level = document.querySelector('script[data-level]')?.dataset?.level || 'a1';
@@ -56,7 +57,8 @@ const state = {
     uid: null,
     data: getLocalProgress(appId), // ← Always has data, even if null
     view: 'glossary',
-    unit: 0
+    unit: 0,
+    flashcardSource: 'words' // 'words' or 'phrases'
 };
 
 const engines = {
@@ -110,18 +112,21 @@ function _save() {
     window.app._lastSaveTime = Date.now();
 
     // ── Sync live engine state back to state.data before saving ──
-    const knownSet = engines.flashcard?.knownIds || engines.glossary?.knownIds;
-    const favSet = engines.flashcard?.favoritesIds || engines.glossary?.favoritesIds;
+    if (engines.flashcard) {
+        if (state.flashcardSource === 'phrases') {
+            state.data.knownPhrases = Array.from(engines.flashcard.knownIds);
+            state.data.favoritePhrases = Array.from(engines.flashcard.favoritesIds);
+            state.data.phraseErrors = { ...engines.flashcard.errors };
+        } else {
+            state.data.known = Array.from(engines.flashcard.knownIds);
+            state.data.favorites = Array.from(engines.flashcard.favoritesIds);
+            state.data.flashcardErrors = { ...engines.flashcard.errors };
+        }
+    } else if (engines.glossary) {
+        state.data.known = Array.from(engines.glossary.knownIds);
+        state.data.favorites = Array.from(engines.glossary.favoritesIds);
+    }
 
-    if (knownSet) {
-        state.data.known = Array.from(knownSet);
-    }
-    if (favSet) {
-        state.data.favorites = Array.from(favSet);
-    }
-    if (engines.flashcard?.errors) {
-        state.data.flashcardErrors = { ...engines.flashcard.errors };
-    }
     if (engines.trophy?.trophyCounts) {
         state.data.trophyCounts = { ...engines.trophy.trophyCounts };
     }
@@ -134,6 +139,9 @@ function _save() {
     const payload = {
         known: state.data.known || [],
         favorites: state.data.favorites || [],
+        knownPhrases: state.data.knownPhrases || [],
+        favoritePhrases: state.data.favoritePhrases || [],
+        phraseErrors: state.data.phraseErrors || {},
         trophyCounts: state.data.trophyCounts || {},
         sessionsCompleted: state.data.sessionsCompleted || 0,
         sessionKnown: state.data.sessionKnown || 0,
@@ -394,6 +402,117 @@ async function _initEngines() {
     console.log(`✅ Engines initialized with ${words.length} words in Unit ${state.unit + 1}`);
 }
 
+// ── Phrases and Conversation Renderers ──
+function _renderPhrases(phrases) {
+    const phrasesPanel = document.getElementById('panel-phrases');
+    if (!phrasesPanel) return;
+
+    state.activePhrases = phrases || [];
+
+    if (!phrases || phrases.length === 0) {
+        phrasesPanel.innerHTML = `
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">📭 Empty State</div>
+                <p>No phrases available for this unit yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const controlsHTML = `
+        <div class="phrases-controls" style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
+                <span>▶️</span> Play All
+            </button>
+            <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
+                <span>⏹️</span> Stop
+            </button>
+        </div>
+    `;
+
+    const cardsHTML = phrases.map(p => {
+        const registerBadge = p.register && p.register !== 'neutral' 
+            ? `<span class="phrase-badge register">${p.register}</span>` 
+            : '';
+        const wordsBadge = p.usedWords 
+            ? `<span class="phrase-badge words">Words: ${p.usedWords}</span>` 
+            : '';
+
+        return `
+            <div class="phrase-card" data-id="${p.id}">
+                <div class="phrase-header">
+                    <div class="phrase-de-container">
+                        <button class="speak-btn" onclick="window.app.speakPhrase('${p.id}', this)" title="Speak phrase">🔊</button>
+                        <span class="phrase-de">${p.de}</span>
+                    </div>
+                </div>
+                <div class="phrase-en">${p.en}</div>
+                ${p.note ? `<div class="phrase-note">${p.note}</div>` : ''}
+                <div class="phrase-meta">
+                    ${registerBadge}
+                    ${wordsBadge}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    phrasesPanel.innerHTML = `
+        ${controlsHTML}
+        <div class="phrases-list-container">
+            ${cardsHTML}
+        </div>
+    `;
+}
+
+function _renderConversation(convo) {
+    const convoPanel = document.getElementById('panel-conversation');
+    if (!convoPanel) return;
+
+    if (!convo || !convo.scenes || convo.scenes.length === 0) {
+        convoPanel.innerHTML = `
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">📭 Empty State</div>
+                <p>No conversation available for this unit yet.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const metaHTML = convo.metadata ? `
+        <div class="conversation-metadata">
+            ${convo.metadata.theme ? `<div class="convo-meta-item"><strong>Theme:</strong> ${convo.metadata.theme}</div>` : ''}
+            ${convo.metadata.characters ? `<div class="convo-meta-item"><strong>Characters:</strong> ${convo.metadata.characters}</div>` : ''}
+            ${convo.metadata.situation ? `<div class="convo-meta-item"><strong>Situation:</strong> ${convo.metadata.situation}</div>` : ''}
+            ${convo.metadata.goal ? `<div class="convo-meta-item"><strong>Goal:</strong> ${convo.metadata.goal}</div>` : ''}
+        </div>
+    ` : '';
+
+    const scenesHTML = convo.scenes.map((scene, sIdx) => {
+        const linesHTML = scene.lines.map(line => `
+            <div class="convo-line">
+                <div class="convo-speaker">${line.speaker}</div>
+                <div class="convo-text">${line.text}</div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="convo-scene">
+                ${scene.title ? `<div class="scene-title">${scene.title}</div>` : ''}
+                <div class="convo-lines">
+                    ${linesHTML}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    convoPanel.innerHTML = `
+        <div class="conversation-container">
+            ${metaHTML}
+            ${scenesHTML}
+        </div>
+    `;
+}
+
 // 4. Global App Object — thin delegating wrapper
 window.app = {
     _enginesReady: false,
@@ -418,6 +537,66 @@ window.app = {
     switchMode: (m) => navService.switchMode(m),
     toggleSidebar: () => navService.toggleSidebar(),
     switchUnit: (i) => navService.switchUnit(i).then(() => _evaluateTrophies()),
+    async switchUnitTab(tabName) {
+        if (typeof this.stopAudioQueue === 'function') {
+            this.stopAudioQueue();
+        }
+        state.tab = tabName;
+
+        // 1. Update Tab Buttons (ARIA Selected & Active states)
+        const tabs = document.querySelectorAll('[role="tab"]');
+        tabs.forEach(tab => {
+            const isActive = tab.id === `tab-${tabName}`;
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            tab.setAttribute('tabindex', isActive ? '0' : '-1');
+            tab.classList.toggle('active', isActive);
+        });
+
+        // 2. Toggle Visibility of Panels
+        const panels = document.querySelectorAll('[role="tabpanel"]');
+        panels.forEach(panel => {
+            const isTarget = panel.id === `panel-${tabName}`;
+            panel.classList.toggle('hidden', !isTarget);
+        });
+
+        // 3. Load and Render Content for active tab
+        if (tabName === 'words') {
+            return;
+        }
+
+        const phrasesPanel = document.getElementById('panel-phrases');
+        const convoPanel = document.getElementById('panel-conversation');
+
+        if (tabName === 'phrases') {
+            phrasesPanel.innerHTML = `
+                <div class="skeleton-loader">
+                    <div class="skeleton-card"><div class="skeleton-shimmer"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-shimmer"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-shimmer"></div></div>
+                </div>
+            `;
+            try {
+                const phrases = await ContentLoader.loadPhrases(level, state.unit);
+                _renderPhrases(phrases);
+            } catch (e) {
+                console.error(e);
+                phrasesPanel.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Error loading phrases. Please check console.</div>`;
+            }
+        } else if (tabName === 'conversation') {
+            convoPanel.innerHTML = `
+                <div class="skeleton-loader">
+                    <div class="skeleton-card" style="height: 200px;"><div class="skeleton-shimmer"></div></div>
+                </div>
+            `;
+            try {
+                const convo = await ContentLoader.loadConversation(level, state.unit);
+                _renderConversation(convo);
+            } catch (e) {
+                console.error(e);
+                convoPanel.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Error loading conversation. Please check console.</div>`;
+            }
+        }
+    },
 
     // ── LEADERBOARD ── (delegates to LeaderboardService)
     _renderLeaderboard: () => leaderboardService.render(),
@@ -445,7 +624,75 @@ window.app = {
         _save();
     },
     revealAllTable() { engines.glossary?.revealAll(); },
-    playUnitAudio() { engines.glossary?.speakAll(); },
+    playUnitAudio() {
+        const activeTab = state.tab || 'words';
+        if (activeTab === 'words') {
+            engines.glossary?.speakAll();
+        } else if (activeTab === 'phrases') {
+            if (SpeechQueue.isPlaying) {
+                this.stopAudioQueue();
+            } else {
+                this.playAllPhrases();
+            }
+        } else {
+            _showToast('Audio playback not supported on this tab');
+        }
+    },
+    playAllPhrases() {
+        if (!state.activePhrases || state.activePhrases.length === 0) return;
+        
+        const playBtn = document.getElementById('btn-play-all-phrases');
+        if (playBtn) {
+            playBtn.classList.add('playing');
+            playBtn.innerHTML = '<span>⏹️</span> Stop';
+        }
+
+        SpeechQueue.playAll(
+            state.activePhrases,
+            (idx, item) => {
+                document.querySelectorAll('.phrase-card').forEach(card => {
+                    card.classList.remove('highlighted-speech');
+                });
+                const activeCard = document.querySelector(`.phrase-card[data-id="${item.id}"]`);
+                if (activeCard) {
+                    activeCard.classList.add('highlighted-speech');
+                    activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            },
+            () => {
+                this.stopAudioQueue();
+            }
+        );
+    },
+    stopAudioQueue() {
+        SpeechQueue.stop();
+        document.querySelectorAll('.phrase-card').forEach(card => {
+            card.classList.remove('highlighted-speech');
+        });
+        const playBtn = document.getElementById('btn-play-all-phrases');
+        if (playBtn) {
+            playBtn.classList.remove('playing');
+            playBtn.innerHTML = '<span>▶️</span> Play All';
+        }
+    },
+    speakPhrase(phraseId, btn) {
+        if (!state.activePhrases) return;
+        const phrase = state.activePhrases.find(p => p.id === phraseId);
+        if (phrase) {
+            this.stopAudioQueue();
+            SpeechQueue.speakSingle(phrase.de);
+            
+            const card = document.querySelector(`.phrase-card[data-id="${phraseId}"]`);
+            if (card) {
+                card.classList.add('highlighted-speech');
+                setTimeout(() => {
+                    if (!SpeechQueue.isPlaying) {
+                        card.classList.remove('highlighted-speech');
+                    }
+                }, 1500);
+            }
+        }
+    },
     speakText(t) {
         speak(cleanTextForAudio(t));
         state.data.ttsCount = (state.data.ttsCount || 0) + 1;
@@ -551,12 +798,38 @@ if (auth) {
     ]);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 DOM loaded.');
+// Keyboard navigation for accessible tabs (roving tabindex)
+document.addEventListener('keydown', (e) => {
+    const activeEl = document.activeElement;
+    if (!activeEl || activeEl.getAttribute('role') !== 'tab') return;
+
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+    let index = tabs.indexOf(activeEl);
+    if (index === -1) return;
+
+    if (e.key === 'ArrowRight') {
+        index = (index + 1) % tabs.length;
+        tabs[index].focus();
+        tabs[index].click();
+    } else if (e.key === 'ArrowLeft') {
+        index = (index - 1 + tabs.length) % tabs.length;
+        tabs[index].focus();
+        tabs[index].click();
+    }
+});
+
+const bootApp = () => {
+    console.log('🚀 DOM loaded / App booting.');
     if (!state.data) state.data = getLocalProgress(appId);
     _applyTheme();
     if (!auth && !_enginesReady) {
         authService.renderAuthUI();
         _initEngines();
     }
-});
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootApp);
+} else {
+    bootApp();
+}
