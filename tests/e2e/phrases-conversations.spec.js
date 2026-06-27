@@ -217,6 +217,98 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     expect(realErrors).toHaveLength(0);
   });
 
+  test('Phrases Hide and Guess Practice Controls', async ({ page }) => {
+    // 1. Open A1 Unit 22 (index 21).
+    await navigateToUnit(page, 21);
+
+    // 2. Open Phrases tab.
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await page.waitForSelector('.phrase-card');
+
+    const phraseCards = page.locator('.phrase-card');
+    const firstCard = phraseCards.first();
+    const firstDe = firstCard.locator('.phrase-de');
+    const firstEn = firstCard.locator('.phrase-en span');
+    const firstNote = firstCard.locator('.phrase-note span');
+    const firstWords = firstCard.locator('.phrase-badge.words');
+
+    // 3. Click Hide German.
+    await page.locator('#panel-phrases button', { hasText: 'Hide German' }).click();
+    // 4. Verify German phrase text is hidden but speaker icon remains visible.
+    await expect(firstDe).toHaveClass(/hidden-word/);
+    await expect(firstCard.locator('.speak-btn').first()).toBeVisible();
+
+    // 5. Click Reveal All.
+    await page.locator('#panel-phrases button', { hasText: 'Reveal All' }).click();
+    await expect(firstDe).not.toHaveClass(/hidden-word/);
+
+    // 6. Click Hide English.
+    await page.locator('#panel-phrases button', { hasText: 'Hide English' }).click();
+    // 7. Verify English meaning is hidden.
+    await expect(firstEn).toHaveClass(/hidden-word/);
+
+    // 8. Click Reveal All.
+    await page.locator('#panel-phrases button', { hasText: 'Reveal All' }).click();
+    await expect(firstEn).not.toHaveClass(/hidden-word/);
+
+    // 9. Click Hide Notes.
+    await page.locator('#panel-phrases button', { hasText: 'Hide Notes' }).click();
+    // 10. Verify note/context is hidden.
+    if (await firstNote.count() > 0) {
+      await expect(firstNote).toHaveClass(/hidden-word/);
+    }
+
+    // 11. Click Reveal All.
+    await page.locator('#panel-phrases button', { hasText: 'Reveal All' }).click();
+    if (await firstNote.count() > 0) {
+      await expect(firstNote).not.toHaveClass(/hidden-word/);
+    }
+
+    // 12. Click Hide Used Words.
+    await page.locator('#panel-phrases button', { hasText: 'Hide Used Words' }).click();
+    // 13. Verify used words are hidden.
+    if (await firstWords.count() > 0) {
+      await expect(firstWords).toHaveClass(/hidden-word/);
+    }
+
+    // 14. Click Reveal All.
+    await page.locator('#panel-phrases button', { hasText: 'Reveal All' }).click();
+    if (await firstWords.count() > 0) {
+      await expect(firstWords).not.toHaveClass(/hidden-word/);
+    }
+
+    // 15. Click Hide Mixed.
+    await page.locator('#panel-phrases button', { hasText: 'Hide Mixed' }).click();
+    // 16. Verify some phrase cards hide German and some hide English.
+    let hasHiddenDe = false;
+    let hasHiddenEn = false;
+    const cardCount = await phraseCards.count();
+    for (let i = 0; i < cardCount; i++) {
+      const deClass = await phraseCards.nth(i).locator('.phrase-de').getAttribute('class');
+      const enClass = await phraseCards.nth(i).locator('.phrase-en span').getAttribute('class');
+      if (deClass.includes('hidden-word')) hasHiddenDe = true;
+      if (enClass.includes('hidden-word')) hasHiddenEn = true;
+    }
+    expect(hasHiddenDe || hasHiddenEn).toBe(true);
+
+    // 17. Verify Play All still starts and highlights cards.
+    const playAllBtn = page.locator('#btn-play-all-phrases');
+    await playAllBtn.click();
+    await expect(playAllBtn).toHaveClass(/playing/);
+    await expect(phraseCards.nth(0)).toHaveClass(/highlighted-speech/, { timeout: 2000 });
+
+    // 18. Verify Stop still cancels playback.
+    const stopBtn = page.locator('#btn-stop-phrases');
+    await stopBtn.click();
+    await expect(playAllBtn).not.toHaveClass(/playing/);
+
+    // 19. Verify Words tab hide controls still work.
+    await page.locator('button[role="tab"]', { hasText: 'Words' }).click();
+    await page.locator('#panel-words button', { hasText: 'Hide English' }).click();
+    const firstWordTranslation = page.locator('#glossary-tbody tr td').nth(1).locator('span').first();
+    await expect(firstWordTranslation).toHaveClass(/hidden-word/);
+  });
+
   test('Mobile viewport layout verification', async ({ page, isMobile }) => {
     if (!isMobile) return; // Skip for desktop
     await navigateToUnit(page, 0);

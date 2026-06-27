@@ -8,7 +8,7 @@ import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime, SpeechQueue } from './tts.js?v=3';
-import { debounce } from './utils.js?v=3';
+import { debounce, sanitize } from './utils.js?v=3';
 import { AuthService } from './auth-service.js?v=3';
 import { NavigationService } from './nav-service.js?v=3';
 import { StatsService } from './stats-service.js?v=3';
@@ -58,7 +58,9 @@ const state = {
     data: getLocalProgress(appId), // ← Always has data, even if null
     view: 'glossary',
     unit: 0,
-    flashcardSource: 'words' // 'words' or 'phrases'
+    flashcardSource: 'words', // 'words' or 'phrases'
+    hiddenPhrases: new Set(),
+    phraseMixedMap: new Map()
 };
 
 const engines = {
@@ -420,22 +422,49 @@ function _renderPhrases(phrases) {
     }
 
     const controlsHTML = `
-        <div class="phrases-controls" style="margin-bottom: 20px; display: flex; gap: 10px;">
-            <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
-                <span>▶️</span> Play All
-            </button>
-            <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
-                <span>⏹️</span> Stop
-            </button>
+        <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+            <div class="phrases-audio-controls" style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
+                    <span>▶️</span> Play All
+                </button>
+                <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
+                    <span>⏹️</span> Stop
+                </button>
+            </div>
+            <div class="controls-row" style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%;">
+                    <span style="font-weight: bold; font-size: 0.9rem;">Hide & Guess:</span>
+                    <div class="btn-group">
+                        <button class="btn" onclick="window.app.hidePhrasePart('de')">Hide German</button>
+                        <button class="btn" onclick="window.app.hidePhrasePart('en')">Hide English</button>
+                        <button class="btn" onclick="window.app.hidePhrasePart('note')">Hide Notes</button>
+                        <button class="btn" onclick="window.app.hidePhrasePart('words')">Hide Used Words</button>
+                        <button class="btn" onclick="window.app.hidePhrasePart('mixed')">Hide Mixed</button>
+                        <button class="btn" onclick="window.app.revealAllPhrases()">Reveal All</button>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
 
+    const isMixed = state.hiddenPhrases.has('mixed');
+
     const cardsHTML = phrases.map(p => {
+        if (isMixed && !state.phraseMixedMap.has(p.id)) {
+            state.phraseMixedMap.set(p.id, Math.random() > 0.5 ? 'de' : 'en');
+        }
+        const mixedHide = isMixed ? state.phraseMixedMap.get(p.id) : null;
+
+        const hideDe = state.hiddenPhrases.has('de') || (mixedHide === 'de');
+        const hideEn = state.hiddenPhrases.has('en') || (mixedHide === 'en');
+        const hideNote = state.hiddenPhrases.has('note');
+        const hideWords = state.hiddenPhrases.has('words');
+
         const registerBadge = p.register && p.register !== 'neutral' 
             ? `<span class="phrase-badge register">${p.register}</span>` 
             : '';
         const wordsBadge = p.usedWords 
-            ? `<span class="phrase-badge words">Words: ${p.usedWords}</span>` 
+            ? `<span class="phrase-badge words hideable ${hideWords ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">Words: ${sanitize(p.usedWords)}</span>` 
             : '';
 
         return `
@@ -443,11 +472,13 @@ function _renderPhrases(phrases) {
                 <div class="phrase-header">
                     <div class="phrase-de-container">
                         <button class="speak-btn" onclick="window.app.speakPhrase('${p.id}', this)" title="Speak phrase">🔊</button>
-                        <span class="phrase-de">${p.de}</span>
+                        <span class="phrase-de hideable ${hideDe ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.de)}</span>
                     </div>
                 </div>
-                <div class="phrase-en">${p.en}</div>
-                ${p.note ? `<div class="phrase-note">${p.note}</div>` : ''}
+                <div class="phrase-en">
+                    <span class="hideable ${hideEn ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.en)}</span>
+                </div>
+                ${p.note ? `<div class="phrase-note"><span class="hideable ${hideNote ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.note)}</span></div>` : ''}
                 <div class="phrase-meta">
                     ${registerBadge}
                     ${wordsBadge}
@@ -536,7 +567,10 @@ window.app = {
     },
     switchMode: (m) => navService.switchMode(m),
     toggleSidebar: () => navService.toggleSidebar(),
-    switchUnit: (i) => navService.switchUnit(i).then(() => _evaluateTrophies()),
+    switchUnit(i) {
+        this.revealAllPhrases();
+        return navService.switchUnit(i).then(() => _evaluateTrophies());
+    },
     async switchUnitTab(tabName) {
         if (typeof this.stopAudioQueue === 'function') {
             this.stopAudioQueue();
@@ -624,6 +658,37 @@ window.app = {
         _save();
     },
     revealAllTable() { engines.glossary?.revealAll(); },
+    revealAllPhrases() {
+        state.hiddenPhrases.clear();
+        state.phraseMixedMap.clear();
+        if (state.activePhrases && state.activePhrases.length > 0) {
+            _renderPhrases(state.activePhrases);
+        }
+    },
+    hidePhrasePart(part) {
+        if (part === 'mixed') {
+            state.hiddenPhrases.clear();
+            state.hiddenPhrases.add('mixed');
+            state.phraseMixedMap.clear();
+            if (state.activePhrases) {
+                state.activePhrases.forEach(p => {
+                    state.phraseMixedMap.set(p.id, Math.random() > 0.5 ? 'de' : 'en');
+                });
+            }
+        } else {
+            if (state.hiddenPhrases.has('mixed')) {
+                state.hiddenPhrases.delete('mixed');
+            }
+            if (state.hiddenPhrases.has(part)) {
+                state.hiddenPhrases.delete(part);
+            } else {
+                state.hiddenPhrases.add(part);
+            }
+        }
+        if (state.activePhrases && state.activePhrases.length > 0) {
+            _renderPhrases(state.activePhrases);
+        }
+    },
     playUnitAudio() {
         const activeTab = state.tab || 'words';
         if (activeTab === 'words') {
