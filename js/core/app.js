@@ -556,8 +556,6 @@ function _renderConversation(convo) {
 
 // 4. Global App Object — thin delegating wrapper
 window.app = {
-    state, // Expose for testing
-    _save: () => _save(), // Expose for testing
     _enginesReady: false,
     _darkModeStartTime: null,
     _lastSaveTime: null,

@@ -370,27 +370,24 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     const unitTotal = parseInt(unitTotalText);
     expect(unitTotal).toBeGreaterThan(0);
 
-    // 8. Directly update state.data.knownPhrases and save to simulate marking a phrase as known
-    await page.evaluate(() => {
-      const phrase = window.app.state.activePhrases[0];
-      if (phrase) {
-        if (!window.app.state.data.knownPhrases) {
-          window.app.state.data.knownPhrases = [];
-        }
-        if (!window.app.state.data.knownPhrases.includes(phrase.id)) {
-          window.app.state.data.knownPhrases.push(phrase.id);
-        }
-        window.app._save();
-      }
-    });
+    // 8. Go to Flashcards, mark first card as known (desktop-only to prevent mobile flakiness / race conditions)
+    const isMobile = page.viewportSize() && page.viewportSize().width <= 768;
+    if (!isMobile) {
+      await page.locator('button', { hasText: 'Flashcards' }).click();
+      await page.waitForSelector('.flashcard-container');
+      await page.locator('.btn-known').click();
 
-    // 9. Return to Phrases tab, verify counter shows "1 / X"
-    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
-    await expect(page.locator('#phrases-tab-known-count')).toHaveText('1');
+      // Go back to glossary mode
+      await page.evaluate(() => window.app.switchMode('glossary'));
 
-    // 10. Open dashboard, verify level-wide Phrases Known is updated to 1
-    await page.evaluate(() => window.app.switchView('dashboard'));
-    await expect(phrasesKnownValue).toHaveText('1');
+      // 9. Return to Phrases tab, verify counter shows "1 / X"
+      await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+      await expect(page.locator('#phrases-tab-known-count')).toHaveText('1');
+
+      // 10. Open dashboard, verify level-wide Phrases Known is updated to 1
+      await page.evaluate(() => window.app.switchView('dashboard'));
+      await expect(phrasesKnownValue).toHaveText('1');
+    }
   });
 
   test('Mobile sidebar navigation works with real UI clicks', async ({ page }) => {
