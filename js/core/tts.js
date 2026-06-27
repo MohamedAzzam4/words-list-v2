@@ -75,8 +75,9 @@ class SpeechQueueClass {
         this.isPlaying = false;
         this.onHighlightCallback = null;
         this.onFinishedCallback = null;
-        this.heartbeatInterval = null;
         this.currentUtterance = null;
+        this._watchdogTimer = null;
+        this._speakDelayTimer = null;
     }
 
     playAll(items, onHighlight, onFinished) {
@@ -90,23 +91,14 @@ class SpeechQueueClass {
         this.onHighlightCallback = onHighlight;
         this.onFinishedCallback = onFinished;
 
-        // Start active Chrome speechSynthesis.resume() heartbeat
-        if (typeof window !== 'undefined' && window.speechSynthesis) {
-            this.heartbeatInterval = setInterval(() => {
-                if (this.isPlaying && window.speechSynthesis.speaking) {
-                    window.speechSynthesis.pause();
-                    window.speechSynthesis.resume();
-                }
-            }, 5000);
-        }
-
         this._speakCurrent();
     }
 
     _speakCurrent() {
         if (!this.isPlaying || this.currentIndex >= this.queue.length) {
+            const cb = this.onFinishedCallback;
             this.stop();
-            if (this.onFinishedCallback) this.onFinishedCallback();
+            if (cb) cb();
             return;
         }
 
@@ -126,53 +118,68 @@ class SpeechQueueClass {
             return;
         }
 
-        const clean = cleanTextForAudio(item.de || item);
-        const utterance = new SpeechSynthesisUtterance(clean);
-        utterance.lang = 'de-DE';
-        if (germanVoice) utterance.voice = germanVoice;
-        utterance.rate = 0.85;
-
         // Clear any watchdog from the previous utterance
         if (this._watchdogTimer) {
             clearTimeout(this._watchdogTimer);
             this._watchdogTimer = null;
         }
 
-        utterance.onend = () => {
-            if (this.currentUtterance === utterance) {
-                if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
-                this.currentUtterance = null;
+        // Cancel first to reset Chrome's internal speech state, then wait
+        // 250ms before speaking. Without this delay, mobile Chrome kills
+        // the new utterance immediately after cancel().
+        window.speechSynthesis.cancel();
+
+        this._speakDelayTimer = setTimeout(() => {
+            if (!this.isPlaying) return;
+
+            const clean = cleanTextForAudio(item.de || item);
+            if (!clean) {
                 this.currentIndex++;
                 this._speakCurrent();
+                return;
             }
-        };
 
-        utterance.onerror = (e) => {
-            // 'interrupted' errors are expected from pause/resume heartbeats — ignore them
-            if (e.error === 'interrupted') return;
-            console.warn('SpeechQueue: Speech error occurred', e);
-            if (this.currentUtterance === utterance) {
-                if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
-                this.currentUtterance = null;
-                this.currentIndex++;
-                this._speakCurrent();
-            }
-        };
+            const utterance = new SpeechSynthesisUtterance(clean);
+            utterance.lang = 'de-DE';
+            if (germanVoice) utterance.voice = germanVoice;
+            utterance.rate = 0.85;
 
-        this.currentUtterance = utterance;
-        window.speechSynthesis.speak(utterance);
+            utterance.onend = () => {
+                if (this.currentUtterance === utterance) {
+                    if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
+                    this.currentUtterance = null;
+                    this.currentIndex++;
+                    this._speakCurrent();
+                }
+            };
 
-        // Watchdog: if mobile Chrome silently drops the utterance, onend/onerror never fire.
-        // After 15s with no callback, force-advance the queue.
-        this._watchdogTimer = setTimeout(() => {
-            if (this.isPlaying && this.currentUtterance === utterance) {
-                console.warn('SpeechQueue: Watchdog fired — utterance likely dropped by mobile browser, advancing.');
-                window.speechSynthesis.cancel();
-                this.currentUtterance = null;
-                this.currentIndex++;
-                this._speakCurrent();
-            }
-        }, 15000);
+            utterance.onerror = (e) => {
+                // 'interrupted' is expected from cancel() — ignore it
+                if (e.error === 'interrupted' || e.error === 'canceled') return;
+                console.warn('SpeechQueue: Speech error occurred', e.error);
+                if (this.currentUtterance === utterance) {
+                    if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
+                    this.currentUtterance = null;
+                    this.currentIndex++;
+                    this._speakCurrent();
+                }
+            };
+
+            this.currentUtterance = utterance;
+            window.speechSynthesis.speak(utterance);
+
+            // Watchdog: if mobile Chrome silently drops the utterance (no onend/onerror),
+            // force-advance the queue after 15s.
+            this._watchdogTimer = setTimeout(() => {
+                if (this.isPlaying && this.currentUtterance === utterance) {
+                    console.warn('SpeechQueue: Watchdog fired — advancing.');
+                    window.speechSynthesis.cancel();
+                    this.currentUtterance = null;
+                    this.currentIndex++;
+                    this._speakCurrent();
+                }
+            }, 15000);
+        }, 250);
     }
 
     speakSingle(text) {
@@ -186,14 +193,14 @@ class SpeechQueueClass {
         this.currentIndex = 0;
         this.currentUtterance = null;
 
+        if (this._speakDelayTimer) {
+            clearTimeout(this._speakDelayTimer);
+            this._speakDelayTimer = null;
+        }
+
         if (this._watchdogTimer) {
             clearTimeout(this._watchdogTimer);
             this._watchdogTimer = null;
-        }
-
-        if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval);
-            this.heartbeatInterval = null;
         }
 
         if (typeof window !== 'undefined' && window.speechSynthesis) {

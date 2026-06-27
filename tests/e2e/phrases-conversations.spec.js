@@ -13,7 +13,7 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     // Mock speechSynthesis deterministically.
     // Use Object.defineProperty because window.speechSynthesis is read-only.
     await page.addInitScript(() => {
-      window.__mockTTS = { currentUtterance: null, speakCount: 0 };
+      window.__mockTTS = { currentUtterance: null, speakCount: 0, _speakResolvers: [] };
       const mockSpeechSynthesis = {
         speaking: false,
         paused: false,
@@ -24,6 +24,9 @@ test.describe('Phrases and Conversations E2E Suite', () => {
           mockSpeechSynthesis.speaking = true;
           window.__mockTTS.currentUtterance = utterance;
           window.__mockTTS.speakCount++;
+          // Resolve any pending waitForSpeak promises
+          const resolvers = window.__mockTTS._speakResolvers.splice(0);
+          resolvers.forEach(r => r());
           // Fallback auto-fire after 5s to prevent infinite hangs in non-audio tests
           window.__mockTTS._fallbackTimer = setTimeout(() => {
             if (mockSpeechSynthesis.speaking) {
@@ -47,13 +50,20 @@ test.describe('Phrases and Conversations E2E Suite', () => {
         configurable: true,
         writable: true
       });
-      // Helper: test code calls this to simulate speech completion
+      // Helper: simulate speech completion on the current utterance
       window.__mockTTS.finishCurrent = () => {
         const utt = window.__mockTTS.currentUtterance;
         if (utt && utt.onend) {
           mockSpeechSynthesis.speaking = false;
           utt.onend(new Event('end'));
         }
+      };
+      // Helper: returns a promise that resolves when the next speak() call happens.
+      // Needed because SpeechQueue uses cancel() + 250ms delay + speak().
+      window.__mockTTS.waitForSpeak = () => {
+        return new Promise(resolve => {
+          window.__mockTTS._speakResolvers.push(resolve);
+        });
       };
       window.SpeechSynthesisUtterance = class {
         constructor(text) {
@@ -150,11 +160,15 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     // Button shows playing state
     await expect(playAllBtn).toHaveClass(/playing/);
 
-    // First card is highlighted (onHighlight fires synchronously during playAll)
+    // First card is highlighted (onHighlight fires synchronously before the 250ms speak delay)
     await expect(phraseCards.nth(0)).toHaveClass(/highlighted-speech/, { timeout: 2000 });
 
-    // Trigger mock onend to advance to next card
+    // Wait for the 250ms cancel-delay-speak to actually call speak(), then finish it
+    await page.evaluate(() => window.__mockTTS.waitForSpeak());
     await page.evaluate(() => window.__mockTTS.finishCurrent());
+
+    // Wait for next speak (250ms delay for second utterance)
+    await page.evaluate(() => window.__mockTTS.waitForSpeak());
 
     // Second card should now be highlighted
     await expect(phraseCards.nth(1)).toHaveClass(/highlighted-speech/, { timeout: 2000 });
@@ -460,5 +474,134 @@ test.describe('Phrases and Conversations E2E Suite', () => {
 
     // 18. Confirm the sidebar closes
     await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
+  });
+
+  test('SpeechQueue advances through multiple items correctly', async ({ page }) => {
+    await navigateToUnit(page, 0);
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await page.waitForSelector('.phrase-card');
+
+    const phraseCards = page.locator('.phrase-card');
+    const totalCards = await phraseCards.count();
+
+    // Start Play All
+    await page.locator('#btn-play-all-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).toHaveClass(/playing/);
+
+    // Advance through at least 5 cards (or all cards if fewer than 5)
+    const advanceCount = Math.min(5, totalCards);
+    for (let i = 0; i < advanceCount; i++) {
+      // Wait for speak() to be called (after the 250ms delay)
+      await page.evaluate(() => window.__mockTTS.waitForSpeak());
+
+      // Verify the correct card is highlighted
+      await expect(phraseCards.nth(i)).toHaveClass(/highlighted-speech/, { timeout: 2000 });
+
+      // Verify speak count increments
+      const speakCount = await page.evaluate(() => window.__mockTTS.speakCount);
+      expect(speakCount).toBe(i + 1);
+
+      // Finish current utterance to advance
+      await page.evaluate(() => window.__mockTTS.finishCurrent());
+    }
+
+    // Stop playback
+    await page.locator('#btn-stop-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).not.toHaveClass(/playing/);
+  });
+
+  test('SpeechQueue stop during 250ms delay cancels correctly', async ({ page }) => {
+    await navigateToUnit(page, 0);
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await page.waitForSelector('.phrase-card');
+
+    // Start Play All
+    await page.locator('#btn-play-all-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).toHaveClass(/playing/);
+
+    // Wait for first speak, finish it so we enter the cancel-delay cycle
+    await page.evaluate(() => window.__mockTTS.waitForSpeak());
+    const countBefore = await page.evaluate(() => window.__mockTTS.speakCount);
+    await page.evaluate(() => window.__mockTTS.finishCurrent());
+
+    // Now the queue is in the 250ms delay before speaking item #2.
+    // Stop immediately (during the delay).
+    await page.locator('#btn-stop-phrases').click();
+
+    // Wait 500ms to ensure the delayed speak would have fired if not cancelled
+    await page.waitForTimeout(500);
+
+    // Speak count should NOT have incremented
+    const countAfter = await page.evaluate(() => window.__mockTTS.speakCount);
+    expect(countAfter).toBe(countBefore);
+
+    // Playback should be fully stopped
+    await expect(page.locator('#btn-play-all-phrases')).not.toHaveClass(/playing/);
+    const isSpeaking = await page.evaluate(() => window.speechSynthesis.speaking);
+    expect(isSpeaking).toBe(false);
+  });
+
+  test('SpeechQueue rapid stop-and-restart works correctly', async ({ page }) => {
+    await navigateToUnit(page, 0);
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await page.waitForSelector('.phrase-card');
+
+    const phraseCards = page.locator('.phrase-card');
+
+    // Start Play All
+    await page.locator('#btn-play-all-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).toHaveClass(/playing/);
+
+    // Wait for first speak
+    await page.evaluate(() => window.__mockTTS.waitForSpeak());
+
+    // Stop immediately
+    await page.locator('#btn-stop-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).not.toHaveClass(/playing/);
+
+    // Reset speak count
+    await page.evaluate(() => { window.__mockTTS.speakCount = 0; });
+
+    // Start again
+    await page.locator('#btn-play-all-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).toHaveClass(/playing/);
+
+    // Should highlight first card again
+    await expect(phraseCards.nth(0)).toHaveClass(/highlighted-speech/, { timeout: 2000 });
+
+    // Wait for the new speak call
+    await page.evaluate(() => window.__mockTTS.waitForSpeak());
+    const count = await page.evaluate(() => window.__mockTTS.speakCount);
+    expect(count).toBe(1); // Only 1 new speak, not stale ones
+
+    // Clean up
+    await page.locator('#btn-stop-phrases').click();
+  });
+
+  test('SpeechQueue completes all items and fires onFinished', async ({ page }) => {
+    await navigateToUnit(page, 0);
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await page.waitForSelector('.phrase-card');
+
+    const phraseCards = page.locator('.phrase-card');
+    const totalCards = await phraseCards.count();
+
+    // Start Play All
+    await page.locator('#btn-play-all-phrases').click();
+    await expect(page.locator('#btn-play-all-phrases')).toHaveClass(/playing/);
+
+    // Advance through ALL items
+    for (let i = 0; i < totalCards; i++) {
+      await page.evaluate(() => window.__mockTTS.waitForSpeak());
+      await page.evaluate(() => window.__mockTTS.finishCurrent());
+    }
+
+    // After all items complete, onFinished should call stopAudioQueue,
+    // which removes .playing class and all highlights
+    await expect(page.locator('#btn-play-all-phrases')).not.toHaveClass(/playing/, { timeout: 2000 });
+
+    // Verify speak count matches total cards
+    const speakCount = await page.evaluate(() => window.__mockTTS.speakCount);
+    expect(speakCount).toBe(totalCards);
   });
 });
