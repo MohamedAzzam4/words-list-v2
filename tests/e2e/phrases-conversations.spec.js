@@ -321,4 +321,147 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     const boundingBox = await tablist.boundingBox();
     expect(boundingBox.width).toBeLessThanOrEqual(400);
   });
+
+  test('Dashboard and Phrases tab progress stats model', async ({ page }) => {
+    // 1. Navigate to Unit 1 (index 0)
+    await navigateToUnit(page, 0);
+
+    // 2. Open dashboard
+    await page.evaluate(() => window.app.switchView('dashboard'));
+
+    // 3. Verify card labels contain "A1"
+    const wordsKnownLabel = page.locator('#label-words-known');
+    const completionLabel = page.locator('#label-completion');
+    await expect(wordsKnownLabel).toHaveText(/A1 Words Known/);
+    await expect(completionLabel).toHaveText(/A1 Word Completion/);
+
+    // 4. Verify Phrases Known card displays correctly (starting at 0 known, out of dynamic positive total phrases)
+    const phrasesKnownValue = page.locator('#stat-session');
+    const phrasesTotalValue = page.locator('#stat-phrases-total');
+    await expect(phrasesKnownValue).toHaveText('0');
+    
+    // Total phrases count should resolve to a positive number
+    await expect(phrasesTotalValue).not.toHaveText('...');
+    await expect(phrasesTotalValue).not.toHaveText('0');
+    const totalText = await phrasesTotalValue.innerText();
+    expect(parseInt(totalText)).toBeGreaterThan(0);
+
+    // 5. Verify topbar progress label says "Word Progress"
+    const progressLabel = page.locator('#progress-label');
+    await expect(progressLabel).toHaveText(/Word Progress/);
+
+    // 6. Verify Leaderboard column header says "Words Mastered (All Levels)"
+    await page.evaluate(() => window.app.switchView('leaderboard'));
+    const leaderboardCol = page.locator('th', { hasText: 'Words Mastered (All Levels)' });
+    await expect(leaderboardCol).toBeVisible();
+
+    // 7. Go to Unit 1 Phrases tab, verify Phrases Learned counter is visible and shows "0 / X" (where X > 0)
+    await page.evaluate(() => {
+      window.app.switchUnit(0);
+      window.app.switchView('glossary');
+    });
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    const tabCounter = page.locator('#phrases-tab-counter');
+    await expect(tabCounter).toBeVisible();
+    await expect(page.locator('#phrases-tab-known-count')).toHaveText('0');
+    
+    const tabTotalVal = page.locator('#phrases-tab-total-count');
+    const unitTotalText = await tabTotalVal.innerText();
+    const unitTotal = parseInt(unitTotalText);
+    expect(unitTotal).toBeGreaterThan(0);
+
+    // 8. Directly update state.data.knownPhrases and save to simulate marking a phrase as known
+    await page.evaluate(() => {
+      const phrase = window.app.state.activePhrases[0];
+      if (phrase) {
+        if (!window.app.state.data.knownPhrases) {
+          window.app.state.data.knownPhrases = [];
+        }
+        if (!window.app.state.data.knownPhrases.includes(phrase.id)) {
+          window.app.state.data.knownPhrases.push(phrase.id);
+        }
+        window.app._save();
+      }
+    });
+
+    // 9. Return to Phrases tab, verify counter shows "1 / X"
+    await page.locator('button[role="tab"]', { hasText: 'Phrases' }).click();
+    await expect(page.locator('#phrases-tab-known-count')).toHaveText('1');
+
+    // 10. Open dashboard, verify level-wide Phrases Known is updated to 1
+    await page.evaluate(() => window.app.switchView('dashboard'));
+    await expect(phrasesKnownValue).toHaveText('1');
+  });
+
+  test('Mobile sidebar navigation works with real UI clicks', async ({ page }) => {
+    const isMobile = page.viewportSize() && page.viewportSize().width <= 768;
+    if (!isMobile) {
+      test.skip();
+    }
+
+    // 1-2. Open the website and select A1
+    await page.goto('/index.html');
+    await page.waitForSelector('.a1-card');
+    await page.locator('.a1-card').click();
+    await page.waitForSelector('#mobile-menu-btn');
+    await page.waitForFunction('window.app !== undefined');
+    await page.waitForSelector('#glossary-tbody tr');
+
+    // 3. Confirm the mobile menu button is visible
+    await expect(page.locator('#mobile-menu-btn')).toBeVisible();
+
+    // 4. Click the mobile menu button
+    await page.locator('#mobile-menu-btn').tap();
+
+    // 5. Confirm the sidebar opens
+    await expect(page.locator('#sidebar')).toHaveClass(/open/);
+    await page.waitForTimeout(350); // Wait for transition animation to finish
+
+    // 6. Click the Dashboard nav item using the visible sidebar UI
+    await page.locator('#sidebar .nav-item', { hasText: 'Dashboard' }).click({ force: true });
+
+    // 7. Confirm the Dashboard view is visible
+    await expect(page.locator('#view-dashboard')).not.toHaveClass(/hidden/);
+
+    // 8. Confirm the sidebar closes after navigation
+    await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
+
+    // 9. Click the mobile menu button again
+    await page.locator('#mobile-menu-btn').tap();
+    await expect(page.locator('#sidebar')).toHaveClass(/open/);
+    await page.waitForTimeout(350); // Wait for transition animation to finish
+
+    // 10. Click the Leaderboard nav item using the visible sidebar UI
+    await page.locator('#sidebar .nav-item', { hasText: 'Leaderboard' }).click({ force: true });
+
+    // 11. Confirm the Leaderboard view is visible
+    await expect(page.locator('#view-leaderboard')).not.toHaveClass(/hidden/);
+
+    // 12. Confirm the sidebar closes after navigation
+    await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
+
+    // 13. Click the mobile menu button again
+    await page.locator('#mobile-menu-btn').tap();
+    await expect(page.locator('#sidebar')).toHaveClass(/open/);
+    await page.waitForTimeout(350); // Wait for transition animation to finish
+
+    // 14. Click the first unit in the sidebar using the real unit item UI
+    await page.locator('#unit-list .nav-item').first().click({ force: true });
+
+    // 15. Confirm the Unit/Glossary view opens
+    await expect(page.locator('#view-glossary')).not.toHaveClass(/hidden/);
+
+    // 16. Confirm Words tab is default
+    await expect(page.locator('#tab-words')).toHaveAttribute('aria-selected', 'true');
+    await expect(page.locator('#panel-words')).not.toHaveClass(/hidden/);
+
+    // 17. Open the mobile menu again and close it using the close button
+    await page.locator('#mobile-menu-btn').tap();
+    await expect(page.locator('#sidebar')).toHaveClass(/open/);
+    await page.waitForTimeout(350); // Wait for transition animation to finish
+    await page.locator('#sidebar-close-btn').tap({ force: true });
+
+    // 18. Confirm the sidebar closes
+    await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
+  });
 });

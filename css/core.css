@@ -708,6 +708,8 @@ th {
 @media (max-width: 768px) {
     #sidebar {
         position: fixed;
+        top: 0;
+        left: 0;
         height: 100%;
         transform: translateX(-100%);
         width: 250px;

@@ -20,7 +20,7 @@
         <div class="nav-header" style="position: relative;">
             <h2 id="nav-level-title">📚 German</h2>
             <div id="nav-level-subtitle" style="font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-top: 5px;"></div>
-            <button id="sidebar-close-btn" onclick="window.app.toggleSidebar()" title="Close menu">✕</button>
+            <button id="sidebar-close-btn" onclick="window.app.toggleSidebar(event)" title="Close menu">✕</button>
         </div>
 
         <div id="auth-section">
@@ -63,14 +63,14 @@
     </nav>
 
     <!-- Mobile overlay: tap outside sidebar to close it -->
-    <div id="sidebar-overlay" onclick="window.app.toggleSidebar()"></div>
+    <div id="sidebar-overlay" onclick="window.app.toggleSidebar(event)"></div>
 
     <main id="main-content">
         <header id="topbar">
-            <button id="mobile-menu-btn" class="topbar-btn" onclick="window.app.toggleSidebar()">☰</button>
+            <button id="mobile-menu-btn" class="topbar-btn" onclick="window.app.toggleSidebar(event)">☰</button>
             <div class="progress-container">
                 <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
-                    <span id="progress-label">Overall Progress</span>
+                    <span id="progress-label">Word Progress</span>
                     <span id="overall-progress-text">0%</span>
                 </div>
                 <div class="progress-bar-bg">
@@ -235,19 +235,19 @@
                 <h2 id="dashboard-title" style="margin-bottom: 20px;">📊 Your Learning Stats</h2>
                 <div class="grid-cards">
                     <div class="stat-card">
-                        <h3>Total Words Known</h3>
+                        <h3 id="label-words-known">Total Words Known</h3>
                         <div class="stat-value" id="stat-known">0</div>
                         <div style="color: var(--text-muted);">Out of <span id="stat-total">0</span></div>
                     </div>
                     <div class="stat-card">
-                        <h3>Overall Completion</h3>
+                        <h3 id="label-completion">Overall Completion</h3>
                         <div class="stat-value" id="stat-percent">0%</div>
                         <div style="color: var(--text-muted);">Keep it up!</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Words Studied Today</h3>
+                        <h3 id="label-phrases-known">Phrases Known</h3>
                         <div class="stat-value" id="stat-session">0</div>
-                        <div style="color: var(--text-muted);">In this session</div>
+                        <div style="color: var(--text-muted);" id="label-phrases-total-container">Out of <span id="stat-phrases-total">0</span></div>
                     </div>
                     <div class="stat-card">
                         <h3>Weakest Unit</h3>
@@ -282,7 +282,7 @@
                             <tr>
                                 <th style="width: 60px; text-align: center;">Rank</th>
                                 <th>Linguist</th>
-                                <th style="text-align: center;">Total Words Mastered</th>
+                                <th style="text-align: center;">Words Mastered (All Levels)</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-tbody"></tbody>
@@ -337,8 +337,8 @@
         // WP-031: Dynamic level setup based on URL parameter
         (function() {
             const levelConfig = {
-                a1: { title: '📚 A1 German', subtitle: 'Massive Vocabulary Set', progressLabel: 'Overall Progress', translationHeader: 'Translation (EN)', dashboardTitle: '📊 Your Learning Stats', breakdownTitle: 'Unit Breakdown', showVocabFilter: false },
-                b2: { title: '📚 B2 German', subtitle: 'Aspekte Textbook', progressLabel: 'Overall B2 Progress', translationHeader: 'Translation (EN/AR)', dashboardTitle: '📊 Your B2 Learning Stats', breakdownTitle: 'Module Breakdown', showVocabFilter: true }
+                a1: { title: '📚 A1 German', subtitle: 'Massive Vocabulary Set', progressLabel: 'Word Progress', translationHeader: 'Translation (EN)', dashboardTitle: '📊 Your Learning Stats', breakdownTitle: 'Unit Breakdown', showVocabFilter: false },
+                b2: { title: '📚 B2 German', subtitle: 'Aspekte Textbook', progressLabel: 'B2 Word Progress', translationHeader: 'Translation (EN/AR)', dashboardTitle: '📊 Your B2 Learning Stats', breakdownTitle: 'Module Breakdown', showVocabFilter: true }
             };
             const cfg = levelConfig[level] || levelConfig.a1;
 

@@ -62,10 +62,22 @@ export class NavigationService {
         }
     }
 
-    toggleSidebar() {
+    toggleSidebar(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const now = Date.now();
+        if (now - (this._lastSidebarToggle || 0) < 350) {
+            return;
+        }
+        this._lastSidebarToggle = now;
+
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
-        const isOpen = sidebar?.classList.toggle('open');
+        if (!sidebar) return;
+
+        const isOpen = sidebar.classList.toggle('open');
         overlay?.classList.toggle('visible', isOpen);
     }
 

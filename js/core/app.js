@@ -421,15 +421,25 @@ function _renderPhrases(phrases) {
         return;
     }
 
+    const unitKnownCount = phrases.filter(p => state.data.knownPhrases?.includes(p.id)).length;
+
     const controlsHTML = `
         <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-            <div class="phrases-audio-controls" style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
-                    <span>▶️</span> Play All
-                </button>
-                <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
-                    <span>⏹️</span> Stop
-                </button>
+            <div class="phrases-audio-controls" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>▶️</span> Play All
+                    </button>
+                    <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>⏹️</span> Stop
+                    </button>
+                </div>
+                <div id="phrases-tab-counter" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500; background: var(--surface); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;">
+                    <span>Phrases Learned:</span>
+                    <span id="phrases-tab-known-count" style="color: var(--text-primary); font-weight: bold;">${unitKnownCount}</span>
+                    <span>/</span>
+                    <span id="phrases-tab-total-count">${phrases.length}</span>
+                </div>
             </div>
             <div class="controls-row" style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%;">
@@ -546,6 +556,8 @@ function _renderConversation(convo) {
 
 // 4. Global App Object — thin delegating wrapper
 window.app = {
+    state, // Expose for testing
+    _save: () => _save(), // Expose for testing
     _enginesReady: false,
     _darkModeStartTime: null,
     _lastSaveTime: null,
@@ -564,9 +576,10 @@ window.app = {
     switchView: (v) => {
         navService.switchView(v);
         if (v === 'leaderboard') leaderboardService.render();
+        if (v === 'dashboard') statsService.updateStats();
     },
     switchMode: (m) => navService.switchMode(m),
-    toggleSidebar: () => navService.toggleSidebar(),
+    toggleSidebar: (e) => navService.toggleSidebar(e),
     switchUnit(i) {
         this.revealAllPhrases();
         return navService.switchUnit(i).then(() => _evaluateTrophies());

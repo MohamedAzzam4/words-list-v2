@@ -1,6 +1,8 @@
 // WP-028: StatsService — extracted from app.js
 // Handles dashboard stats rendering and unit progress calculations
 
+import { ContentLoader } from './content-parser.js?v=3';
+
 export class StatsService {
     constructor({ state, engines, levelConfig, onGetUnitProgress, onResolveUnitLabel }) {
         this.state = state;
@@ -8,6 +10,8 @@ export class StatsService {
         this.levelConfig = levelConfig;
         this._getUnitProgress = onGetUnitProgress;
         this._resolveUnitLabel = onResolveUnitLabel;
+        this._totalPhrasesCount = null;
+        this._loadingPhrases = false;
     }
 
     updateStats() {
@@ -35,6 +39,53 @@ export class StatsService {
 
         const fill = document.getElementById('overall-progress-fill');
         if (fill) fill.style.width = `${pct}%`;
+
+        // Dynamic labels for level-specific scope
+        const levelTitle = this.levelConfig?.levelTitle || '';
+        const levelName = levelTitle.replace('📚', '').replace('German', '').trim() || 'A1';
+
+        const labelWordsKnown = document.getElementById('label-words-known');
+        if (labelWordsKnown) {
+            labelWordsKnown.textContent = `${levelName} Words Known`;
+        }
+        const labelCompletion = document.getElementById('label-completion');
+        if (labelCompletion) {
+            labelCompletion.textContent = `${levelName} Word Completion`;
+        }
+
+        // Repurpose stat-session for level-scoped Phrases Known
+        const knownPhrasesCount = this.state.data?.knownPhrases?.length || 0;
+        setEl('stat-session', knownPhrasesCount);
+
+        const isDashboardVisible = !document.getElementById('view-dashboard')?.classList.contains('hidden');
+
+        if (this._totalPhrasesCount === null && !this._loadingPhrases && isDashboardVisible) {
+            this._loadingPhrases = true;
+            const levelStr = levelName.toLowerCase();
+            const vocab = this.levelConfig?.vocabulary || [];
+            const promises = [];
+            for (let i = 0; i < vocab.length; i++) {
+                promises.push(ContentLoader.loadPhrases(levelStr, i));
+            }
+            Promise.all(promises).then(allUnitPhrases => {
+                let total = 0;
+                allUnitPhrases.forEach(phrases => {
+                    total += phrases.length;
+                });
+                this._totalPhrasesCount = total;
+                this._loadingPhrases = false;
+                // Re-trigger update to display correct denominator
+                this.updateStats();
+            }).catch(e => {
+                console.error('Failed to load phrases for stats:', e);
+                this._loadingPhrases = false;
+            });
+        }
+
+        const statPhrasesTotal = document.getElementById('stat-phrases-total');
+        if (statPhrasesTotal) {
+            statPhrasesTotal.textContent = this._totalPhrasesCount !== null ? this._totalPhrasesCount : '...';
+        }
 
         // DASHBOARD RENDERING
         const statsTbody = document.getElementById('stats-tbody');
