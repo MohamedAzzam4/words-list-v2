@@ -97,7 +97,7 @@ class SpeechQueueClass {
                     window.speechSynthesis.pause();
                     window.speechSynthesis.resume();
                 }
-            }, 10000);
+            }, 5000);
         }
 
         this._speakCurrent();
@@ -126,16 +126,21 @@ class SpeechQueueClass {
             return;
         }
 
-        window.speechSynthesis.cancel();
-
         const clean = cleanTextForAudio(item.de || item);
         const utterance = new SpeechSynthesisUtterance(clean);
         utterance.lang = 'de-DE';
         if (germanVoice) utterance.voice = germanVoice;
         utterance.rate = 0.85;
 
+        // Clear any watchdog from the previous utterance
+        if (this._watchdogTimer) {
+            clearTimeout(this._watchdogTimer);
+            this._watchdogTimer = null;
+        }
+
         utterance.onend = () => {
             if (this.currentUtterance === utterance) {
+                if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
                 this.currentUtterance = null;
                 this.currentIndex++;
                 this._speakCurrent();
@@ -143,8 +148,11 @@ class SpeechQueueClass {
         };
 
         utterance.onerror = (e) => {
+            // 'interrupted' errors are expected from pause/resume heartbeats — ignore them
+            if (e.error === 'interrupted') return;
             console.warn('SpeechQueue: Speech error occurred', e);
             if (this.currentUtterance === utterance) {
+                if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
                 this.currentUtterance = null;
                 this.currentIndex++;
                 this._speakCurrent();
@@ -153,6 +161,18 @@ class SpeechQueueClass {
 
         this.currentUtterance = utterance;
         window.speechSynthesis.speak(utterance);
+
+        // Watchdog: if mobile Chrome silently drops the utterance, onend/onerror never fire.
+        // After 15s with no callback, force-advance the queue.
+        this._watchdogTimer = setTimeout(() => {
+            if (this.isPlaying && this.currentUtterance === utterance) {
+                console.warn('SpeechQueue: Watchdog fired — utterance likely dropped by mobile browser, advancing.');
+                window.speechSynthesis.cancel();
+                this.currentUtterance = null;
+                this.currentIndex++;
+                this._speakCurrent();
+            }
+        }, 15000);
     }
 
     speakSingle(text) {
@@ -165,6 +185,11 @@ class SpeechQueueClass {
         this.queue = [];
         this.currentIndex = 0;
         this.currentUtterance = null;
+
+        if (this._watchdogTimer) {
+            clearTimeout(this._watchdogTimer);
+            this._watchdogTimer = null;
+        }
 
         if (this.heartbeatInterval) {
             clearInterval(this.heartbeatInterval);

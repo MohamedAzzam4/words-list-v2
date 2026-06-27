@@ -55,6 +55,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
     display: flex;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -223,6 +224,7 @@ select {
     align-items: center;
     backdrop-filter: blur(8px); border-bottom: 1px solid; border-image: linear-gradient(to right, transparent, var(--primary), transparent) 1;
     z-index: 5;
+    flex-shrink: 0;
 }
 
 .progress-container {
