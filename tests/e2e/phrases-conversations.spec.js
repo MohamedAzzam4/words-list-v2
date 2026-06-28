@@ -525,8 +525,9 @@ test.describe('Phrases and Conversations E2E Suite', () => {
     await page.evaluate(() => window.__mockTTS.finishCurrent());
 
     // Now the queue is in the 250ms delay before speaking item #2.
-    // Stop immediately (during the delay).
-    await page.locator('#btn-stop-phrases').click();
+    // Stop immediately (during the delay). Use evaluate to click instantly,
+    // because Playwright's simulated click can take longer than 250ms on mobile.
+    await page.evaluate(() => document.getElementById('btn-stop-phrases').click());
 
     // Wait 500ms to ensure the delayed speak would have fired if not cancelled
     await page.waitForTimeout(500);

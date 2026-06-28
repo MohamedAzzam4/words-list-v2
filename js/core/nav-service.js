@@ -108,6 +108,7 @@ export class NavigationService {
             // Always close sidebar on mobile when selecting a unit
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar')?.classList.remove('open');
+                document.getElementById('sidebar-overlay')?.classList.remove('visible');
             }
         }
 
