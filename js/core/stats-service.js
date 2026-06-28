@@ -57,6 +57,11 @@ export class StatsService {
         const knownPhrasesCount = this.state.data?.knownPhrases?.length || 0;
         setEl('stat-session', knownPhrasesCount);
 
+        // SRS Mastered count
+        const srsData = this.state.data?.srsData || {};
+        const masteredCount = Object.values(srsData).filter(item => item.level === 6).length;
+        setEl('stat-srs-mastered', masteredCount);
+
         const isDashboardVisible = !document.getElementById('view-dashboard')?.classList.contains('hidden');
 
         if (this._totalPhrasesCount === null && !this._loadingPhrases && isDashboardVisible) {

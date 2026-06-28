@@ -14,6 +14,7 @@ import { NavigationService } from './nav-service.js?v=3';
 import { StatsService } from './stats-service.js?v=3';
 import { LeaderboardService } from './leaderboard-service.js?v=3';
 import { ContentLoader } from './content-parser.js?v=3';
+import { getLocalDateString } from './srs-logic.js?v=3';
 
 // 1. Load Level Config
 const level = document.querySelector('script[data-level]')?.dataset?.level || 'a1';
@@ -124,6 +125,7 @@ function _save() {
             state.data.favorites = Array.from(engines.flashcard.favoritesIds);
             state.data.flashcardErrors = { ...engines.flashcard.errors };
         }
+        state.data.srsData = { ...engines.flashcard.srsData };
     } else if (engines.glossary) {
         state.data.known = Array.from(engines.glossary.knownIds);
         state.data.favorites = Array.from(engines.glossary.favoritesIds);
@@ -159,6 +161,7 @@ function _save() {
         flashcardErrors: state.data.flashcardErrors || {},
         studyDates: state.data.studyDates || [],
         migrationVersion: state.data.migrationVersion || 0,
+        srsData: state.data.srsData || {},
         lastUpdated: new Date().toISOString()
     };
 
@@ -354,6 +357,40 @@ async function _initEngines() {
                 }
             }
         }
+
+        // Legacy SRS migration: migrate existing known words/phrases to Level 6
+        if (!state.data.srsData) {
+            state.data.srsData = {};
+        }
+        let migratedSRS = false;
+        if (state.data.known) {
+            for (const id of state.data.known) {
+                if (!state.data.srsData[id]) {
+                    state.data.srsData[id] = {
+                        level: 6,
+                        nextReviewDate: '2099-01-01',
+                        lastReviewed: Date.now()
+                    };
+                    migratedSRS = true;
+                }
+            }
+        }
+        if (state.data.knownPhrases) {
+            for (const id of state.data.knownPhrases) {
+                if (!state.data.srsData[id]) {
+                    state.data.srsData[id] = {
+                        level: 6,
+                        nextReviewDate: '2099-01-01',
+                        lastReviewed: Date.now()
+                    };
+                    migratedSRS = true;
+                }
+            }
+        }
+        if (migratedSRS) {
+            _save();
+            console.log('[SRS] Legacy known items migrated to Level 6.');
+        }
     }
 
     const words = levelConfig.vocabulary[state.unit] || [];
@@ -363,6 +400,7 @@ async function _initEngines() {
     engines.glossary = new GlossaryEngine('glossary-tbody', words, known, favorites, (t) => window.app.speakText(t));
     engines.flashcard = new FlashcardEngine(
         words, known, favorites, state.data?.flashcardErrors || {},
+        state.data?.srsData || {},
         () => _save(),
         () => {
             // onSessionComplete: safely increment session counter and record today's date
@@ -560,6 +598,25 @@ window.app = {
     _darkModeStartTime: null,
     _lastSaveTime: null,
     _consecutiveSaveFailures: 0,
+
+    debug_shiftSRS(days) {
+        if (!state.data || !state.data.srsData) return;
+        const srsData = state.data.srsData;
+        for (const id in srsData) {
+            const item = srsData[id];
+            if (item.nextReviewDate && item.level < 6) { // Don't shift mastered cards
+                const date = new Date(item.nextReviewDate + 'T00:00:00');
+                date.setDate(date.getDate() - days);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                item.nextReviewDate = `${year}-${month}-${day}`;
+                item.lastReviewed = Date.now();
+            }
+        }
+        _save();
+        window.location.reload();
+    },
 
     // ── AUTH ── (delegates to AuthService)
     loginWithGoogle: () => authService.loginWithGoogle(),

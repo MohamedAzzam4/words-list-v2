@@ -1,9 +1,42 @@
+import { calculateNextReview, getLocalDateString } from './srs-logic.js?v=3';
+
+function formatTimeRemaining(nextReviewDateStr) {
+    if (!nextReviewDateStr) return 'New Card';
+    
+    // Support legacy "YYYY-MM-DD" local date strings by appending midnight time if missing
+    const nextDateStr = nextReviewDateStr.includes('T') ? nextReviewDateStr : nextReviewDateStr + 'T00:00:00';
+    const nextDate = new Date(nextDateStr);
+    const now = new Date();
+    
+    const diffMs = nextDate - now;
+    if (diffMs <= 0) return 'Due now';
+    
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours <= 0) {
+        return 'in < 1 hour';
+    }
+    if (diffHours < 24) {
+        return `in ${diffHours} hour${diffHours === 1 ? '' : 's'}`;
+    }
+    
+    const days = Math.floor(diffHours / 24);
+    const hours = diffHours % 24;
+    
+    if (hours === 0) {
+        return `in ${days} day${days === 1 ? '' : 's'}`;
+    }
+    
+    return `in ${days} day${days === 1 ? '' : 's'} and ${hours} hour${hours === 1 ? '' : 's'}`;
+}
+
 export class FlashcardEngine {
-    constructor(words, knownIds, favoritesIds, errors, onSave, onSessionComplete) {
+    constructor(words, knownIds, favoritesIds, errors, srsData, onSave, onSessionComplete) {
         this.words = words || [];
         this.knownIds = knownIds || new Set();
         this.favoritesIds = favoritesIds || new Set();
         this.errors = errors || {};
+        this.srsData = srsData || {};
         this.onSave = onSave || (() => { });
         this.onSessionComplete = onSessionComplete || (() => { });
         this.queue = [];
@@ -15,11 +48,12 @@ export class FlashcardEngine {
         this._buildQueue();
     }
 
-    loadUnit(newWords, newKnownIds = null, newFavoritesIds = null, newErrors = null) {
+    loadUnit(newWords, newKnownIds = null, newFavoritesIds = null, newErrors = null, newSrsData = null) {
         this.words = newWords || [];
         if (newKnownIds !== null) this.knownIds = newKnownIds;
         if (newFavoritesIds !== null) this.favoritesIds = newFavoritesIds;
         if (newErrors !== null) this.errors = newErrors;
+        if (newSrsData !== null) this.srsData = newSrsData;
         this._buildQueue();
         this.index = 0;
         this.flipped = false;
@@ -28,13 +62,37 @@ export class FlashcardEngine {
 
     _buildQueue() {
         if (this.filter === 'learning') {
-            this.queue = this.words.filter(w => !this.knownIds.has(w.id));
+            const todayIso = new Date().toISOString();
+            
+            // Due cards: srsData exists, level > 0 and < 6, nextReviewDate <= todayIso
+            const dueCards = this.words.filter(w => {
+                const srs = this.srsData[w.id];
+                return srs && srs.level > 0 && srs.level < 6 && srs.nextReviewDate <= todayIso;
+            });
+            
+            // New cards: no srsData or level 0
+            const newCards = this.words.filter(w => {
+                const srs = this.srsData[w.id];
+                return !srs || srs.level === 0;
+            });
+            
+            let finalDue = [...dueCards];
+            let finalNew = [...newCards];
+            
+            if (this.shuffle) {
+                finalDue.sort(() => Math.random() - 0.5);
+                finalNew.sort(() => Math.random() - 0.5);
+            }
+            
+            const combined = [...finalDue, ...finalNew];
+            this.queue = combined.slice(0, 20);
         } else if (this.filter === 'favorites') {
             this.queue = this.words.filter(w => this.favoritesIds.has(w.id));
+            if (this.shuffle) this.queue.sort(() => Math.random() - 0.5);
         } else {
             this.queue = [...this.words];
+            if (this.shuffle) this.queue.sort(() => Math.random() - 0.5);
         }
-        if (this.shuffle) this.queue.sort(() => Math.random() - 0.5);
     }
 
     setFilter(f) { this.filter = f; this._buildQueue(); this.index = 0; this.render(); }
@@ -56,13 +114,30 @@ export class FlashcardEngine {
     mark(known) {
         const w = this.queue[this.index];
         if (!w) return;
+        
+        const nowIso = new Date().toISOString();
+        const srs = this.srsData[w.id];
+        
+        const isDue = !srs || srs.level === 0 || srs.nextReviewDate <= nowIso;
+        const currentLevel = srs ? srs.level : 0;
+        
+        const result = calculateNextReview(currentLevel, isDue, known, nowIso);
+        
+        this.srsData[w.id] = {
+            level: result.level,
+            nextReviewDate: result.nextReviewDate,
+            lastReviewed: Date.now()
+        };
+        
         if (known) {
-            this.knownIds.add(w.id);
+            if (result.level >= 1) {
+                this.knownIds.add(w.id);
+            }
         } else {
             this.errors[w.id] = (this.errors[w.id] || 0) + 1;
-            // Push to end for review
             this.queue.push(w);
         }
+        
         this.onSave();
         this.next();
     }
@@ -127,6 +202,34 @@ export class FlashcardEngine {
             const isFav = this.favoritesIds.has(w.id);
             favBadge.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
             favBadge.style.opacity = isFav ? '1' : '0.3';
+        }
+        
+        // Render SRS Level indicator
+        const srs = this.srsData[w.id];
+        const level = srs ? srs.level : 0;
+        const dotsContainer = document.getElementById('fc-srs-dots');
+        if (dotsContainer) {
+            dotsContainer.style.flexDirection = 'column';
+            dotsContainer.style.alignItems = 'center';
+            
+            let dotsHtml = '<div style="display:flex; gap:4px; align-items:center;">';
+            if (level === 6) {
+                dotsHtml += '<span class="srs-master-badge">⭐ Mastered</span>';
+            } else {
+                for (let i = 1; i <= 5; i++) {
+                    dotsHtml += `<span class="srs-dot ${i <= level ? 'filled' : ''}"></span>`;
+                }
+            }
+            dotsHtml += '</div>';
+            
+            if (level > 0 && level < 6 && srs && srs.nextReviewDate) {
+                const timeText = formatTimeRemaining(srs.nextReviewDate);
+                dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">Next review: ${timeText}</div>`;
+            } else if (level === 0) {
+                dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">New Card</div>`;
+            }
+            
+            dotsContainer.innerHTML = dotsHtml;
         }
         
         const deHtml = `${w.de} ${w.deContext ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">${w.deContext}</div>` : ''}`;

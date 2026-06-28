@@ -353,7 +353,8 @@ select {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* Fixes subpixel border rendering bugs on mobile */
+    border-spacing: 0;
     text-align: left;
 }
 
@@ -963,11 +964,12 @@ th {
 #theme-btn { border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; } #theme-btn:active { transform: rotate(180deg); }
 table tr:first-child th:first-child { border-top-left-radius: 16px; }
 table tr:first-child th:last-child { border-top-right-radius: 16px; }
-tbody tr { transition: background 0.2s; }
-tbody tr:nth-child(even) { background: var(--surface-hover); }
-tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
+tbody tr td, tbody tr th { transition: background 0.2s; }
+tbody tr:nth-child(even) td, tbody tr:nth-child(even) th { background: var(--surface-hover); }
+tbody tr:hover td, tbody tr:hover th { background: rgba(79, 70, 229, 0.04); }
 #view-flashcard { background: radial-gradient(ellipse at center, rgba(79, 70, 229, 0.05) 0%, transparent 70%); border-radius: 20px; padding: 20px; }
-.flashcard:hover .flashcard-inner { transform: scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
+.flashcard:not(.flipped):hover .flashcard-inner { transform: scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
+.flashcard.flipped:hover .flashcard-inner { transform: rotateY(180deg) scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
 .flashcard-front { border-top: 4px solid var(--primary); }
 .flashcard-back { border-top: 4px solid var(--success); }
 .stat-card:nth-child(1) { border-left: 4px solid var(--primary); }
@@ -978,9 +980,9 @@ tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
 .quiz-btn:nth-child(2) { background: rgba(236, 72, 153, 0.05); }
 .quiz-btn:nth-child(3) { background: rgba(16, 185, 129, 0.05); }
 .quiz-btn:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-#leaderboard-tbody tr:nth-child(1) { background: rgba(251, 191, 36, 0.1); }
-#leaderboard-tbody tr:nth-child(2) { background: rgba(156, 163, 175, 0.1); }
-#leaderboard-tbody tr:nth-child(3) { background: rgba(180, 83, 9, 0.1); }
+#leaderboard-tbody tr:nth-child(1) td { background: rgba(251, 191, 36, 0.1); }
+#leaderboard-tbody tr:nth-child(2) td { background: rgba(156, 163, 175, 0.1); }
+#leaderboard-tbody tr:nth-child(3) td { background: rgba(180, 83, 9, 0.1); }
 
 /* ========== Accessible Tabs & Content ========== */
 .tab-list {
@@ -1214,4 +1216,34 @@ tbody tr:hover { background: rgba(79, 70, 229, 0.04); }
     box-shadow: 0 0 12px rgba(79, 70, 229, 0.2) !important;
     transform: translateY(-2px);
     transition: all 0.3s ease;
+}
+
+/* SRS Levels Indicator */
+.srs-dots-container {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.srs-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background-color 0.2s;
+    display: inline-block;
+}
+
+.srs-dot.filled {
+    background: var(--success);
+}
+
+.srs-master-badge {
+    font-size: 0.75rem;
+    font-weight: bold;
+    background: var(--success);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    display: inline-block;
 }

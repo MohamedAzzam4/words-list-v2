@@ -116,6 +116,29 @@ export const mergeProgress = (local, remote) => {
     // Prefer remote for boolean flags unless local is newer
     merged.darkMode = remote.darkMode !== undefined ? remote.darkMode : local.darkMode;
 
+    // Merge srsData based on lastReviewed timestamp
+    merged.srsData = {};
+    const localSrs = local.srsData || {};
+    const remoteSrs = remote.srsData || {};
+    const allSrsKeys = new Set([...Object.keys(localSrs), ...Object.keys(remoteSrs)]);
+    for (const key of allSrsKeys) {
+        const localItem = localSrs[key];
+        const remoteItem = remoteSrs[key];
+        if (localItem && remoteItem) {
+            const localTime = localItem.lastReviewed || 0;
+            const remoteTime = remoteItem.lastReviewed || 0;
+            if (localTime > remoteTime) {
+                merged.srsData[key] = localItem;
+            } else {
+                merged.srsData[key] = remoteItem;
+            }
+        } else if (localItem) {
+            merged.srsData[key] = localItem;
+        } else if (remoteItem) {
+            merged.srsData[key] = remoteItem;
+        }
+    }
+
     return merged;
 };
 
@@ -140,6 +163,7 @@ const getDefaultProgress = () => ({
     totalStudyTimeMs: 0,
     flashcardErrors: {},
     phraseErrors: {},
+    srsData: {},
     lastUpdated: new Date().toISOString(),
     lastStudyDate: null,
     quizCorrect: 0,
