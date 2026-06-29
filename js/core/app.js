@@ -907,16 +907,25 @@ window.app = {
         await _evaluateTrophies();
     },
     async toggleFavorite(id) {
+        if (!state.data.favorites) state.data.favorites = [];
         let isFav = false;
         
+        const idx = state.data.favorites.indexOf(id);
+        if (idx > -1) {
+            state.data.favorites.splice(idx, 1);
+        } else {
+            state.data.favorites.push(id);
+            isFav = true;
+        }
+        
         if (engines.flashcard && engines.flashcard.favoritesIds) {
-            if (engines.flashcard.favoritesIds.has(id)) engines.flashcard.favoritesIds.delete(id);
-            else { engines.flashcard.favoritesIds.add(id); isFav = true; }
+            if (isFav) engines.flashcard.favoritesIds.add(id);
+            else engines.flashcard.favoritesIds.delete(id);
         }
         
         if (engines.glossary && engines.glossary.favoritesIds) {
-            if (engines.glossary.favoritesIds.has(id)) engines.glossary.favoritesIds.delete(id);
-            else { engines.glossary.favoritesIds.add(id); isFav = true; }
+            if (isFav) engines.glossary.favoritesIds.add(id);
+            else engines.glossary.favoritesIds.delete(id);
         }
         
         if (state.view === 'glossary') {
