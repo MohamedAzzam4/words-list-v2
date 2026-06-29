@@ -13,21 +13,25 @@ export const cleanTextForAudio = (text) => {
 };
 
 let germanVoice = null;
+let englishVoice = null;
 
-const setGermanVoice = () => {
+const setVoices = () => {
     if (!window.speechSynthesis) return;
     const voices = window.speechSynthesis.getVoices();
     germanVoice = voices.find(v => v.lang === 'de-DE' || v.lang === 'de_DE')
                || voices.find(v => v.lang.startsWith('de'))
                || null;
+    englishVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en_US' || v.lang === 'en-GB')
+                || voices.find(v => v.lang.startsWith('en'))
+                || null;
 };
 
 if (typeof window !== 'undefined' && window.speechSynthesis) {
-    window.speechSynthesis.onvoiceschanged = setGermanVoice;
-    setGermanVoice();
+    window.speechSynthesis.onvoiceschanged = setVoices;
+    setVoices();
 }
 
-export const speak = (text) => {
+export const speak = (text, lang = 'de') => {
     if (window.app && window.app.stopAudioQueue) {
         window.app.stopAudioQueue();
     }
@@ -39,12 +43,17 @@ export const speak = (text) => {
         if (window.app._save) window.app._save();
     }
 
-    const clean = cleanTextForAudio(text);
+    const clean = lang === 'de' ? cleanTextForAudio(text) : text;
     if (!clean) return;
 
     const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = 'de-DE';
-    if (germanVoice) utterance.voice = germanVoice;
+    utterance.lang = lang === 'de' ? 'de-DE' : 'en-US';
+    
+    if (lang === 'de' && germanVoice) {
+        utterance.voice = germanVoice;
+    } else if (lang === 'en' && englishVoice) {
+        utterance.voice = englishVoice;
+    }
     utterance.rate = 0.85;
 
     window.speechSynthesis.speak(utterance);

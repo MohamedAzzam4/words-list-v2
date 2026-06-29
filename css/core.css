@@ -968,8 +968,11 @@ tbody tr td, tbody tr th { transition: background 0.2s; }
 tbody tr:nth-child(even) td, tbody tr:nth-child(even) th { background: var(--surface-hover); }
 tbody tr:hover td, tbody tr:hover th { background: rgba(79, 70, 229, 0.04); }
 #view-flashcard { background: radial-gradient(ellipse at center, rgba(79, 70, 229, 0.05) 0%, transparent 70%); border-radius: 20px; padding: 20px; }
-.flashcard:not(.flipped):hover .flashcard-inner { transform: scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
-.flashcard.flipped:hover .flashcard-inner { transform: rotateY(180deg) scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
+@media (hover: hover) {
+    .flashcard:not(.flipped):hover .flashcard-inner { transform: scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
+    .flashcard.flipped:hover .flashcard-inner { transform: rotateY(180deg) scale(1.01); box-shadow: 0 0 0 1px var(--primary), 0 12px 40px rgba(0,0,0,0.12); }
+}
+.no-transition { transition: none !important; }
 .flashcard-front { border-top: 4px solid var(--primary); }
 .flashcard-back { border-top: 4px solid var(--success); }
 .stat-card:nth-child(1) { border-left: 4px solid var(--primary); }

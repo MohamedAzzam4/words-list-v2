@@ -44,7 +44,7 @@ export class FlashcardEngine {
         this.flipped = false;
         this.face = 'de'; // 'de' or 'en'
         this.filter = 'all'; // 'all' or 'learning'
-        this.shuffle = false;
+        this.shuffle = true;
         this._buildQueue();
     }
 
@@ -108,7 +108,13 @@ export class FlashcardEngine {
     speak() {
         const w = this.queue[this.index];
         if (!w) return;
-        window.app.speakText(this.face === 'de' ? w.de : w.en);
+        
+        const isDeVisible = (this.face === 'de' && !this.flipped) || (this.face === 'en' && this.flipped);
+        if (isDeVisible) {
+            window.app.speakText(w.de, 'de');
+        } else {
+            window.app.speakText(w.en || w.de, 'en');
+        }
     }
 
     mark(known) {
@@ -145,14 +151,29 @@ export class FlashcardEngine {
     next() {
         if (this.index < this.queue.length - 1) {
             this.index++;
-            this.flipped = false;
-            this.render();
+            this._resetFlipAndRender();
         } else {
             // Session complete — notify app.js to increment sessionsCompleted
             this.onSessionComplete();
             this.onSave();
             this._buildQueue(); // Refresh queue
             this.index = 0;
+            this._resetFlipAndRender();
+        }
+    }
+
+    _resetFlipAndRender() {
+        const inner = document.querySelector('.flashcard-inner');
+        if (inner && this.flipped) {
+            inner.classList.add('no-transition');
+            this.flipped = false;
+            this.render();
+            // Force reflow
+            void inner.offsetWidth;
+            requestAnimationFrame(() => {
+                inner.classList.remove('no-transition');
+            });
+        } else {
             this.flipped = false;
             this.render();
         }
