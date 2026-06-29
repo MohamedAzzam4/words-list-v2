@@ -907,14 +907,26 @@ window.app = {
         await _evaluateTrophies();
     },
     async toggleFavorite(id) {
+        let isFav = false;
+        
         if (engines.flashcard && engines.flashcard.favoritesIds) {
-            if (engines.flashcard.favoritesIds.has(id)) {
-                engines.flashcard.favoritesIds.delete(id);
-            } else {
-                engines.flashcard.favoritesIds.add(id);
-            }
+            if (engines.flashcard.favoritesIds.has(id)) engines.flashcard.favoritesIds.delete(id);
+            else { engines.flashcard.favoritesIds.add(id); isFav = true; }
         }
-        if (state.view === 'glossary' && engines.glossary) engines.glossary.render();
+        
+        if (engines.glossary && engines.glossary.favoritesIds) {
+            if (engines.glossary.favoritesIds.has(id)) engines.glossary.favoritesIds.delete(id);
+            else { engines.glossary.favoritesIds.add(id); isFav = true; }
+        }
+        
+        if (state.view === 'glossary') {
+            const starSpans = document.querySelectorAll(`tr[data-id="${id}"] span[title="Toggle Favorite"]`);
+            starSpans.forEach(span => {
+                span.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
+                span.style.opacity = isFav ? '1' : '0.25';
+            });
+        }
+        
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
         _save();
         await _evaluateTrophies();
