@@ -205,6 +205,53 @@ export class FlashcardEngine {
 
         const isDeFront = this.face === 'de';
         const typeEl = document.getElementById('fc-type');
+        const typeElBack = document.getElementById('fc-type-back');
+        const favBadge = document.getElementById('fc-fav-badge');
+        const favBadgeBack = document.getElementById('fc-fav-badge-back');
+
+        if (typeEl) typeEl.textContent = w.type || 'Vocab';
+        if (typeElBack) typeElBack.textContent = w.type || 'Vocab';
+
+        const updateFavBadge = (badge) => {
+            if (!badge) return;
+            const isFav = this.favoritesIds.has(w.id);
+            badge.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
+            badge.style.opacity = isFav ? '1' : '0.3';
+        };
+        updateFavBadge(favBadge);
+        updateFavBadge(favBadgeBack);
+        
+        // Render SRS Level indicator
+        const srs = this.srsData[w.id];
+        const level = srs ? srs.level : 0;
+        
+        let dotsHtml = '<div style="display:flex; gap:4px; align-items:center;">';
+        if (level === 6) {
+            dotsHtml += '<span class="srs-master-badge">⭐ Mastered</span>';
+        } else {
+            for (let i = 1; i <= 5; i++) {
+                dotsHtml += `<span class="srs-dot ${i <= level ? 'filled' : ''}"></span>`;
+            }
+        }
+        dotsHtml += '</div>';
+        
+        if (level > 0 && level < 6 && srs && srs.nextReviewDate) {
+            const timeText = formatTimeRemaining(srs.nextReviewDate);
+            dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">Next review: ${timeText}</div>`;
+        } else if (level === 0) {
+            dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">New Card</div>`;
+        }
+
+        const updateDots = (container) => {
+            if (!container) return;
+            container.style.flexDirection = 'column';
+            container.style.alignItems = 'center';
+            container.innerHTML = dotsHtml;
+        };
+        updateDots(document.getElementById('fc-srs-dots'));
+        updateDots(document.getElementById('fc-srs-dots-back'));
+        
+        const deHtml = `${w.de} ${w.deContext ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">${w.deContext}</div>` : ''}`;
         const deEl = document.getElementById('fc-de');
         const enEl = document.getElementById('fc-en');
         const exDeEl = document.getElementById('fc-ex-de');
@@ -216,47 +263,14 @@ export class FlashcardEngine {
         const faceDeBtn = document.getElementById('face-de-btn');
         const faceEnBtn = document.getElementById('face-en-btn');
         const shuffleBtn = document.getElementById('shuffle-btn');
-        const favBadge = document.getElementById('fc-fav-badge');
 
-        if (typeEl) typeEl.textContent = w.type || 'Vocab';
-        if (favBadge) {
-            const isFav = this.favoritesIds.has(w.id);
-            favBadge.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
-            favBadge.style.opacity = isFav ? '1' : '0.3';
+        if (isDeFront) {
+            if (deEl) deEl.innerHTML = deHtml;
+            if (enEl) enEl.innerHTML = w.en;
+        } else {
+            if (deEl) deEl.innerHTML = w.en;
+            if (enEl) enEl.innerHTML = deHtml;
         }
-        
-        // Render SRS Level indicator
-        const srs = this.srsData[w.id];
-        const level = srs ? srs.level : 0;
-        const dotsContainer = document.getElementById('fc-srs-dots');
-        if (dotsContainer) {
-            dotsContainer.style.flexDirection = 'column';
-            dotsContainer.style.alignItems = 'center';
-            
-            let dotsHtml = '<div style="display:flex; gap:4px; align-items:center;">';
-            if (level === 6) {
-                dotsHtml += '<span class="srs-master-badge">⭐ Mastered</span>';
-            } else {
-                for (let i = 1; i <= 5; i++) {
-                    dotsHtml += `<span class="srs-dot ${i <= level ? 'filled' : ''}"></span>`;
-                }
-            }
-            dotsHtml += '</div>';
-            
-            if (level > 0 && level < 6 && srs && srs.nextReviewDate) {
-                const timeText = formatTimeRemaining(srs.nextReviewDate);
-                dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">Next review: ${timeText}</div>`;
-            } else if (level === 0) {
-                dotsHtml += `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">New Card</div>`;
-            }
-            
-            dotsContainer.innerHTML = dotsHtml;
-        }
-        
-        const deHtml = `${w.de} ${w.deContext ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">${w.deContext}</div>` : ''}`;
-        
-        if (deEl) deEl.innerHTML = isDeFront ? deHtml : w.en;
-        if (enEl) enEl.innerHTML = isDeFront ? w.en : deHtml;
         
         if (exDeEl) exDeEl.textContent = w.context ? w.de : '';
         if (exEnEl) exEnEl.textContent = w.context ? w.en : '';
