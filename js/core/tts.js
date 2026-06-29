@@ -7,7 +7,7 @@ export const cleanTextForAudio = (text) => {
     return text
         // استخدام وظيفة التنظيف (التي تزيل الأقواس وعلامات الجمع) قبل النطق
         .replace(/\([^)]*\)/g, '')
-        .replace(/[\s,]*[-–—]\s*(n|en|er|¨|s|e|r|m)\b/gi, '')
+        .replace(/[\s,]*[-–—]\s*[a-zäöüß¨]*/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
 };
