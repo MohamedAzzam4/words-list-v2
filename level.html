@@ -118,14 +118,26 @@
                 <!-- Words Tab -->
                 <div id="panel-words" role="tabpanel" aria-labelledby="tab-words">
                     <div class="controls-row"
-                        style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px;">
-                        <span style="font-weight: bold; font-size: 0.9rem;">Hide & Guess:</span>
-                        <div class="btn-group">
-                            <button class="btn" onclick="window.app.hideTableColumn('article')">Hide Articles</button>
-                            <button class="btn" onclick="window.app.hideTableColumn('en')">Hide English</button>
-                            <button class="btn" onclick="window.app.hideTableColumn('de')">Hide German</button>
-                            <button class="btn" onclick="window.app.hideTableColumn('mixed')">Hide Mixed</button>
-                            <button class="btn" onclick="window.app.revealAllTable()">Reveal All</button>
+                        style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <span style="font-weight: bold; font-size: 0.9rem;">Hide & Guess:</span>
+                            <div class="btn-group">
+                                <button class="btn" onclick="window.app.hideTableColumn('article')">Hide Articles</button>
+                                <button class="btn" onclick="window.app.hideTableColumn('en')">Hide English</button>
+                                <button class="btn" onclick="window.app.hideTableColumn('de')">Hide German</button>
+                                <button class="btn" onclick="window.app.hideTableColumn('mixed')">Hide Mixed</button>
+                                <button class="btn" onclick="window.app.revealAllTable()">Reveal All</button>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button class="btn btn-primary" id="btn-play-all-words" onclick="window.app.playUnitAudio()" style="display: flex; align-items: center; gap: 8px;">
+                                <span>▶️</span> Play All
+                            </button>
+                            <button class="btn" id="btn-stop-words" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
+                                <span>⏹️</span> Stop
+                            </button>
                         </div>
                     </div>
 

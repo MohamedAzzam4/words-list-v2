@@ -760,7 +760,11 @@ window.app = {
     playUnitAudio() {
         const activeTab = state.tab || 'words';
         if (activeTab === 'words') {
-            engines.glossary?.speakAll();
+            if (SpeechQueue.isPlaying) {
+                this.stopAudioQueue();
+            } else {
+                this.playAllWords();
+            }
         } else if (activeTab === 'phrases') {
             if (SpeechQueue.isPlaying) {
                 this.stopAudioQueue();
@@ -770,6 +774,55 @@ window.app = {
         } else {
             _showToast('Audio playback not supported on this tab');
         }
+    },
+    playAllWords() {
+        const tbody = document.getElementById('glossary-tbody');
+        if (!tbody) return;
+        
+        const items = Array.from(tbody.querySelectorAll('tr'))
+            .filter(tr => !tr.classList.contains('hidden'))
+            .map(tr => {
+                // Skip if the main German word column is hidden (it's the second .hideable span)
+                const hideables = tr.querySelectorAll('td:first-child .hideable');
+                if (hideables.length > 1 && hideables[1].classList.contains('hidden-word')) {
+                    return { id: null, text: null };
+                }
+                
+                // Extract the full German text from the speak button's onclick attribute
+                const btn = tr.querySelector('.speak-btn');
+                const onclickText = btn ? btn.getAttribute('onclick') : '';
+                const match = onclickText ? onclickText.match(/speakText\('([^']+)'\)/) : null;
+                const text = match ? match[1].replace(/\\'/g, "'") : '';
+                
+                const id = tr.getAttribute('data-id');
+                return { id, de: text };
+            })
+            .filter(item => item && item.de);
+            
+        if (items.length === 0) return;
+        
+        const playBtn = document.getElementById('btn-play-all-words');
+        if (playBtn) {
+            playBtn.classList.add('playing');
+            playBtn.innerHTML = '<span>⏹️</span> Stop';
+        }
+
+        SpeechQueue.playAll(
+            items,
+            (idx, item) => {
+                document.querySelectorAll('#glossary-tbody tr').forEach(tr => {
+                    tr.classList.remove('highlighted-speech');
+                });
+                const activeRow = tbody.querySelector(`tr[data-id="${item.id}"]`);
+                if (activeRow) {
+                    activeRow.classList.add('highlighted-speech');
+                    activeRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            },
+            () => {
+                this.stopAudioQueue();
+            }
+        );
     },
     playAllPhrases() {
         if (!state.activePhrases || state.activePhrases.length === 0) return;
@@ -799,13 +852,18 @@ window.app = {
     },
     stopAudioQueue() {
         SpeechQueue.stop();
-        document.querySelectorAll('.phrase-card').forEach(card => {
-            card.classList.remove('highlighted-speech');
+        document.querySelectorAll('.phrase-card, #glossary-tbody tr').forEach(el => {
+            el.classList.remove('highlighted-speech');
         });
-        const playBtn = document.getElementById('btn-play-all-phrases');
-        if (playBtn) {
-            playBtn.classList.remove('playing');
-            playBtn.innerHTML = '<span>▶️</span> Play All';
+        const playPhrasesBtn = document.getElementById('btn-play-all-phrases');
+        if (playPhrasesBtn) {
+            playPhrasesBtn.classList.remove('playing');
+            playPhrasesBtn.innerHTML = '<span>▶️</span> Play All';
+        }
+        const playWordsBtn = document.getElementById('btn-play-all-words');
+        if (playWordsBtn) {
+            playWordsBtn.classList.remove('playing');
+            playWordsBtn.innerHTML = '<span>▶️</span> Play All';
         }
     },
     speakPhrase(phraseId, btn) {
