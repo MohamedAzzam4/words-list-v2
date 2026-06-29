@@ -601,19 +601,29 @@ window.app = {
 
     debug_shiftSRS(days) {
         if (!state.data || !state.data.srsData) return;
+        
+        // Sync first to make sure we're shifting the most recent state
+        if (engines.flashcard) {
+            state.data.srsData = { ...engines.flashcard.srsData };
+        }
+        
         const srsData = state.data.srsData;
         for (const id in srsData) {
             const item = srsData[id];
             if (item.nextReviewDate && item.level < 6) { // Don't shift mastered cards
-                const date = new Date(item.nextReviewDate + 'T00:00:00');
-                date.setDate(date.getDate() - days);
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                item.nextReviewDate = `${year}-${month}-${day}`;
+                const dateString = item.nextReviewDate.includes('T') ? item.nextReviewDate : item.nextReviewDate + 'T00:00:00';
+                const date = new Date(dateString);
+                date.setTime(date.getTime() - (days * 24 * 60 * 60 * 1000));
+                item.nextReviewDate = date.toISOString();
                 item.lastReviewed = Date.now();
             }
         }
+        
+        // Push changes back so _save() retains them
+        if (engines.flashcard) {
+            engines.flashcard.srsData = { ...state.data.srsData };
+        }
+        
         _save();
         window.location.reload();
     },
