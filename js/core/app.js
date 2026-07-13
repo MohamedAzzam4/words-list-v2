@@ -464,11 +464,14 @@ function _renderPhrases(phrases) {
     const unitKnownCount = phrases.filter(p => state.data.knownPhrases?.includes(p.id)).length;
 
     const controlsHTML = `
-        <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+        <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; background: var(--surface); padding: 10px; border-radius: 8px; box-shadow: var(--shadow);">
             <div class="phrases-audio-controls" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <div style="display: flex; gap: 10px;">
                     <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
                         <span>▶️</span> Play All
+                    </button>
+                    <button class="btn hidden" id="btn-pause-phrases" onclick="window.app.togglePausePhrases()" style="display: flex; align-items: center; gap: 8px;">
+                        <span>⏸️</span> Pause
                     </button>
                     <button class="btn" id="btn-stop-phrases" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
                         <span>⏹️</span> Stop
@@ -556,7 +559,7 @@ function _renderPhrases(phrases) {
                         <button class="speak-btn" onclick="window.app.speakPhrase('${p.id}', this)" title="Speak phrase">🔊</button>
                         <span class="phrase-de hideable ${hideDe ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.de)}</span>
                     </div>
-                    <button class="fav-btn" onclick="window.app.toggleFavorite('${p.id}', true)" title="Toggle Favorite" style="background:none; border:none; font-size:1.2rem; cursor:pointer; margin-left: auto;">${favIcon}</button>
+                    <button class="fav-btn" onclick="window.app.toggleFavorite('${p.id}', true)" title="Toggle Favorite" style="background:none; border:none; font-size:1.2rem; cursor:pointer; margin-left: auto; color: var(--text-primary); text-shadow: 0 0 2px rgba(0,0,0,0.5);">${favIcon}</button>
                 </div>
                 <div class="phrase-en">
                     <span class="hideable ${hideEn ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.en)}</span>
@@ -878,43 +881,65 @@ window.app = {
     playAllPhrases() {
         if (!state.activePhrases || state.activePhrases.length === 0) return;
         
-        const playBtn = document.getElementById('btn-play-all-phrases');
-        if (playBtn) {
-            playBtn.classList.add('playing');
-            playBtn.innerHTML = '<span>⏹️</span> Stop';
+        const btn = document.getElementById('btn-play-all-phrases');
+        const pauseBtn = document.getElementById('btn-pause-phrases');
+        if (btn) {
+            btn.classList.add('playing');
+            btn.innerHTML = '<span>🔊</span> Playing...';
+        }
+        if (pauseBtn) {
+            pauseBtn.classList.remove('hidden');
+            pauseBtn.innerHTML = '<span>⏸️</span> Pause';
         }
 
         SpeechQueue.playAll(
             state.activePhrases,
-            (idx, item) => {
-                document.querySelectorAll('.phrase-card').forEach(card => {
-                    card.classList.remove('highlighted-speech');
-                });
-                const activeCard = document.querySelector(`.phrase-card[data-id="${item.id}"]`);
-                if (activeCard) {
-                    activeCard.classList.add('highlighted-speech');
-                    activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            (idx, p) => {
+                const card = document.querySelector(`.phrase-card[data-id="${p.id}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('highlighted-speech');
+                    setTimeout(() => card.classList.remove('highlighted-speech'), 1500);
                 }
             },
             () => {
-                this.stopAudioQueue();
+                if (btn) {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '<span>▶️</span> Play All';
+                }
+                if (pauseBtn) {
+                    pauseBtn.classList.add('hidden');
+                }
             }
         );
     },
     stopAudioQueue() {
         SpeechQueue.stop();
-        document.querySelectorAll('.phrase-card, #glossary-tbody tr').forEach(el => {
-            el.classList.remove('highlighted-speech');
-        });
         const playPhrasesBtn = document.getElementById('btn-play-all-phrases');
+        const pausePhrasesBtn = document.getElementById('btn-pause-phrases');
         if (playPhrasesBtn) {
             playPhrasesBtn.classList.remove('playing');
             playPhrasesBtn.innerHTML = '<span>▶️</span> Play All';
+        }
+        if (pausePhrasesBtn) {
+            pausePhrasesBtn.classList.add('hidden');
         }
         const playWordsBtn = document.getElementById('btn-play-all-words');
         if (playWordsBtn) {
             playWordsBtn.classList.remove('playing');
             playWordsBtn.innerHTML = '<span>▶️</span> Play All';
+        }
+    },
+    togglePausePhrases() {
+        const pauseBtn = document.getElementById('btn-pause-phrases');
+        if (!pauseBtn) return;
+        
+        if (SpeechQueue.isPlaying) {
+            SpeechQueue.pause();
+            pauseBtn.innerHTML = '<span>▶️</span> Resume';
+        } else {
+            SpeechQueue.resume();
+            pauseBtn.innerHTML = '<span>⏸️</span> Pause';
         }
     },
     speakPhrase(phraseId, btn) {

@@ -216,6 +216,29 @@ class SpeechQueueClass {
             window.speechSynthesis.cancel();
         }
     }
+
+    pause() {
+        this.isPlaying = false;
+        this.currentUtterance = null;
+        if (this._speakDelayTimer) {
+            clearTimeout(this._speakDelayTimer);
+            this._speakDelayTimer = null;
+        }
+        if (this._watchdogTimer) {
+            clearTimeout(this._watchdogTimer);
+            this._watchdogTimer = null;
+        }
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    resume() {
+        if (!this.isPlaying && this.queue.length > 0 && this.currentIndex < this.queue.length) {
+            this.isPlaying = true;
+            this._speakCurrent();
+        }
+    }
 }
 
 export const SpeechQueue = new SpeechQueueClass();

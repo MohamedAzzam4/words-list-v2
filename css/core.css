@@ -1026,9 +1026,15 @@ tbody tr:hover td, tbody tr:hover th { background: rgba(79, 70, 229, 0.04); }
 
 /* Phrases Styling */
 .phrases-list-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .phrases-list-container {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 .phrase-card {
