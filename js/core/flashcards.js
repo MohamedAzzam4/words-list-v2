@@ -214,6 +214,20 @@ export class FlashcardEngine {
         }
 
         if (q.length === 0) {
+            const emptyTitle = document.getElementById('fc-empty-title');
+            const emptyDesc = document.getElementById('fc-empty-desc');
+            if (emptyTitle && emptyDesc) {
+                if (this.filter === 'learning') {
+                    emptyTitle.textContent = "You're all caught up!";
+                    emptyDesc.textContent = 'You have no more cards due for review right now. Switch to "All Words" to study ahead of time.';
+                } else if (this.filter === 'favorites') {
+                    emptyTitle.textContent = "No favorites yet!";
+                    emptyDesc.textContent = 'Star some words while reviewing to add them to your favorites queue.';
+                } else {
+                    emptyTitle.textContent = "No words found!";
+                    emptyDesc.textContent = 'There are no words available in this unit.';
+                }
+            }
             if (empty) empty.classList.remove('hidden');
             return;
         }
