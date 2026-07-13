@@ -464,9 +464,9 @@ function _renderPhrases(phrases) {
     const unitKnownCount = phrases.filter(p => state.data.knownPhrases?.includes(p.id)).length;
 
     const controlsHTML = `
-        <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; background: var(--surface); padding: 10px; border-radius: 8px; box-shadow: var(--shadow);">
+        <div class="phrases-controls-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
             <div class="phrases-audio-controls" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; position: sticky; top: 10px; z-index: 100; background: var(--surface); padding: 8px; border-radius: 8px; box-shadow: var(--shadow);">
                     <button class="btn btn-primary" id="btn-play-all-phrases" onclick="window.app.playAllPhrases()" style="display: flex; align-items: center; gap: 8px;">
                         <span>▶️</span> Play All
                     </button>
