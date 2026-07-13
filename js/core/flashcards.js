@@ -45,6 +45,7 @@ export class FlashcardEngine {
         this.face = 'de'; // 'de' or 'en'
         this.filter = 'all'; // 'all' or 'learning'
         this.shuffle = true;
+        this.isFinished = false;
         this._buildQueue();
     }
 
@@ -95,9 +96,11 @@ export class FlashcardEngine {
         }
     }
 
-    setFilter(f) { this.filter = f; this._buildQueue(); this.index = 0; this.render(); }
-    setFace(f) { this.face = f; this.flipped = false; this.render(); }
-    toggleShuffle() { this.shuffle = !this.shuffle; this._buildQueue(); this.render(); }
+    setFilter(f) { this.filter = f; this.isFinished = false; this._buildQueue(); this.index = 0; this.render(); }
+
+    setFace(f) { this.face = f; this.render(); }
+
+    toggleShuffle() { this.shuffle = !this.shuffle; this.isFinished = false; this._buildQueue(); this.index = 0; this.render(); }
 
     flip() {
         this.flipped = !this.flipped;
@@ -156,10 +159,17 @@ export class FlashcardEngine {
             // Session complete — notify app.js to increment sessionsCompleted
             this.onSessionComplete();
             this.onSave();
-            this._buildQueue(); // Refresh queue
-            this.index = 0;
-            this._resetFlipAndRender();
+            this.isFinished = true;
+            this.render();
         }
+    }
+
+    restart() {
+        this.isFinished = false;
+        this._buildQueue();
+        this.index = 0;
+        this.flipped = false;
+        this.render();
     }
 
     _resetFlipAndRender() {
@@ -190,15 +200,25 @@ export class FlashcardEngine {
     render() {
         const working = document.getElementById('fc-working-area');
         const empty = document.getElementById('fc-empty-state');
+        const finished = document.getElementById('fc-finished-state');
         const q = this.queue;
 
+        // Hide all states first
+        if (working) working.classList.add('hidden');
+        if (empty) empty.classList.add('hidden');
+        if (finished) finished.classList.add('hidden');
+
+        if (this.isFinished) {
+            if (finished) finished.classList.remove('hidden');
+            return;
+        }
+
         if (q.length === 0) {
-            if (working) working.classList.add('hidden');
             if (empty) empty.classList.remove('hidden');
             return;
         }
+        
         if (working) working.classList.remove('hidden');
-        if (empty) empty.classList.add('hidden');
 
         const w = q[this.index];
         if (!w) return;

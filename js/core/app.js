@@ -902,6 +902,7 @@ window.app = {
 
     // ── FLASHCARDS ──
     flipCard() { engines.flashcard?.flip(); },
+    restartFlashcards() { engines.flashcard?.restart(); },
     speakCurrentCard() { engines.flashcard?.speak(); },
     async markCard(known) {
         engines.flashcard?.mark(known);
