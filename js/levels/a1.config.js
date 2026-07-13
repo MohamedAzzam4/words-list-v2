@@ -749,11 +749,11 @@ export const levelConfig = {
     progressLabel: 'Overall Progress',
     sectionLabel: 'Unit',
     sectionLabels: [
-        'Begrüßungen', 'Zahlen & Farben', 'Familie', 'Wohnen', 'Essen & Trinken',
-        'Kleidung', 'Körper & Gesundheit', 'Tagesablauf', 'Freizeit', 'Reisen',
-        'Einkaufen', 'Restaurant', 'Wetter', 'Jahreszeiten', 'Berufe',
-        'Schule & Lernen', 'Technik', 'Stadt & Verkehr', 'Natur', 'Feste',
-        'Gefühle', 'Kommunikation', 'Grammatik Basics', 'Review & Practice'
+        'Begrüßungen', 'Berufe & Arbeit', 'Familie', 'Möbel & Einkaufen', 'Alltagsgegenstände',
+        'Büro & Technik', 'Freizeit & Hobbys', 'Verabredungen & Zeit', 'Essen & Trinken', 'Reisen & Urlaub',
+        'Tagesablauf', 'Partys & Geburtstage', 'Wege & Verkehr', 'Wohnen & Haus', 'In der Stadt',
+        'Termine & Kalender', 'Pläne & Wünsche', 'Gesundheit & Krankheit', 'Aussehen', 'Haushalt',
+        'Regeln & Erlaubnis', 'Kleidung', 'Wetter', 'Feste & Feiertage'
     ],
     typeFilters: [
         { value: 'all', label: '🔍 All Word Types' },
