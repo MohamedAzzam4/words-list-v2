@@ -59,9 +59,11 @@ const state = {
     data: getLocalProgress(appId), // ← Always has data, even if null
     view: 'glossary',
     unit: 0,
-    flashcardSource: 'words', // 'words' or 'phrases'
+    flashcardSource: 'words',
+    activePhrases: [],
     hiddenPhrases: new Set(),
-    phraseMixedMap: new Map()
+    phraseMixedMap: new Map(),
+    phrasesFilter: 'all'
 };
 
 const engines = {
@@ -472,11 +474,19 @@ function _renderPhrases(phrases) {
                         <span>⏹️</span> Stop
                     </button>
                 </div>
-                <div id="phrases-tab-counter" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500; background: var(--surface); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;">
-                    <span>Phrases Learned:</span>
-                    <span id="phrases-tab-known-count" style="color: var(--text-primary); font-weight: bold;">${unitKnownCount}</span>
-                    <span>/</span>
-                    <span id="phrases-tab-total-count">${phrases.length}</span>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <select class="filter-select" onchange="window.app.setPhrasesFilter(this.value)" style="padding: 6px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary);">
+                        <option value="all" ${state.phrasesFilter === 'all' ? 'selected' : ''}>🔍 All Phrases</option>
+                        <option value="learning" ${state.phrasesFilter === 'learning' ? 'selected' : ''}>🔄 Still Learning</option>
+                        <option value="known" ${state.phrasesFilter === 'known' ? 'selected' : ''}>✅ Known Phrases</option>
+                        <option value="fav" ${state.phrasesFilter === 'fav' ? 'selected' : ''}>⭐ Favourites Only</option>
+                    </select>
+                    <div id="phrases-tab-counter" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500; background: var(--surface); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); display: flex; align-items: center; gap: 4px;">
+                        <span>Phrases Learned:</span>
+                        <span id="phrases-tab-known-count" style="color: var(--text-primary); font-weight: bold;">${unitKnownCount}</span>
+                        <span>/</span>
+                        <span id="phrases-tab-total-count">${phrases.length}</span>
+                    </div>
                 </div>
             </div>
             <div class="controls-row" style="background: var(--surface); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 0;">
@@ -497,7 +507,28 @@ function _renderPhrases(phrases) {
 
     const isMixed = state.hiddenPhrases.has('mixed');
 
-    const cardsHTML = phrases.map(p => {
+    // Filter phrases
+    let filteredPhrases = phrases;
+    if (state.phrasesFilter === 'fav') {
+        filteredPhrases = phrases.filter(p => state.data.favorites && state.data.favorites.includes(p.id));
+    } else if (state.phrasesFilter === 'learning') {
+        filteredPhrases = phrases.filter(p => !(state.data.knownPhrases && state.data.knownPhrases.includes(p.id)));
+    } else if (state.phrasesFilter === 'known') {
+        filteredPhrases = phrases.filter(p => state.data.knownPhrases && state.data.knownPhrases.includes(p.id));
+    }
+    state.activePhrases = filteredPhrases;
+
+    if (filteredPhrases.length === 0) {
+        phrasesPanel.innerHTML = controlsHTML + `
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">📭</div>
+                <p>No phrases match your current filter.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const cardsHTML = filteredPhrases.map(p => {
         if (isMixed && !state.phraseMixedMap.has(p.id)) {
             state.phraseMixedMap.set(p.id, Math.random() > 0.5 ? 'de' : 'en');
         }
@@ -515,6 +546,9 @@ function _renderPhrases(phrases) {
             ? `<span class="phrase-badge words hideable ${hideWords ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">Words: ${sanitize(p.usedWords)}</span>` 
             : '';
 
+        const isFav = state.data.favorites?.includes(p.id);
+        const favIcon = isFav ? '⭐' : '☆';
+
         return `
             <div class="phrase-card" data-id="${p.id}">
                 <div class="phrase-header">
@@ -522,6 +556,7 @@ function _renderPhrases(phrases) {
                         <button class="speak-btn" onclick="window.app.speakPhrase('${p.id}', this)" title="Speak phrase">🔊</button>
                         <span class="phrase-de hideable ${hideDe ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.de)}</span>
                     </div>
+                    <button class="fav-btn" onclick="window.app.toggleFavorite('${p.id}', true)" title="Toggle Favorite" style="background:none; border:none; font-size:1.2rem; cursor:pointer; margin-left: auto;">${favIcon}</button>
                 </div>
                 <div class="phrase-en">
                     <span class="hideable ${hideEn ? 'hidden-word' : ''}" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(p.en)}</span>
@@ -743,6 +778,12 @@ window.app = {
             _renderPhrases(state.activePhrases);
         }
     },
+    setPhrasesFilter(v) {
+        state.phrasesFilter = v;
+        if (state.unit !== null) {
+            this.switchUnitTab('phrases');
+        }
+    },
     hidePhrasePart(part) {
         if (part === 'mixed') {
             state.hiddenPhrases.clear();
@@ -917,7 +958,7 @@ window.app = {
         navService.renderUnitList();
         await _evaluateTrophies();
     },
-    async toggleFavorite(id) {
+    async toggleFavorite(id, fromPhrasesTab = false) {
         if (!state.data.favorites) state.data.favorites = [];
         let isFav = false;
         
@@ -945,6 +986,9 @@ window.app = {
                 span.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
                 span.style.opacity = isFav ? '1' : '0.25';
             });
+            if (fromPhrasesTab) {
+                this.switchUnitTab('phrases');
+            }
         }
         
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
