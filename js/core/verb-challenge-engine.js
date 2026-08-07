@@ -79,12 +79,18 @@ export class VerbChallengeEngine {
 
     /**
      * Create a review session for a set of due review items.
+     * Recognition items always come before production items so a review can
+     * never open in Production while any Recognition cards are still due.
+     * The order within each track is preserved.
      * @param {{deckId: number, items: [{verbId: string, track: string}], date?: string}} params
      */
     createReviewSession({ deckId, items, date = localDateString() }) {
+        const normalized = items
+            .map(i => ({ verbId: i.verbId, track: i.track }))
+            .sort((a, b) => (a.track === PHASE_RECOGNITION ? 0 : 1) - (b.track === PHASE_RECOGNITION ? 0 : 1));
         return {
             sessionType: 'review',
-            reviewItems: items.map(i => ({ verbId: i.verbId, track: i.track })),
+            reviewItems: normalized,
             completedTracks: [],
             deckId,
             date,
@@ -92,7 +98,7 @@ export class VerbChallengeEngine {
             turn: 0,
             activePoolIds: [],
             poolCursor: 0,
-            orderIds: items.map(i => i.verbId),
+            orderIds: normalized.map(i => i.verbId),
             phaseOrder: [],
             cardStateById: {},
             updatedAt: Date.now()
@@ -315,12 +321,14 @@ export class VerbChallengeEngine {
 
         if (pending.length === 0) {
             if (session.sessionType === 'review') {
-                if (!session.completedTracks.includes(session.phase)) {
-                    session.completedTracks.push(session.phase);
-                }
+                // Non-mutating peek: treat the finished track as completed for the
+                // purpose of finding the next track. The caller transitions with
+                // completeReviewTrack()/startReviewTrack().
+                const completed = new Set(session.completedTracks || []);
+                completed.add(session.phase);
                 const nextTrack = session.reviewItems
                     .map(i => i.track)
-                    .find(t => !session.completedTracks.includes(t));
+                    .find(t => !completed.has(t));
                 if (nextTrack) {
                     return {
                         kind: 'transition',
@@ -393,6 +401,26 @@ export class VerbChallengeEngine {
     }
 
     // ── mutations ──
+
+    /**
+     * Explicitly close the current review track and return the transition to the
+     * next uncompleted track (or the final review completion). This is the only
+     * place `completedTracks` is mutated for a finished track.
+     */
+    completeReviewTrack(session) {
+        if (session.sessionType !== 'review' || session.phase === PHASE_REVIEW) return null;
+        if (!session.completedTracks) session.completedTracks = [];
+        if (!session.completedTracks.includes(session.phase)) {
+            session.completedTracks.push(session.phase);
+        }
+        const nextTrack = session.reviewItems
+            .map(i => i.track)
+            .find(t => !session.completedTracks.includes(t));
+        if (nextTrack) {
+            return { kind: 'transition', from: session.phase, to: nextTrack, review: true };
+        }
+        return { kind: 'complete', win: 'review', total: session.reviewItems.length, turn: session.turn };
+    }
 
     /**
      * Complete an introduction card. Introduction never counts as a successful
@@ -485,13 +513,23 @@ export class VerbChallengeEngine {
         return this.nextPresentation(session);
     }
 
+    // A recall only counts as fast when the latency is a valid, positive,
+    // finite number at or below the fast threshold. Unknown, missing, NaN and
+    // other invalid values never count as fast.
+    _isFastLatency(latencyMs) {
+        return typeof latencyMs === 'number'
+            && Number.isFinite(latencyMs)
+            && latencyMs > 0
+            && latencyMs <= FAST_RECALL_MS;
+    }
+
     _gradeChallenge(session, verbId, remembered, latencyMs, outcome) {
         const card = session.cardStateById[verbId];
         if (!card) return;
         card.lastSeenTurn = session.turn;
         if (latencyMs !== null && latencyMs !== undefined) card.lastLatencyMs = latencyMs;
 
-        const isFast = latencyMs === null || latencyMs === undefined || latencyMs === 0 || latencyMs <= FAST_RECALL_MS;
+        const isFast = this._isFastLatency(latencyMs);
 
         if (remembered) {
             if (isFast) {

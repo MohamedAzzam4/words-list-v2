@@ -38,10 +38,16 @@ const HAPPY = () => ({ remembered: true, latency: 600 });
 
 // Advance the session by ONE presentation, resolving its action.
 // Returns the outcome of the mutation (next presentation, or grade outcome).
+// Mirrors the controller: review track completion goes through the explicit
+// completeReviewTrack() mutation, and a finished review is sealed.
 function step(engine, session, presentation, decide) {
     if (presentation.kind === 'transition') {
-        if (presentation.review) engine.startReviewTrack(session, presentation.to);
-        else engine.startPhase(session, presentation.to);
+        if (presentation.review) {
+            engine.completeReviewTrack(session);
+            engine.startReviewTrack(session, presentation.to);
+        } else {
+            engine.startPhase(session, presentation.to);
+        }
         return engine.nextPresentation(session);
     }
     if (presentation.kind === 'intro') {
@@ -51,7 +57,12 @@ function step(engine, session, presentation, decide) {
     if (presentation.spacer) {
         return engine.dismissSpacer(session, presentation.verbId);
     }
-    return engine.grade(session, presentation.verbId, action.remembered, action.latency ?? null).next;
+    const outcome = engine.grade(session, presentation.verbId, action.remembered, action.latency ?? null);
+    if (outcome.next && outcome.next.kind === 'complete' && session.sessionType === 'review') {
+        engine.completeReviewTrack(session);
+        engine.finishSession(session);
+    }
+    return outcome.next;
 }
 
 // Drive until a given predicate holds. Throws on runaway.
@@ -328,4 +339,46 @@ test('phase order is stable across sessions so refresh does not reshuffle', () =
     const s2 = e.createLearningSession({ deckId: 1, verbIds: ids(5) });
     e.startPhase(s2, PHASE_RECOGNITION);
     assert.equal(JSON.stringify(s2.phaseOrder), order1);
+});
+
+test('review session serves recognition items before production items', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_p1', track: PHASE_PRODUCTION },
+            { verbId: 'v_r1', track: PHASE_RECOGNITION },
+            { verbId: 'v_r2', track: PHASE_RECOGNITION },
+            { verbId: 'v_p2', track: PHASE_PRODUCTION }
+        ]
+    });
+    assert.deepEqual(s.orderIds, ['v_r1', 'v_r2', 'v_p1', 'v_p2']);
+    let p = e.nextPresentation(s);
+    assert.equal(p.kind, 'transition');
+    assert.equal(p.to, PHASE_RECOGNITION);
+    e.startReviewTrack(s, p.to);
+    assert.deepEqual(s.orderIds, ['v_r1', 'v_r2']);
+});
+
+test('only a valid positive finite latency counts as fast', () => {
+    const e = eng();
+    // Null / undefined / NaN / 0 / negative / non-number / above-threshold must
+    // never count as fast — this is what guards the Reveal timing window.
+    const s = e.createLearningSession({ deckId: 1, verbIds: ['v_a'] });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const pres = e.nextPresentation(s);
+    assert.equal(pres.kind, 'recall');
+    for (const bad of [null, undefined, NaN, 0, -5, '600', Infinity, FAST_RECALL_MS + 1]) {
+        const c = s.cardStateById[pres.verbId];
+        c.status = 'pending';
+        c.requiredFast = 1;
+        c.completedFast = 0;
+        const outcome = e.grade(s, pres.verbId, true, bad);
+        assert.equal(outcome.passed, false, `latency ${String(bad)} must not count as fast`);
+        assert.equal(c.status, 'pending');
+    }
+    s.cardStateById[pres.verbId].requiredFast = 1;
+    s.cardStateById[pres.verbId].completedFast = 0;
+    const fast = e.grade(s, pres.verbId, true, FAST_RECALL_MS);
+    assert.equal(fast.passed, true, 'exactly the threshold counts as fast');
 });

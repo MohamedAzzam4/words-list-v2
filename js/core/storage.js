@@ -184,6 +184,110 @@ export const mergeProgress = (local, remote) => {
     return merged;
 };
 
+// Per-track merge for guided verb mastery records.
+//
+// Recognition and Production mastery evolve independently. A newer
+// recognition-only record must never erase production mastery (and vice
+// versa), so each track is merged using its own timestamp:
+//
+// {
+//   recognitionWin,
+//   srs,
+//   recognitionUpdatedAt,
+//   productionWin,
+//   productionSrs,
+//   productionUpdatedAt,
+//   updatedAt,
+//   infinitive
+// }
+//
+// Legacy records without track timestamps fall back to their record-level
+// `updatedAt` (only when the track genuinely exists) so old saves merge safely.
+
+const VERB_LEARNING_SCHEMA_VERSION = 2;
+
+// Resolve the numeric time of one record track. Returns null when the track
+// does not exist. A track exists if it has an explicit track timestamp, a win,
+// or a scheduled SRS entry; an empty default SRS object is not a track.
+function trackNumericTime(rec, winField, srsField, updatedField) {
+    if (!rec) return null;
+    let num;
+    const explicit = rec[updatedField];
+    if (typeof explicit === 'number') {
+        num = explicit;
+    } else if (typeof explicit === 'string' && explicit) {
+        num = Date.parse(explicit);
+    }
+    if (num !== undefined && num !== null && !Number.isNaN(num)) {
+        return Number(num);
+    }
+    const srsObj = rec[srsField];
+    const exists = !!rec[winField] || (srsObj && !!srsObj.nextReviewDate);
+    if (!exists) return null;
+    const u = rec.updatedAt;
+    if (typeof u === 'number') return u;
+    if (typeof u === 'string' && u) return Date.parse(u);
+    return 0;
+}
+
+// Pick the source record for one track (recognition or production).
+function pickTrackSide(a, b, winField, srsField, updatedField) {
+    const ta = trackNumericTime(a, winField, srsField, updatedField);
+    const tb = trackNumericTime(b, winField, srsField, updatedField);
+    if (ta === null && tb === null) return null;
+    if (ta === null) return b;
+    if (tb === null) return a;
+    return ta >= tb ? a : b;
+}
+
+export function mergeVerbRecord(a, b) {
+    const out = {};
+
+    const recSrc = pickTrackSide(a, b, 'recognitionWin', 'srs', 'recognitionUpdatedAt');
+    if (recSrc) {
+        if (recSrc.recognitionWin) out.recognitionWin = recSrc.recognitionWin;
+        if (recSrc.srs) out.srs = { ...recSrc.srs };
+        const recNum = trackNumericTime(recSrc, 'recognitionWin', 'srs', 'recognitionUpdatedAt');
+        if (recNum !== null && (recSrc.recognitionUpdatedAt === undefined ||
+            recSrc.recognitionUpdatedAt === null)) {
+            out.recognitionUpdatedAt = recNum;
+        } else if (recSrc.recognitionUpdatedAt !== undefined && recSrc.recognitionUpdatedAt !== null) {
+            out.recognitionUpdatedAt = recSrc.recognitionUpdatedAt;
+        }
+    }
+
+    const prodSrc = pickTrackSide(a, b, 'productionWin', 'productionSrs', 'productionUpdatedAt');
+    if (prodSrc) {
+        if (prodSrc.productionWin) out.productionWin = prodSrc.productionWin;
+        if (prodSrc.productionSrs) out.productionSrs = { ...prodSrc.productionSrs };
+        const prodNum = trackNumericTime(prodSrc, 'productionWin', 'productionSrs', 'productionUpdatedAt');
+        if (prodNum !== null && (prodSrc.productionUpdatedAt === undefined ||
+            prodSrc.productionUpdatedAt === null)) {
+            out.productionUpdatedAt = prodNum;
+        } else if (prodSrc.productionUpdatedAt !== undefined && prodSrc.productionUpdatedAt !== null) {
+            out.productionUpdatedAt = prodSrc.productionUpdatedAt;
+        }
+    }
+
+    const times = [
+        trackNumericTime(a, 'recognitionWin', 'srs', 'recognitionUpdatedAt'),
+        trackNumericTime(b, 'recognitionWin', 'srs', 'recognitionUpdatedAt'),
+        trackNumericTime(a, 'productionWin', 'productionSrs', 'productionUpdatedAt'),
+        trackNumericTime(b, 'productionWin', 'productionSrs', 'productionUpdatedAt')
+    ].filter(t => t !== null);
+    if (times.length > 0) {
+        out.updatedAt = Math.max(...times);
+    } else {
+        const au = typeof a.updatedAt === 'number' ? a.updatedAt : (typeof a.updatedAt === 'string' ? Date.parse(a.updatedAt) : 0);
+        const bu = typeof b.updatedAt === 'number' ? b.updatedAt : (typeof b.updatedAt === 'string' ? Date.parse(b.updatedAt) : 0);
+        out.updatedAt = Math.max(au || 0, bu || 0);
+    }
+
+    out.infinitive = a.infinitive || b.infinitive || undefined;
+
+    return out;
+}
+
 export const mergeVerbLearning = (local, remote) => {
     const mergedWords = {};
     const wordKeys = new Set([
@@ -194,7 +298,7 @@ export const mergeVerbLearning = (local, remote) => {
         const a = local.verbs?.[key];
         const b = remote.verbs?.[key];
         if (a && b) {
-            mergedWords[key] = (a.updatedAt || 0) >= (b.updatedAt || 0) ? a : b;
+            mergedWords[key] = mergeVerbRecord(a, b);
         } else {
             mergedWords[key] = a || b;
         }
@@ -217,6 +321,7 @@ export const mergeVerbLearning = (local, remote) => {
 
     return {
         schemaVersion: Math.max(
+            VERB_LEARNING_SCHEMA_VERSION,
             local.schemaVersion || 1,
             remote.schemaVersion || 1
         ),

@@ -140,17 +140,6 @@
     margin-bottom: 6px;
 }
 
-.guided-answer-sub {
-    font-size: 1rem;
-    color: var(--text-main);
-}
-
-.guided-reveal-timer {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-top: 10px;
-}
-
 /* Milestone / transition banner */
 .guided-milestone {
     text-align: center;
@@ -221,38 +210,6 @@
     max-width: 420px;
     margin-left: auto;
     margin-right: auto;
-}
-
-/* Due reviews banner on start screen */
-.guided-due-banner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--primary);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.guided-due-text {
-    font-size: 0.92rem;
-    color: var(--text-main);
-}
-
-.guided-due-text strong {
-    color: var(--primary);
-}
-
-/* Legacy migration notice (transient, non-blocking) */
-.guided-migrated-note {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 8px;
-    font-style: italic;
 }
 
 @media (max-width: 768px) {

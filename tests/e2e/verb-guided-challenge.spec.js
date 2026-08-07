@@ -325,10 +325,10 @@ test.describe('Guided Challenge E2E Suite', () => {
         expect(errors).toEqual([]);
     });
 
-    test('verbLearning mastery is persisted to localStorage after grading', async ({ page }) => {
+    test('verbLearning mastery is committed only when a whole phase wins', async ({ page }) => {
         await startGuided(page);
 
-        // complete one recall so a mastery record is written
+        // complete one recall so the "acquisition part" of the flow advances
         await clickIntroThrough(page);
         const revealBtn = page.locator('button:has-text("Reveal Answer")');
         await expect(revealBtn).toBeVisible();
@@ -337,14 +337,97 @@ test.describe('Guided Challenge E2E Suite', () => {
 
         await flushStorage(page);
 
+        // MID-SESSION: no per-card mastery is written yet. Mastery for the deck
+        // is committed atomically only when the whole phase reaches its win.
+        const midVerbs = await page.evaluate((key) => {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw).verbLearning?.verbs : null;
+        }, STORAGE_KEY);
+        expect(midVerbs).toBeTruthy();
+        const midMastered = Object.values(midVerbs).filter(r => r.recognitionWin || r.productionWin);
+        expect(midMastered.length).toBe(0);
+
+        // drive acquisition → recognition all the way to the First Win
+        let guard = 0;
+        while (guard++ < 400) {
+            const introBtn = page.locator('button:has-text("Got it — Continue")');
+            const reveal = page.locator('button:has-text("Reveal Answer")');
+            const contBtn = page.locator('button:has-text("Continue")').first();
+            if (await introBtn.count()) await introBtn.click();
+            else if (await reveal.count()) await answerRecall(page, true);
+            else if (await contBtn.count()) break;
+            else await page.waitForTimeout(40);
+        }
+        await expect(page.locator('.guided-milestone-title')).toHaveText('Acquisition Complete!');
+        await continueThrough(page);
+        guard = 0;
+        while (guard++ < 400) {
+            const reveal = page.locator('button:has-text("Reveal Answer")');
+            const finishBtn = page.locator('button:has-text("Finish")');
+            if (await reveal.count()) await answerRecall(page, true);
+            else if (await finishBtn.count()) break;
+            else await page.waitForTimeout(40);
+        }
+        await expect(page.locator('.guided-complete-title')).toContainText('First Win');
+
+        await flushStorage(page);
         const verbs = await page.evaluate((key) => {
             const raw = localStorage.getItem(key);
             return raw ? JSON.parse(raw).verbLearning?.verbs : null;
         }, STORAGE_KEY);
+        const recognized = Object.values(verbs).filter(r => r.recognitionWin);
+        expect(recognized.length).toBe(7); // the whole deck 36 wins atomically
+        const produced = Object.values(verbs).filter(r => r.productionWin);
+        expect(produced.length).toBe(0);   // production must be earned separately
+    });
 
-        expect(verbs).toBeTruthy();
-        const mastered = Object.values(verbs).filter(r => r.recognitionWin || r.productionWin || r.updatedAt);
-        expect(mastered.length).toBeGreaterThan(0);
+    test('restarting the Daily Review restarts the review, not the acquisition challenge', async ({ page }) => {
+        // seed one recognized verb with a due SRS review date
+        await page.goto('/verbs.html');
+        await page.evaluate((key) => {
+            const seeded = {
+                verbLearning: {
+                    schemaVersion: 1,
+                    verbs: {
+                        v_werden: {
+                            recognitionWin: '2026-01-01T00:00:00.000Z',
+                            productionWin: '2026-01-01T00:00:00.000Z',
+                            srs: { level: 2, nextReviewDate: '2026-01-01T00:00:00.000Z' },
+                            productionSrs: { level: 2, nextReviewDate: '2026-01-01T00:00:00.000Z' },
+                            updatedAt: Date.now(),
+                            infinitive: 'werden'
+                        }
+                    },
+                    sessions: {}
+                }
+            };
+            localStorage.setItem(key, JSON.stringify(seeded));
+        }, STORAGE_KEY);
+
+        await page.reload();
+        await page.locator('button:has-text("Daily Review")').click();
+        await expect(page.locator('#view-guided')).toBeVisible();
+        await expect(page.locator('.guided-milestone-title')).toContainText(/Continuing to/);
+        await continueThrough(page);
+
+        // progress the review a couple of cards into the recognition track
+        const revealBtn = page.locator('button:has-text("Reveal Answer")');
+        await expect(revealBtn).toBeVisible();
+        await revealBtn.click();
+        await page.locator('button:has-text("I knew it")').click();
+        await page.waitForTimeout(100);
+
+        // restart button must say "Restart Review" while inside a review
+        await expect(page.locator('#guided-restart-btn')).toHaveText(/Restart Review/);
+
+        // restart → the session is rebuilt as a REVIEW (a quiz transition into
+        // recognition/production), never as an Acquisition intro lesson.
+        await page.locator('#guided-restart-btn').click();
+        await expect(page.locator('#view-guided')).toBeVisible();
+        await expect(page.locator('.guided-phase-badge')).toHaveText('Daily Review');
+        await expect(page.locator('.guided-milestone-title')).toContainText(/Continuing to/);
+        await continueThrough(page);
+        await expect(page.locator('.guided-label')).toHaveText('Verb (German)');
     });
 
 });
