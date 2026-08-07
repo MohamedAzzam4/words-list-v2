@@ -173,7 +173,56 @@ export const mergeProgress = (local, remote) => {
         }
     }
 
+    // Merge guided challenge learning records:
+    //  - per-verb record with the newest updatedAt wins, unrelated fields kept
+    //  - per-deck session with the newest updatedAt wins
+    merged.verbLearning = mergeVerbLearning(
+        local.verbLearning || {},
+        remote.verbLearning || {}
+    );
+
     return merged;
+};
+
+export const mergeVerbLearning = (local, remote) => {
+    const mergedWords = {};
+    const wordKeys = new Set([
+        ...Object.keys(local.verbs || {}),
+        ...Object.keys(remote.verbs || {})
+    ]);
+    for (const key of wordKeys) {
+        const a = local.verbs?.[key];
+        const b = remote.verbs?.[key];
+        if (a && b) {
+            mergedWords[key] = (a.updatedAt || 0) >= (b.updatedAt || 0) ? a : b;
+        } else {
+            mergedWords[key] = a || b;
+        }
+    }
+
+    const mergedSessions = {};
+    const sessionKeys = new Set([
+        ...Object.keys(local.sessions || {}),
+        ...Object.keys(remote.sessions || {})
+    ]);
+    for (const key of sessionKeys) {
+        const a = local.sessions?.[key];
+        const b = remote.sessions?.[key];
+        if (a && b) {
+            mergedSessions[key] = (a.updatedAt || 0) >= (b.updatedAt || 0) ? a : b;
+        } else {
+            mergedSessions[key] = a || b;
+        }
+    }
+
+    return {
+        schemaVersion: Math.max(
+            local.schemaVersion || 1,
+            remote.schemaVersion || 1
+        ),
+        verbs: mergedWords,
+        sessions: mergedSessions
+    };
 };
 
 const getDefaultProgress = () => ({
@@ -203,6 +252,11 @@ const getDefaultProgress = () => ({
     flashcardErrors: {},
     phraseErrors: {},
     srsData: {},
+    verbLearning: {
+        schemaVersion: 1,
+        verbs: {},
+        sessions: {}
+    },
     lastUpdated: new Date().toISOString(),
     lastStudyDate: null,
     quizCorrect: 0,

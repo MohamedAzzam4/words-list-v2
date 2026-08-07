@@ -1,0 +1,331 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+
+// The repo package.json is `commonjs`, so `.js` ESM modules cannot be imported
+// by Node directly. Load the engine source verbatim (single source of truth)
+// inside a VM context that mirrors a browser ES module environment.
+const engineSrc = readFileSync(
+    new URL('../../js/core/verb-challenge-engine.js', import.meta.url),
+    'utf8'
+).replace(/^export\s+/gm, '');
+
+const sandbox = {};
+vm.createContext(sandbox);
+vm.runInContext(
+    engineSrc + `
+;globalThis.__EXP = { VerbChallengeEngine, ACTIVE_POOL_SIZE, FAST_RECALL_MS,
+  PHASE_ACQUISITION, PHASE_RECOGNITION, PHASE_PRODUCTION, PHASE_COMPLETE, RECOVERY_FAST_COUNT };
+`,
+    sandbox
+);
+
+const {
+    VerbChallengeEngine,
+    ACTIVE_POOL_SIZE,
+    FAST_RECALL_MS,
+    PHASE_ACQUISITION,
+    PHASE_RECOGNITION,
+    PHASE_PRODUCTION,
+    PHASE_COMPLETE,
+    RECOVERY_FAST_COUNT
+} = sandbox.__EXP;
+
+const ids = (n) => Array.from({ length: n }, (_, i) => `v_${i}`);
+const eng = () => new VerbChallengeEngine({ rng: () => 0.5 });
+const HAPPY = () => ({ remembered: true, latency: 600 });
+
+// Advance the session by ONE presentation, resolving its action.
+// Returns the outcome of the mutation (next presentation, or grade outcome).
+function step(engine, session, presentation, decide) {
+    if (presentation.kind === 'transition') {
+        if (presentation.review) engine.startReviewTrack(session, presentation.to);
+        else engine.startPhase(session, presentation.to);
+        return engine.nextPresentation(session);
+    }
+    if (presentation.kind === 'intro') {
+        return engine.completeIntro(session, presentation.verbId);
+    }
+    const action = decide(session, presentation);
+    if (presentation.spacer) {
+        return engine.dismissSpacer(session, presentation.verbId);
+    }
+    return engine.grade(session, presentation.verbId, action.remembered, action.latency ?? null).next;
+}
+
+// Drive until a given predicate holds. Throws on runaway.
+function drive(engine, session, predicate, decide) {
+    let presentation = engine.nextPresentation(session);
+    let guard = 0;
+    while (presentation && !predicate(presentation)) {
+        if (++guard > 5000) throw new Error('runaway drive loop');
+        presentation = step(engine, session, presentation, decide);
+    }
+    return presentation;
+}
+
+test('acquisition seeds a hidden rolling pool capped at eight', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(50) });
+    assert.equal(s.phase, PHASE_ACQUISITION);
+    assert.equal(e.acquisitionPoolSize(s), Math.min(ACTIVE_POOL_SIZE, 50));
+    assert.equal(s.activePoolIds.length, ACTIVE_POOL_SIZE);
+});
+
+test('pool never exceeds eight throughout a full lesson', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(37) });
+    let maxPool = 0;
+    const finalPres = drive(
+        e, s,
+        p => {
+            maxPool = Math.max(maxPool, e.acquisitionPoolSize(s));
+            return p.kind === 'complete';
+        },
+        HAPPY
+    );
+    assert.equal(finalPres.kind, 'complete');
+    assert.ok(maxPool <= 8, `pool grew to ${maxPool}`);
+});
+
+test('a ready acquisition word leaves the pool and the next unseen word enters', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(12) });
+    // introduce exactly the pool words
+    let pres = e.nextPresentation(s);
+    while (pres && pres.kind === 'intro') pres = e.completeIntro(s, pres.verbId);
+    assert.equal(pres.kind, 'recall');
+    const before = new Set(s.activePoolIds);
+    const outId = pres.verbId;
+    const outcome = e.grade(s, outId, true, 1);
+    assert.equal(outcome.passed, true);
+    const after = new Set(s.activePoolIds);
+    assert.ok(!after.has(outId), 'ready word should leave the pool');
+    assert.equal(after.size, before.size, 'pool size stays constant (next unseen enters)');
+    const added = [...after].find(id => !before.has(id));
+    assert.ok(added, 'a new word should have entered the pool');
+    assert.equal(s.cardStateById[added].status, 'unseen');
+});
+
+test('forgot during acquisition never repeats without intervening cards', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(20) });
+    let pres = e.nextPresentation(s);
+    while (pres && pres.kind !== 'recall') pres = e.completeIntro(s, pres.verbId);
+    const forgettingId = pres.verbId;
+    pres = e.grade(s, forgettingId, false, 1).next; // forgot
+    let turnsBetween = 0;
+    while (pres && pres.kind === 'recall' && pres.verbId !== forgettingId) {
+        turnsBetween += 1;
+        pres = pres.spacer
+            ? e.dismissSpacer(s, pres.verbId)
+            : e.grade(s, pres.verbId, true, 1).next;
+    }
+    assert.ok(turnsBetween >= 2, `only ${turnsBetween} intervening cards`);
+    assert.equal(pres.verbId, forgettingId);
+});
+
+test('recognition phase only starts once every acquisition word is ready', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(9) });
+    const pres = drive(e, s, p => p.kind === 'transition', HAPPY);
+    assert.equal(pres.from, PHASE_ACQUISITION);
+    assert.equal(pres.to, PHASE_RECOGNITION);
+    assert.equal(pres.ready, 9);
+    assert.ok(s.orderIds.every(id => s.cardStateById[id].status === 'ready'));
+});
+
+test('acquisition completes and the pool stays rolling to recognition for 50 verbs', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(50) });
+    let maxPool = 0;
+    const pres = drive(
+        e, s,
+        p => {
+            maxPool = Math.max(maxPool, e.acquisitionPoolSize(s));
+            return p.kind === 'transition';
+        },
+        HAPPY
+    );
+    assert.equal(pres.to, PHASE_RECOGNITION);
+    assert.ok(maxPool <= 8);
+    assert.ok(s.orderIds.every(id => s.cardStateById[id].status === 'ready'));
+});
+
+test('fast recognition passes on the first official attempt', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(3) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const first = e.nextPresentation(s);
+    assert.equal(first.kind, 'recall');
+    assert.equal(first.direction, 'de-to-en');
+    const outcome = e.grade(s, first.verbId, true, 500);
+    assert.equal(outcome.passed, true);
+    assert.equal(s.cardStateById[first.verbId].status, 'passed');
+});
+
+test('slow recognition is scheduled again and never passes', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(4) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const first = e.nextPresentation(s);
+    const outcome = e.grade(s, first.verbId, true, FAST_RECALL_MS + 5000);
+    assert.equal(outcome.passed, false);
+    assert.equal(outcome.rememberedSlow, true);
+    assert.equal(s.cardStateById[first.verbId].status, 'pending');
+});
+
+test('forgot during recognition requires recovery before passing', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(2) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const firstId = e.nextPresentation(s).verbId;
+
+    const forgot = e.grade(s, firstId, false, 1000); // forgot
+    assert.equal(forgot.forgot, true);
+    assert.equal(s.cardStateById[firstId].requiredFast, RECOVERY_FAST_COUNT);
+
+    const recover1 = e.grade(s, firstId, true, 500); // recovery fast #1
+    assert.equal(recover1.passed, false);
+    assert.equal(s.cardStateById[firstId].completedFast, 1);
+
+    const recover2 = e.grade(s, firstId, true, 500); // recovery fast #2
+    assert.equal(recover2.passed, true);
+    assert.equal(s.cardStateById[firstId].status, 'passed');
+});
+
+test('forgot during recognition cannot pass after zero fast recalls', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(2) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const firstId = e.nextPresentation(s).verbId;
+    e.grade(s, firstId, false, 1000); // forgot
+    // slow recovery attempt counts nothing
+    const attempted = e.grade(s, firstId, true, FAST_RECALL_MS + 9000);
+    assert.equal(attempted.passed, false);
+    assert.equal(s.cardStateById[firstId].completedFast, 0);
+});
+
+test('production challenge stays independent from recognition', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(3) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const pr1 = e.nextPresentation(s);
+    assert.equal(pr1.direction, 'de-to-en');
+    e.grade(s, pr1.verbId, true, 400);
+    assert.equal(e.phaseProgress(s).passed, 1);
+
+    e.startPhase(s, PHASE_PRODUCTION);
+    const pp1 = e.nextPresentation(s);
+    assert.equal(pp1.direction, 'en-to-de');
+    assert.equal(e.phaseProgress(s).passed, 0, 'production starts fresh');
+});
+
+test('full deck drives recognition, then production to the final second win', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 36, verbIds: ids(7) });
+    // acquisition → recognition, stop at recognition completion
+    const rec = drive(e, s, p => p.kind === 'complete', HAPPY);
+    assert.equal(rec.win, PHASE_RECOGNITION);
+    // user continues to production
+    e.startPhase(s, PHASE_PRODUCTION);
+    const prod = drive(e, s, p => p.kind === 'complete', HAPPY);
+    assert.equal(prod.win, PHASE_PRODUCTION);
+    assert.equal(e.phaseProgress(s).passed, 7);
+});
+
+test('review session serves recognition then production tracks and completes', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_a', track: PHASE_RECOGNITION },
+            { verbId: 'v_b', track: PHASE_RECOGNITION },
+            { verbId: 'v_c', track: PHASE_PRODUCTION }
+        ]
+    });
+    let p = e.nextPresentation(s);
+    assert.equal(p.kind, 'transition');
+    assert.equal(p.to, PHASE_RECOGNITION);
+    e.startReviewTrack(s, p.to);
+    p = e.nextPresentation(s);
+    assert.equal(p.kind, 'recall');
+    assert.equal(p.phase, PHASE_RECOGNITION);
+    const final = drive(e, s, q => q.kind === 'complete', HAPPY);
+    assert.equal(final.kind, 'complete');
+    assert.equal(final.win, 'review');
+    assert.equal(final.total, 3);
+    assert.equal(
+        [...s.completedTracks].sort().join(','),
+        [PHASE_RECOGNITION, PHASE_PRODUCTION].sort().join(',')
+    );
+});
+
+test('review session that starts on production serves production first', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_b', track: PHASE_PRODUCTION },
+            { verbId: 'v_c', track: PHASE_PRODUCTION }
+        ]
+    });
+    let p = e.nextPresentation(s);
+    assert.equal(p.kind, 'transition');
+    assert.equal(p.to, PHASE_PRODUCTION);
+    e.startReviewTrack(s, p.to);
+    assert.equal(s.phase, PHASE_PRODUCTION);
+    p = e.nextPresentation(s);
+    assert.equal(p.kind, 'recall');
+    assert.equal(p.direction, 'en-to-de');
+    const final = drive(e, s, q => q.kind === 'complete', HAPPY);
+    assert.equal(final.kind, 'complete');
+    assert.equal(final.win, 'review');
+    assert.equal(s.completedTracks.join(','), PHASE_PRODUCTION);
+});
+
+test('finishSession seals a session so it can never start again', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(2) });
+    assert.ok(e.nextPresentation(s));
+    e.finishSession(s);
+    assert.equal(s.phase, PHASE_COMPLETE);
+    assert.equal(e.nextPresentation(s), null);
+});
+
+test('recognition direction remains German→English throughout the phase', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(4) });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const dirs = [];
+    const final = drive(
+        e, s,
+        p => p.kind === 'complete',
+        (session, presentation) => {
+            if (!presentation.spacer) dirs.push(presentation.direction);
+            return HAPPY();
+        }
+    );
+    assert.equal(final.kind, 'complete');
+    assert.ok(dirs.length >= 4);
+    assert.ok(dirs.every(d => d === 'de-to-en'));
+});
+
+test('production prompts use English→German direction (no German on front)', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(4) });
+    e.startPhase(s, PHASE_PRODUCTION);
+    const first = e.nextPresentation(s);
+    assert.equal(first.direction, 'en-to-de');
+});
+
+test('phase order is stable across sessions so refresh does not reshuffle', () => {
+    const e = eng();
+    const s1 = e.createLearningSession({ deckId: 1, verbIds: ids(5) });
+    e.startPhase(s1, PHASE_RECOGNITION);
+    const order1 = JSON.stringify(s1.phaseOrder);
+    const s2 = e.createLearningSession({ deckId: 1, verbIds: ids(5) });
+    e.startPhase(s2, PHASE_RECOGNITION);
+    assert.equal(JSON.stringify(s2.phaseOrder), order1);
+});
