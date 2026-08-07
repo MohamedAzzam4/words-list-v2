@@ -430,4 +430,171 @@ test.describe('Guided Challenge E2E Suite', () => {
         await expect(page.locator('.guided-label')).toHaveText('Verb (German)');
     });
 
+    test('GC-04: review restart does not double-advance SRS level', async ({ page }) => {
+        await page.goto('/verbs.html');
+        await page.evaluate((key) => {
+            const seeded = {
+                verbLearning: {
+                    schemaVersion: 2,
+                    verbs: {
+                        v_werden: {
+                            recognitionWin: '2026-01-01T00:00:00.000Z',
+                            srs: { level: 2, nextReviewDate: '2026-01-01T00:00:00.000Z' },
+                            updatedAt: Date.now(),
+                            infinitive: 'werden'
+                        }
+                    },
+                    sessions: {}
+                }
+            };
+            localStorage.setItem(key, JSON.stringify(seeded));
+        }, STORAGE_KEY);
+
+        await page.reload();
+        await page.locator('button:has-text("Daily Review")').click();
+        await expect(page.locator('#view-guided')).toBeVisible();
+        await continueThrough(page);
+
+        // Grade recognition card
+        await page.locator('button:has-text("Reveal Answer")').click();
+        await page.locator('button:has-text("I knew it")').click();
+
+        // Check SRS level in localStorage
+        let stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+        const levelAfterFirstPass = stored.verbLearning.verbs.v_werden.srs.level;
+        expect(levelAfterFirstPass).toBe(3);
+
+        // Restart Review
+        await page.locator('#guided-restart-btn').click();
+        await continueThrough(page);
+
+        // Grade recognition card again
+        await page.locator('button:has-text("Reveal Answer")').click();
+        await page.locator('button:has-text("I knew it")').click();
+
+        // Assert level remains 3, NOT 4
+        stored = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
+        expect(stored.verbLearning.verbs.v_werden.srs.level).toBe(3);
+    });
+
+    test('GC-05: restart review immediately persists new session synchronously to localStorage', async ({ page }) => {
+        await page.goto('/verbs.html');
+        await page.evaluate((key) => {
+            const seeded = {
+                verbLearning: {
+                    schemaVersion: 2,
+                    verbs: {
+                        v_werden: {
+                            recognitionWin: '2026-01-01T00:00:00.000Z',
+                            srs: { level: 2, nextReviewDate: '2026-01-01T00:00:00.000Z' },
+                            updatedAt: Date.now(),
+                            infinitive: 'werden'
+                        }
+                    },
+                    sessions: {}
+                }
+            };
+            localStorage.setItem(key, JSON.stringify(seeded));
+        }, STORAGE_KEY);
+
+        await page.reload();
+        await page.locator('button:has-text("Daily Review")').click();
+        await continueThrough(page);
+
+        // Restart review
+        await page.locator('#guided-restart-btn').click();
+        await page.waitForTimeout(50);
+
+        // Immediate localStorage read synchronously without delay
+        const immediateStorage = await page.evaluate((key) => {
+            const raw = localStorage.getItem(key);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            return parsed.verbLearning?.sessions?.['__daily_review__'] || parsed.verbLearning?.sessions?.review || null;
+        }, STORAGE_KEY);
+        expect(immediateStorage).not.toBeNull();
+        expect(immediateStorage.sessionType).toBe('review');
+        expect(immediateStorage.turn).toBe(0);
+        expect(immediateStorage.completedTracks).toEqual([]);
+    });
+
+    test('GC-06: restart review preserves exact phaseOrder across session restart', async ({ page }) => {
+        await page.goto('/verbs.html');
+        await page.evaluate((key) => {
+            const verbsObj = {};
+            ['v_werden', 'v_sein', 'v_haben', 'v_kommen'].forEach(id => {
+                verbsObj[id] = {
+                    recognitionWin: '2026-01-01T00:00:00.000Z',
+                    srs: { level: 1, nextReviewDate: '2026-01-01T00:00:00.000Z' },
+                    updatedAt: Date.now()
+                };
+            });
+            localStorage.setItem(key, JSON.stringify({ verbLearning: { schemaVersion: 2, verbs: verbsObj } }));
+        }, STORAGE_KEY);
+
+        await page.reload();
+        await page.locator('button:has-text("Daily Review")').click();
+        await continueThrough(page);
+        
+        const initialOrder = await page.evaluate(() => window.verbsEngine.challengeSession.phaseOrder);
+        expect(initialOrder.length).toBe(4);
+
+        await page.locator('#guided-restart-btn').click();
+        await continueThrough(page);
+        const newOrder = await page.evaluate(() => window.verbsEngine.challengeSession.phaseOrder);
+        expect(newOrder).toEqual(initialOrder);
+    });
+
+    test('GC-07: daily review progress indicator advances card-by-card per terminal completion', async ({ page }) => {
+        await page.goto('/verbs.html');
+        await page.evaluate((key) => {
+            const seeded = {
+                verbLearning: {
+                    schemaVersion: 2,
+                    verbs: {
+                        v_werden: { recognitionWin: '2026-01-01T00:00:00.000Z', srs: { level: 1, nextReviewDate: '2026-01-01T00:00:00.000Z' }, updatedAt: Date.now() },
+                        v_sein: { recognitionWin: '2026-01-01T00:00:00.000Z', srs: { level: 1, nextReviewDate: '2026-01-01T00:00:00.000Z' }, updatedAt: Date.now() },
+                        v_haben: { recognitionWin: '2026-01-01T00:00:00.000Z', productionWin: '2026-01-01T00:00:00.000Z', productionSrs: { level: 1, nextReviewDate: '2026-01-01T00:00:00.000Z' }, updatedAt: Date.now() }
+                    }
+                }
+            };
+            localStorage.setItem(key, JSON.stringify(seeded));
+        }, STORAGE_KEY);
+
+        await page.reload();
+        await page.locator('button:has-text("Daily Review")').click();
+        await continueThrough(page);
+
+        // Check start progress label
+        const progLabel = page.locator('.guided-progress-label span:last-child');
+        await expect(progLabel).toHaveText('0 / 3 (0%)');
+
+        // Pass 1st card
+        await page.locator('button:has-text("Reveal Answer")').click();
+        await page.locator('button:has-text("I knew it")').click();
+        await expect(progLabel).toHaveText('1 / 3 (33%)');
+
+        // Pass 2nd card
+        await page.locator('button:has-text("Reveal Answer")').click();
+        await page.locator('button:has-text("I knew it")').click();
+        await expect(progLabel).toHaveText('2 / 3 (67%)');
+    });
+
+    test('GC-08: canonical verb ID migration runs on repeated post-auth user data replacements', async ({ page }) => {
+        await page.goto('/verbs.html');
+        const res1 = await page.evaluate(() => {
+            window.verbsEngine.userData = { knownVerbIds: ['v_werden', 'werden'], verbLearning: { schemaVersion: 1, verbs: {} } };
+            window.verbsEngine.migrateCanonicalVerbIds();
+            return window.verbsEngine.userData.knownVerbIds;
+        });
+        expect(res1).toEqual(['v_werden']);
+
+        const res2 = await page.evaluate(() => {
+            window.verbsEngine.userData = { knownVerbIds: ['v_haben', 'haben'], verbLearning: { schemaVersion: 1, verbs: {} } };
+            window.verbsEngine.migrateCanonicalVerbIds();
+            return window.verbsEngine.userData.knownVerbIds;
+        });
+        expect(res2).toEqual(['v_haben']);
+    });
+
 });

@@ -382,3 +382,50 @@ test('only a valid positive finite latency counts as fast', () => {
     const fast = e.grade(s, pres.verbId, true, FAST_RECALL_MS);
     assert.equal(fast.passed, true, 'exactly the threshold counts as fast');
 });
+
+test('GC-10: completedTracks is modified only by completeReviewTrack and not by startReviewTrack or nextPresentation', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_1', track: PHASE_RECOGNITION },
+            { verbId: 'v_2', track: PHASE_PRODUCTION }
+        ]
+    });
+    assert.equal(s.completedTracks.length, 0);
+    
+    // nextPresentation must NOT mutate completedTracks
+    e.nextPresentation(s);
+    assert.equal(s.completedTracks.length, 0);
+
+    // startReviewTrack must NOT mutate completedTracks
+    e.startReviewTrack(s, PHASE_RECOGNITION);
+    assert.equal(s.completedTracks.length, 0);
+
+    // Only completeReviewTrack explicitly mutates completedTracks
+    e.completeReviewTrack(s);
+    assert.equal(s.completedTracks.length, 1);
+    assert.equal(s.completedTracks[0], PHASE_RECOGNITION);
+
+    // Calling completeReviewTrack again is idempotent
+    e.completeReviewTrack(s);
+    assert.equal(s.completedTracks.length, 1);
+});
+
+test('GC-19: learning and review sessions are isolated and sealed on completion', () => {
+    const e = eng();
+    const sLearn = e.createLearningSession({ deckId: 1, verbIds: ids(2) });
+    const sRev = e.createReviewSession({ deckId: 1, items: [{ verbId: 'v_0', track: PHASE_RECOGNITION }] });
+
+    assert.equal(sLearn.sessionType, 'learning');
+    assert.equal(sRev.sessionType, 'review');
+    assert.notEqual(sLearn.sessionType, sRev.sessionType);
+
+    e.finishSession(sLearn);
+    assert.equal(sLearn.phase, PHASE_COMPLETE);
+    assert.equal(e.nextPresentation(sLearn), null);
+
+    e.finishSession(sRev);
+    assert.equal(sRev.phase, PHASE_COMPLETE);
+    assert.equal(e.nextPresentation(sRev), null);
+});

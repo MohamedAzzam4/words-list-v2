@@ -166,15 +166,11 @@ export class VerbChallengeEngine {
     startReviewTrack(session, track) {
         const ids = session.reviewItems.filter(i => i.track === track).map(i => i.verbId);
         if (ids.length === 0) return false;
-        // record the track we are leaving as completed before switching
-        if (session.sessionType === 'review' && session.phase !== PHASE_REVIEW) {
-            if (!session.completedTracks.includes(session.phase)) {
-                session.completedTracks.push(session.phase);
-            }
-        }
         session.phase = track;
         session.orderIds = ids;
-        session.phaseOrder = shuffle(ids, this._rng);
+        if (!session.phaseOrder || session.phaseOrder.length !== ids.length) {
+            session.phaseOrder = shuffle(ids, this._rng);
+        }
         session.cardStateById = {};
         for (const id of ids) {
             session.cardStateById[id] = this._newChallengeCard();

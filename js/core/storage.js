@@ -204,7 +204,39 @@ export const mergeProgress = (local, remote) => {
 // Legacy records without track timestamps fall back to their record-level
 // `updatedAt` (only when the track genuinely exists) so old saves merge safely.
 
+export function migrateCanonicalVerbIds(data, dataset) {
+    if (!data) return;
+    if (!data._knownIdsBackup && Array.isArray(data.knownVerbIds)) {
+        data._knownIdsBackup = JSON.parse(JSON.stringify(data.knownVerbIds));
+    }
+    if (Array.isArray(data.knownVerbIds) && dataset) {
+        const validIds = new Set(dataset.decks.flatMap(d => d.verbs).map(v => v.id));
+        const infToId = new Map(dataset.decks.flatMap(d => d.verbs).map(v => [v.infinitive.toLowerCase(), v.id]));
+        const canonicalSet = new Set();
+        for (const raw of data.knownVerbIds) {
+            if (typeof raw !== 'string') continue;
+            const clean = raw.replace(/^v_/, '').toLowerCase().trim();
+            if (validIds.has(raw)) canonicalSet.add(raw);
+            else if (infToId.has(clean)) canonicalSet.add(infToId.get(clean));
+            else if (validIds.has(`v_${clean}`)) canonicalSet.add(`v_${clean}`);
+        }
+        data.knownVerbIds = Array.from(canonicalSet);
+    }
+}
+
 const VERB_LEARNING_SCHEMA_VERSION = 2;
+
+export function normalizeVerbLearning(vl) {
+    if (!vl || typeof vl !== 'object') {
+        return { schemaVersion: VERB_LEARNING_SCHEMA_VERSION, verbs: {}, sessions: {} };
+    }
+    return {
+        ...vl,
+        schemaVersion: VERB_LEARNING_SCHEMA_VERSION,
+        verbs: vl.verbs || {},
+        sessions: vl.sessions || {}
+    };
+}
 
 // Resolve the numeric time of one record track. Returns null when the track
 // does not exist. A track exists if it has an explicit track timestamp, a win,
@@ -358,7 +390,7 @@ const getDefaultProgress = () => ({
     phraseErrors: {},
     srsData: {},
     verbLearning: {
-        schemaVersion: 1,
+        schemaVersion: 2,
         verbs: {},
         sessions: {}
     },

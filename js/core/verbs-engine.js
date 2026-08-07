@@ -1918,7 +1918,7 @@ class VerbsEngineClass {
             const completed = s.completedTracks || [];
             const finishedCount = s.reviewItems.filter(it => completed.includes(it.track) && it.track !== s.phase).length;
             const total = s.reviewItems.length;
-            const inTrack = (p && typeof p.ready === 'number') ? p.ready : 0;
+            const inTrack = (p && typeof p.ready === 'number') ? p.ready : ((p && typeof p.passed === 'number') ? p.passed : 0);
             const ready = finishedCount + inTrack;
             return { ready: Math.min(ready, total), total, percent: total ? Math.round((Math.min(ready, total) / total) * 100) : 0 };
         }
@@ -2197,6 +2197,7 @@ class VerbsEngineClass {
     }
 
     challengeRevealAnswer() {
+        if (this.challengeRevealed) return;
         this.challengeRevealed = true;
         // Stop and freeze the prompt-to-reveal timing. Everything that happens
         // after Reveal (reading the answer, choosing “I knew it”) must not
@@ -2528,23 +2529,47 @@ class VerbsEngineClass {
         this.switchView('glossary');
     }
 
+    migrateCanonicalVerbIds() {
+        if (!this.userData) return;
+        // Immutable first backup
+        if (!this.userData._knownIdsBackup && Array.isArray(this.userData.knownVerbIds)) {
+            this.userData._knownIdsBackup = JSON.parse(JSON.stringify(this.userData.knownVerbIds));
+        }
+        if (Array.isArray(this.userData.knownVerbIds) && this.dataset) {
+            const validIds = new Set(this.dataset.decks.flatMap(d => d.verbs).map(v => v.id));
+            const infToId = new Map(this.dataset.decks.flatMap(d => d.verbs).map(v => [v.infinitive.toLowerCase(), v.id]));
+            const canonicalSet = new Set();
+            for (const raw of this.userData.knownVerbIds) {
+                if (typeof raw !== 'string') continue;
+                const clean = raw.replace(/^v_/, '').toLowerCase().trim();
+                if (validIds.has(raw)) canonicalSet.add(raw);
+                else if (infToId.has(clean)) canonicalSet.add(infToId.get(clean));
+                else if (validIds.has(`v_${clean}`)) canonicalSet.add(`v_${clean}`);
+            }
+            this.userData.knownVerbIds = Array.from(canonicalSet);
+        }
+    }
+
     restartGuidedChallenge() {
         const s = this.challengeSession;
         const wasReview = !!(s && s.sessionType === 'review');
         const initialItems = wasReview ? (s.initialItems || s.reviewItems) : null;
+        const initialStartLevels = (wasReview && s.reviewStartLevels) ? s.reviewStartLevels : null;
+        const initialPhaseOrder = (wasReview && s.phaseOrder) ? s.phaseOrder.slice() : null;
+
         this.switchView('glossary');
         this._clearChallengeSession(s || { deckId: this.currentDeckId });
         this.currentIndex = 0;
         if (wasReview) {
             // Restarting from a Daily Review rebuilds the review (same due
             // items) instead of dropping the user into a learning challenge.
-            this.startChallengeReview(initialItems);
+            this.startChallengeReview(initialItems, initialStartLevels, initialPhaseOrder);
         } else {
             this.startGuidedChallenge();
         }
     }
 
-    startChallengeReview(overrideItems = null) {
+    startChallengeReview(overrideItems = null, overrideStartLevels = null, overridePhaseOrder = null) {
         if (!this.dataset) return;
 
         let items = overrideItems ? overrideItems.map(i => ({ deckId: i.deckId || this.currentDeckId, verbId: i.verbId, track: i.track })) : [];
@@ -2604,7 +2629,10 @@ class VerbsEngineClass {
         this.challengeSession.initialItems = reviewItems;
         // Snapshot the SRS level each card is entering review with, so terminal
         // rescheduling is calculated against the level the user actually saw.
-        this.challengeSession.reviewStartLevels = this._buildReviewStartLevels(reviewItems);
+        this.challengeSession.reviewStartLevels = overrideStartLevels || this._buildReviewStartLevels(reviewItems);
+        if (overridePhaseOrder) {
+            this.challengeSession.phaseOrder = overridePhaseOrder;
+        }
         this.challengeRevealed = false;
         this._resetChallengeTimer();
         this.switchView('guided');

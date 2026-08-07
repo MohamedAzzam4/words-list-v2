@@ -92,3 +92,76 @@ test('mergeVerbLearning preserves both sides and sessions', () => {
     assert.equal(out.sessions.s1.updatedAt, 500);
     assert.equal(out.sessions.s2.updatedAt, 700);
 });
+
+function createStorageSandbox() {
+    const s = {};
+    vm.createContext(s);
+    vm.runInContext(
+        src + `
+;globalThis.__STORAGE = { mergeVerbRecord, trackNumericTime, pickTrackSide, mergeVerbLearning, mergeProgress, getDefaultProgressObj, normalizeVerbLearning, migrateCanonicalVerbIds, VERB_LEARNING_SCHEMA_VERSION };
+`,
+        s
+    );
+    return s.__STORAGE;
+}
+
+test('GC-09: migration backup is created on first migration and never overwritten or appended to', () => {
+    const st = createStorageSandbox();
+    let data = { knownVerbIds: ['v_werden', 'werden', 'sein'] };
+    st.migrateCanonicalVerbIds(data);
+    let b1 = JSON.stringify(data._knownIdsBackup);
+    
+    // Second migration with different knownVerbIds
+    data.knownVerbIds.push('haben');
+    st.migrateCanonicalVerbIds(data);
+    let b2 = JSON.stringify(data._knownIdsBackup);
+
+    assert.equal(b1, b2, 'backup must remain immutable and not be overwritten on second migration');
+});
+
+test('GC-11: schema version 2 default, upgrade, and merge produce version 2', () => {
+    const st = createStorageSandbox();
+    let def = st.getDefaultProgressObj();
+    let upgraded = st.normalizeVerbLearning({ schemaVersion: 1, verbs: {} });
+    let merged = st.mergeVerbLearning({ schemaVersion: 1, verbs: {} }, { schemaVersion: 1, verbs: {} });
+
+    assert.equal(def.verbLearning.schemaVersion, 2, 'getDefaultProgressObj must specify schemaVersion 2');
+    assert.equal(upgraded.schemaVersion, 2, 'normalizeVerbLearning must upgrade schemaVersion to 2');
+    assert.equal(merged.schemaVersion, 2, 'mergeVerbLearning must return schemaVersion 2');
+});
+
+test('GC-15: mergeVerbLearning handles complete track conflict matrix independently', () => {
+    // 1. Newer local recognition + newer remote production
+    const local1 = {
+        schemaVersion: 2,
+        verbs: {
+            v_1: fullRecord({ recognitionWin: 'LOCAL_REC', recognitionUpdatedAt: t(5000), productionWin: 'LOCAL_PROD', productionUpdatedAt: t(1000) })
+        }
+    };
+    const remote1 = {
+        schemaVersion: 2,
+        verbs: {
+            v_1: fullRecord({ recognitionWin: 'REMOTE_REC', recognitionUpdatedAt: t(2000), productionWin: 'REMOTE_PROD', productionUpdatedAt: t(6000) })
+        }
+    };
+    const out1 = mergeVerbLearning(local1, remote1);
+    assert.equal(out1.verbs.v_1.recognitionWin, 'LOCAL_REC');
+    assert.equal(out1.verbs.v_1.productionWin, 'REMOTE_PROD');
+
+    // 2. Newer remote recognition + newer local production
+    const local2 = {
+        schemaVersion: 2,
+        verbs: {
+            v_1: fullRecord({ recognitionWin: 'LOCAL_REC', recognitionUpdatedAt: t(1000), productionWin: 'LOCAL_PROD', productionUpdatedAt: t(8000) })
+        }
+    };
+    const remote2 = {
+        schemaVersion: 2,
+        verbs: {
+            v_1: fullRecord({ recognitionWin: 'REMOTE_REC', recognitionUpdatedAt: t(7000), productionWin: 'REMOTE_PROD', productionUpdatedAt: t(2000) })
+        }
+    };
+    const out2 = mergeVerbLearning(local2, remote2);
+    assert.equal(out2.verbs.v_1.recognitionWin, 'REMOTE_REC');
+    assert.equal(out2.verbs.v_1.productionWin, 'LOCAL_PROD');
+});
