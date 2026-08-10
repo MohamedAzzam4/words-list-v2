@@ -393,7 +393,7 @@ test('GC-10: completedTracks is modified only by completeReviewTrack and not by 
         ]
     });
     assert.equal(s.completedTracks.length, 0);
-    
+
     // nextPresentation must NOT mutate completedTracks
     e.nextPresentation(s);
     assert.equal(s.completedTracks.length, 0);
@@ -402,10 +402,24 @@ test('GC-10: completedTracks is modified only by completeReviewTrack and not by 
     e.startReviewTrack(s, PHASE_RECOGNITION);
     assert.equal(s.completedTracks.length, 0);
 
-    // Only completeReviewTrack explicitly mutates completedTracks
-    e.completeReviewTrack(s);
+    // Premature completion while a track card is still pending is rejected
+    // with null and zero mutation
+    assert.equal(e.completeReviewTrack(s), null);
+    assert.equal(s.completedTracks.length, 0);
+    assert.equal(s.phase, PHASE_RECOGNITION);
+
+    // Terminally complete the track: pass its only pending card
+    const id = s.phaseOrder[0];
+    const outcome = e.grade(s, id, true, 500);
+    assert.equal(outcome.passed, true);
+    assert.equal(s.cardStateById[id].status, 'passed');
+
+    // Exactly one completion mutation
+    const next = e.completeReviewTrack(s);
     assert.equal(s.completedTracks.length, 1);
     assert.equal(s.completedTracks[0], PHASE_RECOGNITION);
+    assert.equal(next.kind, 'transition');
+    assert.equal(next.to, PHASE_PRODUCTION);
 
     // Calling completeReviewTrack again is idempotent
     e.completeReviewTrack(s);
@@ -638,4 +652,99 @@ test('T5-unit: a replayed acquisition win is a complete no-op', () => {
         assert.equal(card[key], snap[key], `ready card ${key} must be exactly preserved`);
     }
     assert.deepEqual(s.activePoolIds, poolAfter, 'the pool must not change');
+});
+
+test('T5-unit: completeIntro replay and wrong-phase calls are complete no-ops', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(3) });
+
+    const first = e.nextPresentation(s);
+    assert.equal(first.kind, 'intro');
+    const aId = first.verbId;
+    const bId = s.orderIds[1];
+
+    e.completeIntro(s, aId); // first introduction is a real mutation
+    assert.equal(s.turn, 1);
+    assert.equal(s.cardStateById[aId].status, 'introduced');
+
+    const snapB = {
+        status: s.cardStateById[bId].status, dueTurn: s.cardStateById[bId].dueTurn,
+        failCount: s.cardStateById[bId].failCount, lastLatencyMs: s.cardStateById[bId].lastLatencyMs,
+        lastSeenTurn: s.cardStateById[bId].lastSeenTurn
+    };
+    const snapTurn = s.turn;
+    const snapOrder = s.orderIds.slice();
+    const snapPool = s.activePoolIds.slice();
+    const snapCursor = s.poolCursor;
+
+    // Replayed intro on the introduced card: no-op, current next presentation
+    // (the following unseen card) is returned unchanged
+    const replay = e.completeIntro(s, aId);
+    assert.equal(s.turn, snapTurn, 'a replayed intro must NOT advance the turn');
+    assert.equal(s.cardStateById[aId].status, 'introduced', 'the introduced card must stay introduced');
+    assert.equal(replay.verbId, bId, 'the following unseen card remains the next presentation');
+    assert.equal(replay.kind, 'intro');
+    for (const key of Object.keys(snapB)) {
+        assert.equal(s.cardStateById[bId][key], snapB[key], `following card ${key} must be exactly preserved`);
+    }
+    assert.deepEqual(s.orderIds, snapOrder, 'order state must be exactly preserved');
+    assert.deepEqual(s.activePoolIds, snapPool, 'pool state must be exactly preserved');
+    assert.equal(s.poolCursor, snapCursor, 'pool cursor must be exactly preserved');
+
+    // Absent card: no-op
+    const absent = e.completeIntro(s, 'v_missing');
+    assert.equal(s.turn, snapTurn, 'an absent-card intro must NOT advance the turn');
+    assert.equal(absent.verbId, bId);
+
+    // Wrong phase (recognition): no-op on card and session
+    e.startPhase(s, PHASE_RECOGNITION);
+    const cardB = s.cardStateById[bId];
+    assert.equal(cardB.status, 'pending', 'recognition cards start pending');
+    const turnAtRec = s.turn;
+    const wrongPhase = e.completeIntro(s, bId);
+    assert.equal(s.turn, turnAtRec, 'a wrong-phase intro must NOT advance the turn');
+    assert.equal(cardB.status, 'pending', 'a wrong-phase intro must NOT mutate the card');
+    assert.equal(wrongPhase.kind, 'recall', 'the current next presentation is returned unchanged');
+});
+
+test('T5-unit: grading a pending card inside a sealed session is a complete no-op', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_r1', track: PHASE_RECOGNITION },
+            { verbId: 'v_r2', track: PHASE_RECOGNITION },
+            { verbId: 'v_p1', track: PHASE_PRODUCTION }
+        ]
+    });
+    e.startReviewTrack(s, PHASE_RECOGNITION);
+    const id = s.phaseOrder[0];
+    const card = s.cardStateById[id];
+    assert.equal(card.status, 'pending');
+
+    e.finishSession(s);
+    assert.equal(s.phase, PHASE_COMPLETE);
+
+    const snapCard = {
+        status: card.status, dueTurn: card.dueTurn, failCount: card.failCount,
+        requiredFast: card.requiredFast, completedFast: card.completedFast,
+        lastLatencyMs: card.lastLatencyMs, lastSeenTurn: card.lastSeenTurn
+    };
+    const snapPhase = s.phase;
+    const snapTurn = s.turn;
+    const snapPhaseOrder = s.phaseOrder.slice();
+    const snapOrderIds = s.orderIds.slice();
+    const snapCompleted = (s.completedTracks || []).slice();
+
+    const outcome = e.grade(s, id, true, 600);
+    assert.equal(outcome.ignored, true, 'a sealed-session grade must be ignored');
+    assert.equal(outcome.passed, false);
+    assert.equal(s.phase, snapPhase);
+    assert.equal(s.turn, snapTurn, 'a sealed-session grade must NOT advance the turn');
+    assert.deepEqual(s.phaseOrder, snapPhaseOrder, 'phase order must be exactly preserved');
+    assert.deepEqual(s.orderIds, snapOrderIds, 'track order must be exactly preserved');
+    assert.deepEqual(s.completedTracks, snapCompleted, 'completed tracks must be exactly preserved');
+    for (const key of Object.keys(snapCard)) {
+        assert.equal(card[key], snapCard[key], `pending card ${key} must be exactly preserved`);
+    }
 });

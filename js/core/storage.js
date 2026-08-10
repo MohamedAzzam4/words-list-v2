@@ -204,26 +204,6 @@ export const mergeProgress = (local, remote) => {
 // Legacy records without track timestamps fall back to their record-level
 // `updatedAt` (only when the track genuinely exists) so old saves merge safely.
 
-export function migrateCanonicalVerbIds(data, dataset) {
-    if (!data) return;
-    if (!data._knownIdsBackup && Array.isArray(data.knownVerbIds)) {
-        data._knownIdsBackup = JSON.parse(JSON.stringify(data.knownVerbIds));
-    }
-    if (Array.isArray(data.knownVerbIds) && dataset) {
-        const validIds = new Set(dataset.decks.flatMap(d => d.verbs).map(v => v.id));
-        const infToId = new Map(dataset.decks.flatMap(d => d.verbs).map(v => [v.infinitive.toLowerCase(), v.id]));
-        const canonicalSet = new Set();
-        for (const raw of data.knownVerbIds) {
-            if (typeof raw !== 'string') continue;
-            const clean = raw.replace(/^v_/, '').toLowerCase().trim();
-            if (validIds.has(raw)) canonicalSet.add(raw);
-            else if (infToId.has(clean)) canonicalSet.add(infToId.get(clean));
-            else if (validIds.has(`v_${clean}`)) canonicalSet.add(`v_${clean}`);
-        }
-        data.knownVerbIds = Array.from(canonicalSet);
-    }
-}
-
 const VERB_LEARNING_SCHEMA_VERSION = 2;
 
 export function normalizeVerbLearning(vl) {
@@ -232,7 +212,14 @@ export function normalizeVerbLearning(vl) {
     }
     return {
         ...vl,
-        schemaVersion: VERB_LEARNING_SCHEMA_VERSION,
+        // Monotonic schema version: missing, invalid, or older versions are
+        // upgraded to the current one; a valid newer version is preserved.
+        schemaVersion: Math.max(
+            VERB_LEARNING_SCHEMA_VERSION,
+            (typeof vl.schemaVersion === 'number' && Number.isFinite(vl.schemaVersion))
+                ? vl.schemaVersion
+                : VERB_LEARNING_SCHEMA_VERSION
+        ),
         verbs: vl.verbs || {},
         sessions: vl.sessions || {}
     };
@@ -277,7 +264,14 @@ export function mergeVerbRecord(a, b) {
 
     const recSrc = pickTrackSide(a, b, 'recognitionWin', 'srs', 'recognitionUpdatedAt');
     if (recSrc) {
-        if (recSrc.recognitionWin) out.recognitionWin = recSrc.recognitionWin;
+        // Mastery wins are monotonic: the newer track's SRS data and timestamp
+        // win, but a non-null win from either side must never be erased by a
+        // newer SRS-only record that omitted the win.
+        if (recSrc.recognitionWin) {
+            out.recognitionWin = recSrc.recognitionWin;
+        } else if (a.recognitionWin || b.recognitionWin) {
+            out.recognitionWin = a.recognitionWin || b.recognitionWin;
+        }
         if (recSrc.srs) out.srs = { ...recSrc.srs };
         const recNum = trackNumericTime(recSrc, 'recognitionWin', 'srs', 'recognitionUpdatedAt');
         if (recNum !== null && (recSrc.recognitionUpdatedAt === undefined ||
@@ -290,7 +284,11 @@ export function mergeVerbRecord(a, b) {
 
     const prodSrc = pickTrackSide(a, b, 'productionWin', 'productionSrs', 'productionUpdatedAt');
     if (prodSrc) {
-        if (prodSrc.productionWin) out.productionWin = prodSrc.productionWin;
+        if (prodSrc.productionWin) {
+            out.productionWin = prodSrc.productionWin;
+        } else if (a.productionWin || b.productionWin) {
+            out.productionWin = a.productionWin || b.productionWin;
+        }
         if (prodSrc.productionSrs) out.productionSrs = { ...prodSrc.productionSrs };
         const prodNum = trackNumericTime(prodSrc, 'productionWin', 'productionSrs', 'productionUpdatedAt');
         if (prodNum !== null && (prodSrc.productionUpdatedAt === undefined ||
@@ -321,14 +319,18 @@ export function mergeVerbRecord(a, b) {
 }
 
 export const mergeVerbLearning = (local, remote) => {
+    // Both inputs are normalized through the real production path so a legacy,
+    // partial, or non-object side can never break the merge or lose fields.
+    const l = normalizeVerbLearning(local);
+    const r = normalizeVerbLearning(remote);
     const mergedWords = {};
     const wordKeys = new Set([
-        ...Object.keys(local.verbs || {}),
-        ...Object.keys(remote.verbs || {})
+        ...Object.keys(l.verbs),
+        ...Object.keys(r.verbs)
     ]);
     for (const key of wordKeys) {
-        const a = local.verbs?.[key];
-        const b = remote.verbs?.[key];
+        const a = l.verbs[key];
+        const b = r.verbs[key];
         if (a && b) {
             mergedWords[key] = mergeVerbRecord(a, b);
         } else {
@@ -338,12 +340,12 @@ export const mergeVerbLearning = (local, remote) => {
 
     const mergedSessions = {};
     const sessionKeys = new Set([
-        ...Object.keys(local.sessions || {}),
-        ...Object.keys(remote.sessions || {})
+        ...Object.keys(l.sessions),
+        ...Object.keys(r.sessions)
     ]);
     for (const key of sessionKeys) {
-        const a = local.sessions?.[key];
-        const b = remote.sessions?.[key];
+        const a = l.sessions[key];
+        const b = r.sessions[key];
         if (a && b) {
             mergedSessions[key] = (a.updatedAt || 0) >= (b.updatedAt || 0) ? a : b;
         } else {
@@ -354,8 +356,8 @@ export const mergeVerbLearning = (local, remote) => {
     return {
         schemaVersion: Math.max(
             VERB_LEARNING_SCHEMA_VERSION,
-            local.schemaVersion || 1,
-            remote.schemaVersion || 1
+            l.schemaVersion || 1,
+            r.schemaVersion || 1
         ),
         verbs: mergedWords,
         sessions: mergedSessions

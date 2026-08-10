@@ -37,7 +37,7 @@ import {
     clearLocalProgress, 
     getDefaultProgressObj,
     mergeVerbRecord
-} from './storage.js?v=3';
+} from './storage.js?v=4';
 import { sanitize, debounce } from './utils.js';
 import { ActivityService } from './activity-service.js?v=3';
 import { TrophyEngine, VERB_TROPHIES } from './trophies.js?v=3';
@@ -612,7 +612,7 @@ class VerbsEngineClass {
 
     isVerbKnown(w) {
         if (!w || !this.userData) return false;
-        const known = this.userData.knownVerbIds;
+        const known = Array.isArray(this.userData.knownVerbIds) ? this.userData.knownVerbIds : [];
         const inf = (w.infinitive || '').toLowerCase();
         const id = w.id;
 
@@ -2038,7 +2038,7 @@ class VerbsEngineClass {
                     <div class="guided-milestone-title">${title}</div>
                     <div class="guided-milestone-sub">${sub}</div>
                     <div class="guided-controls">
-                        <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeContinue()">
+                        <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeContinue(${this._challengeRenderToken})">
                             Continue${p.to ? ` to ${this._phaseBadgeText(p.to)}` : ''} →
                         </button>
                     </div>
@@ -2068,7 +2068,7 @@ class VerbsEngineClass {
                 <div class="guided-complete-sub">${subtitle}</div>
                 <div class="guided-controls">
                     ${!isReview && p.win === PHASE_RECOGNITION ? `
-                        <button class="btn primary" onclick="window.verbsEngine.challengeStartProduction()">🚀 Continue to Production</button>
+                        <button class="btn primary" onclick="window.verbsEngine.challengeStartProduction(${this._challengeRenderToken})">🚀 Continue to Production</button>
                     ` : ''}
                     <button class="btn" onclick="window.verbsEngine.exitGuidedChallenge(true)">✅ Finish</button>
                 </div>
@@ -2093,7 +2093,7 @@ class VerbsEngineClass {
                 <div class="guided-spacer-note" style="display:none;"></div>
                 <div class="guided-controls">
                     <button class="btn" onclick="window.verbsEngine.challengeSpeakVerb('${p.verbId}')">🔊 Listen</button>
-                    <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeIntroDone()">Got it — Continue →</button>
+                    <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeIntroDone(${this._challengeRenderToken})">Got it — Continue →</button>
                 </div>
             </div>
         `;
@@ -2180,10 +2180,14 @@ class VerbsEngineClass {
         if (v) speak(cleanTextForAudio(v.infinitive), 'de');
     }
 
-    challengeContinue() {
+    challengeContinue(token) {
         const s = this.challengeSession;
         const p = this.challengePresentation;
-        if (!s || !p) return;
+        if (!s || !p || p.kind !== 'transition') return;
+        // Presentation-token guard: a click carrying an older token is a stale
+        // duplicate from a superseded render and must NOT advance the phase the
+        // screen has already moved on to.
+        if (typeof token !== 'number' || token !== this._challengeRenderToken) return;
         if (p.review) {
             const track = p.to || (s.phase === PHASE_RECOGNITION ? PHASE_PRODUCTION : PHASE_RECOGNITION);
             // Explicitly close the finished track, then move to the next one.
@@ -2200,9 +2204,14 @@ class VerbsEngineClass {
         this._saveChallengeSession();
     }
 
-    challengeStartProduction() {
+    challengeStartProduction(token) {
         const s = this.challengeSession;
-        if (!s) return;
+        if (!s || s.sessionType !== 'learning') return;
+        const p = this.challengePresentation;
+        if (!p || p.kind !== 'complete' || p.win !== PHASE_RECOGNITION) return;
+        // Presentation-token guard: only the current completion render may
+        // advance into Production.
+        if (typeof token !== 'number' || token !== this._challengeRenderToken) return;
         this.challengeEngine.startPhase(s, PHASE_PRODUCTION);
         this.challengeRevealed = false;
         this._resetChallengeTimer();
@@ -2457,10 +2466,13 @@ class VerbsEngineClass {
 
     // ── guided challenge lifecycle ──
 
-    challengeIntroDone() {
+    challengeIntroDone(token) {
         const s = this.challengeSession;
         const p = this.challengePresentation;
         if (!s || !p || p.kind !== 'intro') return;
+        // Stale intro button: a second click on a superseded render must never
+        // introduce the card the screen has already moved on to.
+        if (typeof token !== 'number' || token !== this._challengeRenderToken) return;
         this.challengePresentation = this.challengeEngine.completeIntro(s, p.verbId);
         this.challengeRevealed = false;
         this._resetChallengeTimer();
@@ -2531,14 +2543,7 @@ class VerbsEngineClass {
                     } else if (records[canonical] === records[key]) {
                         /* same object */
                     } else {
-                        const merged = mergeVerbRecord(records[canonical], records[key]);
-                        if (!merged.recognitionWin && (records[canonical].recognitionWin || records[key].recognitionWin)) {
-                            merged.recognitionWin = records[canonical].recognitionWin || records[key].recognitionWin;
-                        }
-                        if (!merged.productionWin && (records[canonical].productionWin || records[key].productionWin)) {
-                            merged.productionWin = records[canonical].productionWin || records[key].productionWin;
-                        }
-                        records[canonical] = merged;
+                        records[canonical] = mergeVerbRecord(records[canonical], records[key]);
                     }
                     delete records[key];
                     changed = true;

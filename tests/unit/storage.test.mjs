@@ -98,26 +98,12 @@ function createStorageSandbox() {
     vm.createContext(s);
     vm.runInContext(
         src + `
-;globalThis.__STORAGE = { mergeVerbRecord, trackNumericTime, pickTrackSide, mergeVerbLearning, mergeProgress, getDefaultProgressObj, normalizeVerbLearning, migrateCanonicalVerbIds, VERB_LEARNING_SCHEMA_VERSION };
+;globalThis.__STORAGE = { mergeVerbRecord, trackNumericTime, pickTrackSide, mergeVerbLearning, mergeProgress, getDefaultProgressObj, normalizeVerbLearning, VERB_LEARNING_SCHEMA_VERSION };
 `,
         s
     );
     return s.__STORAGE;
 }
-
-test('GC-09: migration backup is created on first migration and never overwritten or appended to', () => {
-    const st = createStorageSandbox();
-    let data = { knownVerbIds: ['v_werden', 'werden', 'sein'] };
-    st.migrateCanonicalVerbIds(data);
-    let b1 = JSON.stringify(data._knownIdsBackup);
-    
-    // Second migration with different knownVerbIds
-    data.knownVerbIds.push('haben');
-    st.migrateCanonicalVerbIds(data);
-    let b2 = JSON.stringify(data._knownIdsBackup);
-
-    assert.equal(b1, b2, 'backup must remain immutable and not be overwritten on second migration');
-});
 
 test('GC-11: schema version 2 default, upgrade, and merge produce version 2', () => {
     const st = createStorageSandbox();
@@ -164,4 +150,70 @@ test('GC-15: mergeVerbLearning handles complete track conflict matrix independen
     const out2 = mergeVerbLearning(local2, remote2);
     assert.equal(out2.verbs.v_1.recognitionWin, 'REMOTE_REC');
     assert.equal(out2.verbs.v_1.productionWin, 'LOCAL_PROD');
+});
+
+test('mergeVerbRecord: newer recognition SRS/timestamp cannot erase an older recognition win', () => {
+    const newer = fullRecord({
+        srs: { level: 3, nextReviewDate: '2035-01-01T00:00:00.000Z' },
+        recognitionUpdatedAt: t(6000),
+        updatedAt: 9000
+    });
+    const older = fullRecord({
+        recognitionWin: t(1000),
+        recognitionUpdatedAt: t(1000),
+        updatedAt: 1000
+    });
+    const out = mergeVerbRecord(newer, older);
+    assert.equal(out.srs.nextReviewDate, '2035-01-01T00:00:00.000Z', 'newer recognition SRS data must win');
+    assert.equal(out.recognitionUpdatedAt, t(6000), 'newer recognition track timestamp must win');
+    assert.equal(out.recognitionWin, t(1000), 'older non-null recognition mastery must survive');
+    assert.equal(out.updatedAt, 6000, 'overall updatedAt is the newest TRACK time');
+});
+
+test('mergeVerbRecord: newer production SRS/timestamp cannot erase an older production win', () => {
+    const newer = fullRecord({
+        productionSrs: { level: 2, nextReviewDate: '2035-01-01T00:00:00.000Z' },
+        productionUpdatedAt: t(7000),
+        updatedAt: 7000
+    });
+    const older = fullRecord({
+        productionWin: t(2000),
+        productionUpdatedAt: t(2000),
+        updatedAt: 2000
+    });
+    const out = mergeVerbRecord(newer, older);
+    assert.equal(out.productionSrs.nextReviewDate, '2035-01-01T00:00:00.000Z', 'newer production SRS data must win');
+    assert.equal(out.productionUpdatedAt, t(7000), 'newer production track timestamp must win');
+    assert.equal(out.productionWin, t(2000), 'older non-null production mastery must survive');
+    assert.equal(out.updatedAt, 7000, 'overall updatedAt is the newest TRACK time');
+});
+
+test('normalizeVerbLearning upgrades old, missing, and invalid versions, never downgrades newer ones', () => {
+    const st = createStorageSandbox();
+    assert.equal(st.normalizeVerbLearning({ schemaVersion: 1, verbs: {} }).schemaVersion, 2, 'version 1 upgrades to 2');
+    assert.equal(st.normalizeVerbLearning({ verbs: {} }).schemaVersion, 2, 'missing version upgrades to 2');
+    assert.equal(st.normalizeVerbLearning({ schemaVersion: '3', verbs: {} }).schemaVersion, 2, 'non-numeric version upgrades to 2');
+    assert.equal(st.normalizeVerbLearning({ schemaVersion: 3, verbs: {} }).schemaVersion, 3, 'version 3 is preserved');
+});
+
+test('mergeVerbLearning returns the highest schema version and never downgrades', () => {
+    const st = createStorageSandbox();
+    const out = st.mergeVerbLearning(
+        {
+            schemaVersion: 3,
+            verbs: { v_1: fullRecord({ recognitionWin: '$A', recognitionUpdatedAt: t(1000), updatedAt: 1000 }) },
+            sessions: {}
+        },
+        { schemaVersion: 2, verbs: {}, sessions: {} }
+    );
+    assert.equal(out.schemaVersion, 3, 'version 3 merged with version 2 yields version 3');
+    assert.equal(out.verbs.v_1.recognitionWin, '$A', 'verb data survives the merge');
+});
+
+test('mergeVerbLearning with undefined and null inputs returns a safe version-2 default', () => {
+    const st = createStorageSandbox();
+    const out = st.mergeVerbLearning(undefined, null);
+    assert.equal(out.schemaVersion, 2);
+    assert.equal(Object.keys(out.verbs).length, 0, 'verbs default to an empty object');
+    assert.equal(Object.keys(out.sessions).length, 0, 'sessions default to an empty object');
 });

@@ -939,6 +939,98 @@ test.describe('Guided Challenge E2E Suite', () => {
         await expect.poll(() => readSrsLevel(page, bId, 'srs')).toBe(2);
     });
 
+    test('GC-11: two click attempts on the same Intro button introduce exactly one card', async ({ page }) => {
+        await startGuided(page);
+
+        // First presented card A; card B is the next natural order entry and
+        // must be the very next presentation after A
+        const snap = await page.evaluate(() => {
+            const eng = window.verbsEngine;
+            const s = eng.challengeSession;
+            const c = s.cardStateById;
+            const read = (id) => ({
+                status: c[id]?.status, dueTurn: c[id]?.dueTurn, introTurn: c[id]?.introTurn,
+                failCount: c[id]?.failCount, lastLatencyMs: c[id]?.lastLatencyMs, lastSeenTurn: c[id]?.lastSeenTurn
+            });
+            const p = eng.challengePresentation;
+            return {
+                ids: [...s.orderIds],
+                a: read(s.orderIds[0]),
+                b: read(s.orderIds[1]),
+                turn: s.turn,
+                pool: [...s.activePoolIds],
+                presented: { verbId: p.verbId, kind: p.kind },
+                phase: s.phase
+            };
+        }, STORAGE_KEY);
+        const aId = snap.ids[0];
+        const bId = snap.ids[1];
+        expect(snap.presented.verbId).toBe(aId);
+        expect(snap.presented.kind).toBe('intro');
+        expect(snap.a.status).toBe('unseen');
+
+        // Click the very same Intro button DOM node twice in a single browser
+        // task — no re-query, no re-render in between
+        await page.evaluate(() => {
+            const btn = [...document.querySelectorAll('button')]
+                .find(x => (x.textContent || '').includes('Got it — Continue'));
+            btn.click();
+            btn.click();
+        });
+
+        // Exactly ONE introduction: one turn advance, card A introduced, card B
+        // still unseen and field-wise unchanged, card B now presented
+        const after = await page.evaluate(() => {
+            const eng = window.verbsEngine;
+            const s = eng.challengeSession;
+            const c = s.cardStateById;
+            const read = (id) => ({
+                status: c[id]?.status, dueTurn: c[id]?.dueTurn, introTurn: c[id]?.introTurn,
+                failCount: c[id]?.failCount, lastLatencyMs: c[id]?.lastLatencyMs, lastSeenTurn: c[id]?.lastSeenTurn
+            });
+            const p = eng.challengePresentation;
+            return {
+                turn: s.turn,
+                a: read(s.orderIds[0]),
+                b: read(s.orderIds[1]),
+                pool: [...s.activePoolIds],
+                presented: { verbId: p.verbId, kind: p.kind },
+                phase: s.phase
+            };
+        }, STORAGE_KEY);
+
+        expect(after.turn).toBe(snap.turn + 1);
+        expect(after.a.status).toBe('introduced');
+        expect(after.a.introTurn).toBe(snap.turn);
+        expect(after.a.dueTurn).toBe(snap.turn + 3);
+        expect(after.a.lastSeenTurn).toBe(snap.turn);
+        expect(after.b).toEqual(snap.b);
+        expect(after.pool).toEqual(snap.pool);
+        expect(after.presented.verbId).toBe(bId);
+        expect(after.presented.kind).toBe('intro');
+        expect(after.phase).toBe('acquisition');
+
+        // One later legitimate click on the FRESH button introduces B exactly once
+        await page.locator('button:has-text("Got it — Continue")').click();
+        const after2 = await page.evaluate(() => {
+            const eng = window.verbsEngine;
+            const s = eng.challengeSession;
+            const b = s.cardStateById[s.orderIds[1]];
+            const p = eng.challengePresentation;
+            return {
+                turn: s.turn,
+                bStatus: b.status,
+                bIntroTurn: b.introTurn,
+                presented: { verbId: p.verbId, kind: p.kind }
+            };
+        }, STORAGE_KEY);
+        expect(after2.turn).toBe(snap.turn + 2);
+        expect(after2.bStatus).toBe('introduced');
+        expect(after2.bIntroTurn).toBe(snap.turn + 1);
+        expect(after2.presented.verbId).toBe(snap.ids[2]);
+        expect(after2.presented.kind).toBe('intro');
+    });
+
     // ── Tests for removing Restart Review from Daily Review MVP ──
 
     test('R1: Daily Review does not render a Restart button or Restart action in any state', async ({ page }) => {

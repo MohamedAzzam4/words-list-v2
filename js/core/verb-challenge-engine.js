@@ -409,6 +409,13 @@ export class VerbChallengeEngine {
      */
     completeReviewTrack(session) {
         if (session.sessionType !== 'review' || session.phase === PHASE_REVIEW) return null;
+        // A track with any unresolved pending card is unfinished: premature
+        // completion must be rejected with zero mutation.
+        const unfinished = session.phaseOrder.some(id => {
+            const card = session.cardStateById && session.cardStateById[id];
+            return !!card && card.status === 'pending';
+        });
+        if (unfinished) return null;
         if (!session.completedTracks) session.completedTracks = [];
         if (!session.completedTracks.includes(session.phase)) {
             session.completedTracks.push(session.phase);
@@ -425,17 +432,21 @@ export class VerbChallengeEngine {
     /**
      * Complete an introduction card. Introduction never counts as a successful
      * recall. The word's first recall is scheduled after INTRO_TO_RECALL_GAP.
+     * Only a genuine unseen acquisition introduction mutates state: an absent
+     * card, a replayed intro, an introduced/ready card, or a wrong phase is a
+     * complete no-op (no turn, no card state, no session mutation) that still
+     * returns the current next presentation.
      */
     completeIntro(session, verbId) {
         const card = session.cardStateById[verbId];
-        if (card) {
+        if (session.phase === PHASE_ACQUISITION && card && card.status === 'unseen') {
             card.status = 'introduced';
             card.introTurn = session.turn;
             card.dueTurn = session.turn + 1 + INTRO_TO_RECALL_GAP;
             card.lastSeenTurn = session.turn;
+            session.turn += 1;
+            session.updatedAt = Date.now();
         }
-        session.turn += 1;
-        session.updatedAt = Date.now();
         return this.nextPresentation(session);
     }
 
@@ -456,7 +467,7 @@ export class VerbChallengeEngine {
         // already-terminal cards are ignored.
         const scorable = !!card && (
             (session.phase === PHASE_ACQUISITION && card.status === 'introduced')
-            || (session.phase !== PHASE_ACQUISITION && card.status === 'pending')
+            || ((session.phase === PHASE_RECOGNITION || session.phase === PHASE_PRODUCTION) && card.status === 'pending')
         );
         if (!scorable) {
             return {
