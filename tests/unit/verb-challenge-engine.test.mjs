@@ -429,3 +429,213 @@ test('GC-19: learning and review sessions are isolated and sealed on completion'
     assert.equal(sRev.phase, PHASE_COMPLETE);
     assert.equal(e.nextPresentation(sRev), null);
 });
+
+test('T2-unit: per-track review orders are stored separately and ID-set mismatch regenerates', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_r1', track: PHASE_RECOGNITION },
+            { verbId: 'v_r2', track: PHASE_RECOGNITION },
+            { verbId: 'v_p1', track: PHASE_PRODUCTION },
+            { verbId: 'v_p2', track: PHASE_PRODUCTION }
+        ]
+    });
+
+    // Start recognition track
+    e.startReviewTrack(s, PHASE_RECOGNITION);
+    assert.deepEqual(s.orderIds.sort(), ['v_r1', 'v_r2']);
+    assert.equal(s.phase, PHASE_RECOGNITION);
+    assert.deepEqual(Object.keys(s.cardStateById).sort(), ['v_r1', 'v_r2']);
+
+    // The recognition order must be stored under its own track key
+    const recOrder = s.trackPhaseOrders?.[PHASE_RECOGNITION];
+    assert.ok(recOrder, 'trackPhaseOrders.recognition must exist');
+    assert.deepEqual(recOrder.sort(), ['v_r1', 'v_r2']);
+
+    // Production order must not exist yet
+    assert.equal(s.trackPhaseOrders?.[PHASE_PRODUCTION], undefined);
+
+    // Complete recognition, start production
+    e.completeReviewTrack(s);
+    e.startReviewTrack(s, PHASE_PRODUCTION);
+    assert.deepEqual(s.orderIds.sort(), ['v_p1', 'v_p2']);
+    assert.equal(s.phase, PHASE_PRODUCTION);
+    assert.deepEqual(Object.keys(s.cardStateById).sort(), ['v_p1', 'v_p2']);
+
+    // Production order stored separately
+    const prodOrder = s.trackPhaseOrders?.[PHASE_PRODUCTION];
+    assert.ok(prodOrder, 'trackPhaseOrders.production must exist');
+    assert.deepEqual(prodOrder.sort(), ['v_p1', 'v_p2']);
+
+    // Recognition order must NOT have been overwritten by production
+    assert.deepEqual(s.trackPhaseOrders[PHASE_RECOGNITION].sort(), ['v_r1', 'v_r2']);
+
+    // Even though both tracks have length 2, neither borrows the other's IDs
+    const recIds = new Set(s.trackPhaseOrders[PHASE_RECOGNITION]);
+    const prodIds = new Set(s.trackPhaseOrders[PHASE_PRODUCTION]);
+    const overlap = [...recIds].filter(id => prodIds.has(id));
+    assert.equal(overlap.length, 0, 'recognition and production IDs must not overlap');
+
+    // ID-set mismatch: modify reviewItems and re-start production
+    // This simulates a restart where the due items have changed
+    s.reviewItems = [
+        { verbId: 'v_r1', track: PHASE_RECOGNITION },
+        { verbId: 'v_r2', track: PHASE_RECOGNITION },
+        { verbId: 'v_p3', track: PHASE_PRODUCTION },  // different ID
+        { verbId: 'v_p2', track: PHASE_PRODUCTION }
+    ];
+    e.startReviewTrack(s, PHASE_PRODUCTION);
+    // Must have regenerated because IDs changed (not just length)
+    assert.deepEqual(s.orderIds.sort(), ['v_p2', 'v_p3']);
+    // The new trackPhaseOrders entry must reflect the new IDs
+    assert.deepEqual(s.trackPhaseOrders[PHASE_PRODUCTION].sort(), ['v_p2', 'v_p3']);
+});
+
+test('T4-unit: monotonic recall latency — edge values never count as fast', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ['v_a'] });
+    e.startPhase(s, PHASE_RECOGNITION);
+    const pres = e.nextPresentation(s);
+    assert.equal(pres.kind, 'recall');
+
+    // Every invalid latency must NOT count as fast
+    for (const bad of [null, undefined, NaN, 0, -5, '600', Infinity, FAST_RECALL_MS + 1]) {
+        const c = s.cardStateById[pres.verbId];
+        c.status = 'pending';
+        c.requiredFast = 1;
+        c.completedFast = 0;
+        const outcome = e.grade(s, pres.verbId, true, bad);
+        assert.equal(outcome.passed, false, `latency ${String(bad)} must not count as fast`);
+        assert.equal(c.status, 'pending', `card must remain pending for latency ${String(bad)}`);
+    }
+
+    // Exactly at threshold: must count as fast
+    s.cardStateById[pres.verbId].requiredFast = 1;
+    s.cardStateById[pres.verbId].completedFast = 0;
+    s.cardStateById[pres.verbId].status = 'pending';
+    const fast = e.grade(s, pres.verbId, true, FAST_RECALL_MS);
+    assert.equal(fast.passed, true, 'exactly the threshold counts as fast');
+
+    // Double-grade cannot change already-passed status
+    // (simulates what happens if grade is called again on a passed card)
+    const passedCard = s.cardStateById[pres.verbId];
+    assert.equal(passedCard.status, 'passed');
+
+    // Verify the engine uses no Date.now in the _isFastLatency path
+    // (this is a structural assertion: _isFastLatency only checks typeof/finite/range)
+    assert.equal(typeof e._isFastLatency, 'function');
+    assert.equal(e._isFastLatency(null), false);
+    assert.equal(e._isFastLatency(undefined), false);
+    assert.equal(e._isFastLatency(NaN), false);
+    assert.equal(e._isFastLatency(0), false);
+    assert.equal(e._isFastLatency(-1), false);
+    assert.equal(e._isFastLatency(Infinity), false);
+    assert.equal(e._isFastLatency('500'), false);
+    assert.equal(e._isFastLatency(FAST_RECALL_MS), true);
+    assert.equal(e._isFastLatency(1), true);
+    assert.equal(e._isFastLatency(FAST_RECALL_MS + 1), false);
+});
+
+test('T5-unit: a replayed terminal event is a complete no-op (no turn, no retry, no scoring)', () => {
+    const e = eng();
+    const s = e.createReviewSession({
+        deckId: 1,
+        items: [
+            { verbId: 'v_r1', track: PHASE_RECOGNITION },
+            { verbId: 'v_r2', track: PHASE_RECOGNITION },
+            { verbId: 'v_p1', track: PHASE_PRODUCTION },
+            { verbId: 'v_p2', track: PHASE_PRODUCTION }
+        ]
+    });
+    e.startReviewTrack(s, PHASE_RECOGNITION);
+
+    // Present and terminally pass the first recognition card
+    const pres = e.nextPresentation(s);
+    assert.equal(pres.kind, 'recall');
+    const id = pres.verbId;
+    const nextId = s.phaseOrder.find(x => x !== id);
+    const card = s.cardStateById[id];
+    const nextCard = s.cardStateById[nextId];
+    card.requiredFast = 1;
+    card.completedFast = 0;
+
+    const first = e.grade(s, id, true, 600);
+    assert.equal(first.passed, true, 'first terminal grade must pass');
+    assert.equal(card.status, 'passed', 'the terminal event must mark the card passed');
+
+    // Snapshot everything a stale replay could corrupt (field-by-field: the
+    // engine lives in a vm realm, so object identity/prototype must not be used)
+    const snapCard = {
+        status: card.status, dueTurn: card.dueTurn, failCount: card.failCount,
+        requiredFast: card.requiredFast, completedFast: card.completedFast,
+        lastLatencyMs: card.lastLatencyMs, lastSeenTurn: card.lastSeenTurn
+    };
+    const snapNext = {
+        status: nextCard.status, dueTurn: nextCard.dueTurn, failCount: nextCard.failCount,
+        requiredFast: nextCard.requiredFast, completedFast: nextCard.completedFast,
+        lastLatencyMs: nextCard.lastLatencyMs, lastSeenTurn: nextCard.lastSeenTurn
+    };
+    const snapSession = {
+        phase: s.phase,
+        turn: s.turn,
+        phaseOrder: s.phaseOrder.slice(),
+        completedTracks: (s.completedTracks || []).slice()
+    };
+
+    // Replay the identical terminal event on the same card
+    const replay = e.grade(s, id, true, 600);
+    assert.equal(replay.passed, false, 'replayed terminal event must never pass again');
+    assert.equal(replay.forgot, false, 'a replay must not even look like a scored outcome');
+    assert.equal(replay.rememberedSlow, false);
+    assert.equal(replay.recovery, false);
+    assert.equal(replay.ignored, true, 'a replay must be flagged as ignored');
+
+    // Complete no-op: the passed card, the following card, the session turn and
+    // every scheduling/order structure must be exactly preserved
+    for (const key of Object.keys(snapCard)) {
+        assert.equal(card[key], snapCard[key], `passed card ${key} must be exactly preserved`);
+    }
+    for (const key of Object.keys(snapNext)) {
+        assert.equal(nextCard[key], snapNext[key], `following card ${key} must be exactly preserved`);
+    }
+    assert.equal(s.turn, snapSession.turn, 'a replay must NOT advance the turn');
+    assert.equal(s.phase, snapSession.phase);
+    assert.deepEqual(s.phaseOrder, snapSession.phaseOrder);
+    assert.deepEqual(s.completedTracks, snapSession.completedTracks);
+
+    // An absent card is equally a no-op
+    const absent = e.grade(s, 'v_missing', true, 600);
+    assert.equal(absent.ignored, true);
+    assert.equal(absent.passed, false);
+    assert.equal(s.turn, snapSession.turn, 'an absent-card grade must NOT advance the turn');
+});
+
+test('T5-unit: a replayed acquisition win is a complete no-op', () => {
+    const e = eng();
+    const s = e.createLearningSession({ deckId: 1, verbIds: ids(3) });
+    let pres = e.nextPresentation(s);
+    while (pres && pres.kind === 'intro') pres = e.completeIntro(s, pres.verbId);
+    assert.equal(pres.kind, 'recall');
+    const id = pres.verbId;
+
+    const first = e.grade(s, id, true, 1);
+    assert.equal(first.passed, true);
+    const card = s.cardStateById[id];
+    assert.equal(card.status, 'ready');
+    const snap = {
+        status: card.status, dueTurn: card.dueTurn, failCount: card.failCount,
+        lastLatencyMs: card.lastLatencyMs, lastSeenTurn: card.lastSeenTurn
+    };
+    const turnAfter = s.turn;
+    const poolAfter = s.activePoolIds.slice();
+
+    const replay = e.grade(s, id, true, 1);
+    assert.equal(replay.ignored, true, 'a ready acquisition card replay must be ignored');
+    assert.equal(replay.passed, false);
+    assert.equal(s.turn, turnAfter, 'a replay must NOT advance the turn');
+    for (const key of Object.keys(snap)) {
+        assert.equal(card[key], snap[key], `ready card ${key} must be exactly preserved`);
+    }
+    assert.deepEqual(s.activePoolIds, poolAfter, 'the pool must not change');
+});

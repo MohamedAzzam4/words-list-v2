@@ -168,9 +168,13 @@ export class VerbChallengeEngine {
         if (ids.length === 0) return false;
         session.phase = track;
         session.orderIds = ids;
-        if (!session.phaseOrder || session.phaseOrder.length !== ids.length) {
-            session.phaseOrder = shuffle(ids, this._rng);
+        session.trackPhaseOrders = session.trackPhaseOrders || {};
+        const cached = session.trackPhaseOrders[track];
+        const idsMatch = cached && cached.length === ids.length && new Set(cached).size === new Set([...cached, ...ids]).size;
+        if (!idsMatch) {
+            session.trackPhaseOrders[track] = shuffle(ids, this._rng);
         }
+        session.phaseOrder = session.trackPhaseOrders[track];
         session.cardStateById = {};
         for (const id of ids) {
             session.cardStateById[id] = this._newChallengeCard();
@@ -442,6 +446,33 @@ export class VerbChallengeEngine {
      * @param {number|null} latencyMs response time from first reveal (nullable)
      */
     grade(session, verbId, remembered, latencyMs) {
+        const card = session.cardStateById ? session.cardStateById[verbId] : null;
+
+        // A replayed or spurious event (double click, stale button, retry of an
+        // already-decided card) must be a COMPLETE no-op: no turn advance, no
+        // card state, no order or retry scheduling, no session mutation. Only
+        // cards still awaiting a scored outcome are scorable (introduced
+        // acquisition recalls and pending challenge recalls). Absent cards and
+        // already-terminal cards are ignored.
+        const scorable = !!card && (
+            (session.phase === PHASE_ACQUISITION && card.status === 'introduced')
+            || (session.phase !== PHASE_ACQUISITION && card.status === 'pending')
+        );
+        if (!scorable) {
+            return {
+                verbId,
+                phase: session.phase,
+                passed: false,
+                forgot: false,
+                rememberedSlow: false,
+                recovery: false,
+                lastLatencyMs: latencyMs === null || latencyMs === undefined ? null : latencyMs,
+                ignored: true,
+                turn: session.turn,
+                next: null
+            };
+        }
+
         const outcome = {
             verbId,
             phase: session.phase,
@@ -522,6 +553,9 @@ export class VerbChallengeEngine {
     _gradeChallenge(session, verbId, remembered, latencyMs, outcome) {
         const card = session.cardStateById[verbId];
         if (!card) return;
+        // Exactly-once guard: a passed card is terminal. A duplicate or
+        // replayed terminal event can never re-apply a scored outcome.
+        if (card.status === 'passed') return;
         card.lastSeenTurn = session.turn;
         if (latencyMs !== null && latencyMs !== undefined) card.lastLatencyMs = latencyMs;
 
