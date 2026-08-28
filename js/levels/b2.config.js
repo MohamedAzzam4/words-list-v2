@@ -3085,13 +3085,30 @@ function parseRawB2Data(rawArray) {
         }
 
         if (!units[unitNum]) units[unitNum] = [];
+        const exampleDe = parts[4] ? parts[4].trim() : '';
+        const exampleTranslation = parts[5] ? parts[5].trim() : '';
+        const translationLanguage = parts[3] && parts[3].includes(' / ') ? 'mixed' : 'en';
+        const exampleTranslationLanguage = exampleTranslation
+            ? (exampleTranslation.includes(' / ') ? 'mixed' : 'en')
+            : null;
         units[unitNum].push({
             id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
+            unitId: unitNum,
             de: deMain,
             deContext: deContext,
             en: parts[3] ? parts[3].trim() : '',
             type: tType,
-            context: parts[4] ? parts[4].trim() : ''
+            context: exampleDe, // Legacy alias used by the current UI
+            translation: parts[3] ? parts[3].trim() : '',
+            translationLanguage,
+            exampleDe,
+            exampleTranslation,
+            exampleTranslationLanguage,
+            examples: exampleDe ? [{
+                de: exampleDe,
+                translation: exampleTranslation,
+                translationLanguage: exampleTranslationLanguage
+            }] : []
         });
     });
 

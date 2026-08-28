@@ -715,7 +715,7 @@ const RAW_A1_DATA = [
 ];
 
 // 🔧 Parser: Converts raw strings to engine-ready objects
-function parseRawData(rawArray) {
+export function parseRawData(rawArray) {
     const units = {};
     rawArray.forEach((line, index) => {
         if (!line || line.trim() === '') return;
@@ -724,12 +724,25 @@ function parseRawData(rawArray) {
         if (isNaN(unitNum)) return;
 
         if (!units[unitNum]) units[unitNum] = [];
+        const exampleDe = deEx || '';
+        const exampleTranslation = enEx || '';
         units[unitNum].push({
             id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
+            unitId: unitNum,
             de: de,
             en: en,
             type: type || 'Vocab',
-            context: deEx || '' // TTS & UI will handle cleaning/display
+            context: exampleDe, // Legacy alias used by the current UI
+            translation: en,
+            translationLanguage: 'en',
+            exampleDe,
+            exampleTranslation,
+            exampleTranslationLanguage: exampleTranslation ? 'en' : null,
+            examples: exampleDe ? [{
+                de: exampleDe,
+                translation: exampleTranslation,
+                translationLanguage: exampleTranslation ? 'en' : null
+            }] : []
         });
     });
 
