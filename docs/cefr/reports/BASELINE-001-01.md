@@ -1,0 +1,158 @@
+# BASELINE-001 — Attempt 01 Delivery Report
+
+## 1. Identity and status
+
+- Status: READY_FOR_REVIEW
+- Assigned goal and task type: BASELINE-001 only — DOCUMENTATION/diagnostic. Verify the external sandbox against the published handoff branch, record the actual development baseline, run the specified checks once, and confirm/refute every known gap in `docs/cefr/BASELINE.md`. No application, test, contract, content, dependency, or workflow changes.
+- Owner assignment reference: `docs/cefr/GLM_HANDOFF.md` "First ready-to-send prompt"; executor prompt delivered with this task (BASELINE-001 only).
+- Branch; base commit; final tested code commit; report commit (fill after creation):
+  - Branch: `codex/cefr-glm-handoff` (fresh clone; tracking `origin/codex/cefr-glm-handoff`)
+  - Base commit: `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` — **matches the expected starting commit exactly**; no difference to report.
+  - Tested tree: `70d42d36c6b83fb282fd948e909379e8e0b883ef` (clean tree at the base commit; no source/test edits in this package)
+  - Final tested code commit: `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` (unchanged; report-only package)
+  - Report commit: see "Branch/commit/patch retrieval" in section 9 (filled after commit; report committed on a local task branch, not pushed).
+- Executor/model and sandbox OS/runtime versions:
+  - OS: Debian GNU/Linux 13 (trixie), kernel `5.10.134-013.8.3.kangaroo.al8.x86_64` (Linux container, bash)
+  - Node `v24.19.0`; npm `11.17.0`; Python `3.12.14` (executable named `python` available for the Playwright webServer)
+  - Playwright `1.61.1` (from `package-lock.json`, lockfileVersion 3; `@playwright/test` 1.61.1)
+  - Chromium installed via Playwright: `149.0.7827.55` (playwright build v1228, chromium + chromium-headless-shell)
+- Start/end time; work directory: start 2026-08-28T23:05Z, end 2026-08-28T23:28Z (times UTC; all checks ran in a single foreground sequence); work directory `/home/z/my-project/words-list-v2` (fresh clone; repository-relative paths used below).
+- Dependency acceptance references: none accepted — this package only verifies. `4c367f3ab73c102845cdd441a6b793676645771d` (corrected application baseline per `docs/cefr/BASELINE.md`) was verified to be an ancestor of this checkout (`git merge-base --is-ancestor` exit 0).
+
+## 2. Required reading and pre-edit plan
+
+- Paths fully read (in the order required by `AGENTS.md`), relevant contract IDs, observed conflicts:
+  - `AGENTS.md`; `contracts/README.md`; `contracts/PORTABLE_AGENT_EXECUTION.md` (PX); `contracts/CHANGE_MANAGEMENT.md` (CM); `contracts/CODE_FINGERPRINT.md` (FP); `contracts/TESTING_AND_SUCCESS.md` (TS); `contracts/DEAD_CODE_AND_REFACTORING.md` (DC); `contracts/DELIVERY_REPORTING.md` (DR); `contracts/LEVEL_FLASHCARD_STANDARD.md` (LF/LR, APPROVED); `contracts/GUIDED_CHALLENGE.md` (GC v0.2, APPROVED); `docs/cefr/BASELINE.md`; `docs/cefr/WORK_PACKAGES.md` (all 29 WPs incl. BASELINE-001 scope); `docs/cefr/ACCEPTANCE_MATRIX.md`; `docs/cefr/GLM_HANDOFF.md`; `Refactoring documentation/plans/CEFR_LEVEL_FLASHCARD_STANDARD_AND_REVIEW_CENTER_ROADMAP.md`.
+  - Also read for context: `docs/cefr/reports/HANDOFF-PREPARATION-001.md`, `docs/cefr/templates/WORK_PACKAGE_REPORT.md`, `docs/cefr/reports/README.md`, `package.json`, `playwright.config.js`.
+  - Observed conflicts: none between documents. A code-vs-contract conflict (published scheduler vs GC v0.2) is a *documented known gap* (`BASELINE.md` item 3) and is re-confirmed with evidence as finding BL-03 below, not silently resolved.
+- Before behavior; approved after behavior; explicit non-goals:
+  - Before: repository exactly as published at `d2f4c79`.
+  - After: identical code; only this report file (plus task-local logs outside the repo) added.
+  - Non-goals: no source/test/contract/content/dependency/lockfile/workflow edits; no `.agent-control`/OpenCode/Antigravity/hooks/sidecars; no full browser suite launch; no production accounts or writes; no fixes for confirmed findings.
+- Exact allowed write paths and any proposed new files: `docs/cefr/reports/BASELINE-001-01.md` (this file) only. Task-local artifacts kept outside the repository at `../baseline-001-artifacts/` (unit/E2E/list logs) so the repository working tree contains only the report change.
+- Risk: low — read-only diagnostic with report-only writes. Fault families: (a) wrong checkout/commit tested; (b) stale/shared server serving other code; (c) false gap confirmation from misread source; (d) environment limitations misreported as test results. Mitigations: commit/ancestor verification, port-9012 pre-check before the run, file:line evidence for every finding, explicit restriction list.
+- Affected callers/UI/state/storage/audio boundaries: none modified; inspected boundaries are `js/core/flashcards.js` (renderer + speech request), `js/core/app.js` (`speakText` wrapper), `js/core/tts.js` (`speak` adapter), `js/core/verb-challenge-engine.js` (Acquisition grading), `js/levels/a1.config.js` / `js/levels/b2.config.js` (normalization), `tests/unit/*.mjs`, `tests/e2e/*.spec.js`.
+- Baseline tests and known failures: known gaps per `BASELINE.md` (example renderer, language forwarding, GC scheduler mismatch, B2 coverage, VM loaders). No known failing tests on this branch; none observed in this run.
+
+## 3. Changes and rationale
+
+| File | Change/purpose | Contract/WP criterion | Compatibility impact |
+|---|---|---|---|
+| `docs/cefr/reports/BASELINE-001-01.md` | New: this delivery report | BASELINE-001 "Write: only the package report and task-local logs/artifacts"; DR-001 | None (documentation only; no runtime files touched) |
+
+No application source, tests, contracts, content, dependency manifests, lockfiles, or workflow configuration were modified. `git status --short` before report creation showed a completely clean tree at `d2f4c79`. No bug fixes were made, so no root-cause subsection applies; confirmed defects are recorded as findings for owner triage.
+
+## 4. Acceptance-to-evidence mapping
+
+| Criterion / AC row / contract ID | Test path + exact name | Result | Log/artifact | Tested revision |
+|---|---|---|---|---|
+| BASELINE-001: record HEAD/branch/status | `git rev-parse HEAD`; `git status --short`; `git stash list` | PASS — branch `codex/cefr-glm-handoff`, HEAD `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` (= expected commit), tree clean, no stashes | Section 5 ledger rows 1–5 | d2f4c79 |
+| BASELINE-001 / GLM_HANDOFF first prompt: `4c367f3` is ancestor of checkout | `git merge-base --is-ancestor 4c367f3ab73c102845cdd441a6b793676645771d HEAD` | PASS (exit 0) | Section 5 row 6 | d2f4c79 |
+| BASELINE-001: run full tracked unit suite | `npm run test:units` → `tests/unit/*.test.mjs` (59 tests incl. LEVEL-DATA-001..014, GC/storage/scheduler units) | PASS — 59 passed / 0 failed / 0 skipped, exit 0, 377 ms | `../baseline-001-artifacts/test-units.log` (full output also in section 5) | d2f4c79 |
+| BASELINE-001: focused favorites/SRS Chromium anchors | `tests/e2e/favorites-filters.spec.js` "Toggling filters should not remove favorites"; `tests/e2e/srs.spec.js` "SRS Level Progression and Time Machine Verification" | PASS — 2 passed (3.8 s), exit 0 | `../baseline-001-artifacts/e2e-focused.log` | d2f4c79 |
+| BASELINE-001: list broad tests without running | `npx playwright test --list` | PASS — 100 test/project cases in 8 files, exit 0 (inventory only; NOT executed results) | `../baseline-001-artifacts/playwright-list.log` | d2f4c79 |
+| BASELINE-001: diff/status check | `git diff --check`; `git status --short` | PASS — exit 0, no whitespace errors, clean tree | Section 5 rows 18–19 | d2f4c79 |
+| BASELINE-001: server serves THIS checkout | port-9012 pre-check (no listener) + Playwright webServer request log (`GET /js/levels/a1.config.js` etc. from this repo root) + app boot console "✅ [A1] Config loaded: 📚 A1 German" | PASS — `reuseExistingServer` could not attach to a stale server (port free before run); served files resolved from this checkout | `../baseline-001-artifacts/e2e-focused.log` | d2f4c79 |
+| BASELINE-001 gap 1 (example renderer) — see BL-01 | Source inspection: `js/core/flashcards.js:311-312`, `js/levels/a1.config.js:738,743-752` | CONFIRMED (gap exists) | Section 9 / BL-01 | d2f4c79 |
+| BASELINE-001 gap 2 (audio language forwarding) — see BL-02 | Source inspection: `js/core/app.js:985-986`, `js/core/flashcards.js:117,121`, `js/core/tts.js:71-91`, `tests/unit/flashcards.test.mjs:6-30`, `tests/e2e/words-audio.spec.js:6-34` | CONFIRMED (gap exists) | Section 9 / BL-02 | d2f4c79 |
+| BASELINE-001 gap 3 (GC scheduler vs contract) — see BL-03 | Source inspection: `js/core/verb-challenge-engine.js:24-34,123-132,512-530`, `tests/unit/verb-challenge-engine.test.mjs:103-120` vs `contracts/GUIDED_CHALLENGE.md` GC-ACQ-003..017, GC-TEST-001 | CONFIRMED (mismatch exists) | Section 9 / BL-03 | d2f4c79 |
+| BASELINE-001 gap 5 (B2 integration coverage) — see BL-05 | `rg "b2\|B2" tests/e2e/` (zero matches) + navigation inventory of all `page.goto` targets | CONFIRMED (coverage missing) | Section 9 / BL-05 | d2f4c79 |
+| AC-22 / PX, DR: honest complete report, no scope drift | This report; command ledger; diff review | READY_FOR_REVIEW (executor-supplied proof only; no self-acceptance) | This file | d2f4c79 + report commit |
+| AC-21 / TS-MUT: mutation testing | N/A — diagnostic/report-only package; no production behavior changed, so there is no changed risk family to probe (TS-MUT-001 exempts documentation-only work; explained, not omitted) | N/A | Section 7 | — |
+| DC-001: dead-code removal inventory | N/A — no code changed, so no changed symbols/callers to inventory; a scoped *existence* check for planned-but-missing modules was performed instead (BL-04) | N/A | Sections 8, 9 | d2f4c79 |
+
+## 5. Complete command ledger
+
+All commands were run in `/home/z/my-project/words-list-v2` unless noted. Exit codes are the actual terminal results; no command ran in the background unawaited, no duplicates were launched, and no test file was edited at any point.
+
+| # | Command (exact) | Phase + revision | Start/end or duration | Exit | Passed/failed/skipped | Artifact | Interpretation |
+|---|---|---|---|---|---|---|---|
+| 1 | `git clone https://github.com/MohamedAzzam4/words-list-v2.git` | setup | <5 s | 0 | — | — | Fresh isolated clone (no prior checkout in sandbox) |
+| 2 | `git checkout codex/cefr-glm-handoff` | setup | instant | 0 | — | — | Local branch tracking `origin/codex/cefr-glm-handoff` |
+| 3 | `git rev-parse HEAD` | setup | instant | 0 | — | — | `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` — **identical to expected starting commit**; no difference to report |
+| 4 | `git status` / `git status --short` / `git stash list` | setup | instant | 0 | — | — | Clean working tree, 0 modified/untracked files, no stashes |
+| 5 | `git log --oneline -3` | setup | instant | 0 | — | — | HEAD = `d2f4c79 docs(cefr): define portable GLM work packages and delivery contracts` |
+| 6 | `git merge-base --is-ancestor 4c367f3ab73c102845cdd441a6b793676645771d HEAD` | setup | instant | 0 | — | — | Corrected application baseline is an ancestor of this checkout, as required |
+| 7 | `node --version`; `npm --version`; `python --version`; `uname -a`; `/etc/os-release` | setup | instant | 0 | — | — | v24.19.0 / 11.17.0 / 3.12.14; Debian 13 trixie; recorded in section 1 |
+| 8 | `npm ci --ignore-scripts --no-audit --no-fund` | setup | 652 ms | 0 | — | — | "added 3 packages"; locked deps only; lockfileVersion 3, playwright 1.61.1; no lockfile change |
+| 9 | `npx playwright --version` | setup | instant | 0 | — | — | Version 1.61.1 (matches lockfile) |
+| 10 | `npx playwright install --with-deps chromium` | setup | ~5 s | 1 (install aborted) | — | — | **Environment restriction**: "Switching to root user… sudo: a password is required" — system-dep step needs root; sandbox-provider permission not available. NOT a product test failure; reported, not bypassed |
+| 11 | `npx playwright install chromium` (without `--with-deps`) | setup | ~30 s | 0 | — | — | Chromium 149.0.7827.55 + headless shell v1228 downloaded to `~/.cache/ms-playwright` |
+| 12 | Node launch probe: `require('playwright')` → `chromium.launch()` + `setContent` (inline one-liner, <10 lines) | setup | ~1 s | 0 | — | — | `LAUNCH_OK` — browser launches headlessly with existing system libraries; restriction in row 10 did not block testing |
+| 13 | Port 9012 pre-check: `ss -tlnp` + `curl --max-time 3 http://localhost:9012/` | setup | instant | 0 | — | — | No listener; curl code `000` (connection refused) → Playwright must start its own `python -m http.server 9012` from THIS checkout; `reuseExistingServer: true` could not attach to unrelated code |
+| 14 | `npm run test:units` | baseline / final (single run) | <1 s (test duration 377 ms) | 0 | **59 passed / 0 failed / 0 skipped** | `../baseline-001-artifacts/test-units.log` | Full tracked unit suite (4 files: level-data, flashcards, storage, verb-challenge-engine). Node summary: tests 59, pass 59, fail 0, skipped 0. Count coincides with the handoff-preparation reference count (reference info; not manufactured) |
+| 15 | `npx playwright test tests/e2e/favorites-filters.spec.js tests/e2e/srs.spec.js --project=chromium --reporter=line` | baseline / final (single run) | 3.8 s (wall ~5 s) | 0 | **2 passed / 0 failed / 0 skipped** | `../baseline-001-artifacts/e2e-focused.log` | Focused Chromium anchors. WebServer log shows this checkout served (`/js/core/app.js?v=4`, `/js/levels/a1.config.js`, …; console: "✅ [A1] Config loaded: 📚 A1 German", "📱 Using offline mode", Firebase SDK CDN import initialized synthetically). One `NO_COLOR`/`FORCE_COLOR` env warning only |
+| 16 | `npx playwright test --list` | inventory (no execution) | <2 s | 0 | — (listing) | `../baseline-001-artifacts/playwright-list.log` | **100 test/project cases in 8 files** across `chromium` + `Mobile Chrome` projects. Inventory only — these tests were NOT executed in this package |
+| 17 | `git diff --check` | final | instant | 0 | — | — | No whitespace/conflict-marker errors |
+| 18 | `git status --short` (final, after all checks) | final | instant | 0 | — | — | Clean tree (report not yet written at that point; see section 9 final diff note) |
+| 19 | Read-only inspection commands: `rg`/Grep over `js/`, `css/`, `level.html`, `index.html`, `tests/`; `sed -n` file views; `wc -l` | gap audit | — | 0 | — | — | Source/test evidence for findings BL-01..BL-08; no file modifications |
+| 20 | `curl -s -o /dev/null -w "%{http_code}" https://cdn.jsdelivr.net/...` | environment probe | ~1 s | 0 | — | — | HTTP 200 — outbound CDN access available; gstatic/firebase CDN imports booted during E2E (row 15), so network restriction did not affect startup |
+
+Background task IDs and terminal outcomes: none — every command ran in the foreground and was awaited; no duplicate suites were launched; no processes had to be killed. Reason for broad reruns: none (no reruns occurred; each check ran exactly once).
+
+## 6. Regression and integration
+
+- A1: covered by the passing focused E2E (`favorites-filters.spec.js`, `srs.spec.js` on `level.html?level=a1`) and by unit tests LEVEL-DATA-001/004/006/010 asserting A1 identity (24 units / 711 cards, snapshot digest) at `tests/unit/level-data.test.mjs:156,206-209`.
+- B2: unit-level identity verified (LEVEL-DATA-002/005 pass; 70 units / 3031 cards asserted at `tests/unit/level-data.test.mjs:213-214`), but **no B2 browser test exists or ran** — see BL-05. B2 E2E parity is NOT established.
+- Ordinary Verbs: not executed in this package (`tests/e2e/verbs.spec.js` inventoried only). No behavior claims made.
+- Guided Verbs: not executed in this package (`tests/e2e/verb-guided-challenge.spec.js` inventoried only). Published scheduler inspected — see BL-03.
+- Phrases / Conversation / navigation / favorites / SRS: favorites/SRS A1 E2E passed; Phrases/Conversation E2E (`phrases-conversations.spec.js`) inventoried only, not run (assignment scope). Phrases `context`/`deContext` field mapping inspected at `js/core/content-parser.js:90-91`.
+- Legacy storage / refresh / level and account isolation: unit coverage only (`LEVEL-DATA-010` legacy progress load passes; storage.test.mjs merge/version tests pass). No browser-level verification in this package.
+- Actual audio adapter text AND language: **NOT verified end-to-end and confirmed broken at the wrapper** — the engine requests `'de'`/`'en'` (`js/core/flashcards.js:117,121`) but `js/core/app.js:985-986` drops the language argument, so every level-app utterance goes through the German default of `speak(text, lang='de')` (`js/core/tts.js:71`). No E2E asserts `utterance.lang` today (BL-02).
+- Browser/module startup and console errors: during the two passing E2E tests no browser console errors were observed (only informational boot logs: voice mock selected, config loaded, Firebase initialized for synthetic appId `german-a1-app`, offline mode, WP-010 migration). Module ESM imports were not directly proven by VM-stripping unit tests (BL-06); the browser E2E run itself loaded the real page modules successfully.
+- Desktop/mobile/themes/keyboard/reduced-motion/screenshots inspected: not applicable to this diagnostic package — no UI was changed and no broad UI verification was assigned; recorded as untested, not as passing.
+- For each inapplicable item: reason given inline above; full untested list in section 9.
+
+## 7. Test-quality and fault-probe evidence
+
+| Probe | Risk/contract | Production target + exact patch artifact | Detecting test | Baseline / syntax result | Actual failure | Classification | Integrity proof |
+|---|---|---|---|---|---|---|---|
+| — | — | — | — | — | — | — | — |
+
+No mutation/fault probes were performed: **justified N/A**. TS-MUT-001 requires implementation fault probes for *changed domain logic* ("Documentation-only or pure style changes need no artificial mutation quota; explain applicability"). BASELINE-001 is a report-only/diagnostic package with zero production edits, so there is no changed risk family to probe; inventing probes would itself be a scope violation (PX-004, BASELINE-001 "Write: only the package report and task-local logs/artifacts").
+
+Test-quality observations recorded for future packages (no edits made):
+- `tests/unit/flashcards.test.mjs:6-30` stubs `window.app.speakText` — proves safe text/language *selection at the wrapper boundary*, exactly as BASELINE.md states; it cannot detect the wrapper dropping the language (BL-02). The same file (lines 8–10) and `tests/unit/storage.test.mjs:8`, `tests/unit/verb-challenge-engine.test.mjs:12`, `tests/unit/level-data.test.mjs:14,27` use VM loaders that strip `import`/`export` — they cannot prove real browser ESM imports (BL-06, TS-TEST-006).
+- `tests/e2e/words-audio.spec.js:31-33` mocks `SpeechSynthesisUtterance` capturing `text` only — no `lang` assertion exists anywhere in the E2E suite; audio-language coverage is a real gap for AUDIO-003.
+- No conditional assertions, swallowed errors, or weakened snapshots were found in the inspected test files; no snapshot regeneration occurred in this package.
+
+## 8. Dead-code and dependency inventory
+
+| Candidate symbol/path | Searches + dynamic caller checks | Classification | Disposition | Regression proof |
+|---|---|---|---|---|
+| — | — | — | — | — |
+
+**Justified N/A for removal inventory**: DC-001 scopes the dead-code examination to "changed symbols and direct callers" of a code work package; this package changed no code, so there are no changed symbols to inventory, and whole-repository cleanup belongs only to an assigned refactoring package (REFACTOR-001..004).
+
+Scoped existence verification performed instead (supports BL-04): directory listing of `js/core/` plus `rg -i "review-?center|reviewCenter|shared-?card|speech-?plan|review-aggregation|review-session"` over `js/`, `css/`, `level.html`, `index.html` returned zero matches — none of the planned shared-card / speech-plan / review-center modules exist yet, exactly as BASELINE.md item 4 states. No dependency changes were made (`npm ci` from the lockfile; lockfile unchanged in `git status`).
+
+## 9. Findings, limitations, and handoff
+
+| Finding ID | Severity/impact | Reproduction and evidence | Disposition | Owner decision needed |
+|---|---|---|---|---|
+| BL-01 | High (UX/data-parity) — flashcard back shows vocabulary term/translation instead of the actual example sentence/translation | `js/core/flashcards.js:311-312`: `if (exDeEl) exDeEl.textContent = w.context ? w.de : '';` / `if (exEnEl) exEnEl.textContent = w.context ? w.en : '';` — the example slots (`#fc-ex-de`/`#fc-ex-en`) receive `w.de`/`w.en`; `w.context` (= `exampleDe`, alias set at `js/levels/a1.config.js:738`) is used only as an existence gate. Normalized `exampleDe`/`exampleTranslation`/`examples[]`/per-example `speechText` exist at `js/levels/a1.config.js:743-752` (B2 equivalent in `b2.config.js`) but are not consumed by this renderer. **BASELINE.md gap 1: CONFIRMED** | Open — deferred to SHARED-CARD-003 (AC-05) | Accept gap as SHARED-CARD-003 input |
+| BL-02 | High (wrong-language speech) — real level-app audio adapter does not forward the requested language | Chain: `js/core/flashcards.js:117` `window.app.speakText(w.de, 'de')` and `:121` `window.app.speakText(englishText, 'en')` request language → `js/core/app.js:985-986` `speakText(t) { speak(cleanTextForAudio(t)); }` — single-parameter signature silently drops the language → `js/core/tts.js:71` `speak = (text, lang = 'de')` defaults every level-app utterance to German (`utterance.lang='de-DE'`, German voice, tts.js:82-89). Glossary caller `js/core/app.js:423` passes no language either. Unit tests stub the wrapper (`tests/unit/flashcards.test.mjs:14`), so LEVEL-DATA-012/013/014 pass while the real chain is wrong; `tests/e2e/words-audio.spec.js:31-33` mock records text only. **BASELINE.md gap 2: CONFIRMED** — English card speech is currently spoken through the German default voice | Open — deferred to AUDIO-003 (must assert real utterance text AND lang per AC-03/AC-11) | Confirm AUDIO-003 scope includes the `app.js` wrapper signature |
+| BL-03 | High (contract vs implementation) — published scheduler predates GC v0.2 Acquisition corrections | `js/core/verb-challenge-engine.js:512-530` `_gradeAcquisition`: one successful recall sets `card.status='ready'` and rolls the pool (comment line 519: "light phase: one separated successful recall promotes the word"), regardless of recall step or latency. Card model `:123-132` has no recall-step/confirmation state; acquisition ignores latency for graduation (recorded only, line 516) so GC-ACQ-004/005/006/013/014/015/016/017 are unimplemented (constants `:29-34` include INTRO_TO_RECALL_GAP=2 and SLOW_RECALL_GAP=8 but no step-2 gap of 6). The tracked test `tests/unit/verb-challenge-engine.test.mjs:103-120` ("a ready acquisition word leaves the pool and the next unseen word enters") asserts `outcome.passed === true` after a single recall — codifying the behavior GC v0.2 "Explicitly superseded Acquisition behavior" says must be replaced. GC-TEST-001 (50 intros + 100 scored recalls) cannot pass against this engine (it would be 50 + 50). **BASELINE.md gap 3: CONFIRMED** | Open — owner triage required before any Guided card work; NOT fixed here (per instruction "record mismatches for owner triage") | Decide: assign a dedicated scheduler WP (superseding the named test per GC contract) or defer with an explicit waiver; SHARED-CARD-001/002 must not redesign the scheduler |
+| BL-04 | Medium (expected) — shared presentation, autoplay parity, Review Center, bounded sessions/resume, refactoring not implemented | `ls js/core/`: no `shared-card*`, `speech-plan*`, `review-aggregation*`, `review-session-plan*`, `review-center*` modules; `rg -i "review-?center|shared-?card|speech-?plan|review-aggregation|review-session"` over `js/`, `css/`, `level.html`, `index.html` → zero matches. Level flashcards still use the legacy `FlashcardEngine` renderer. **BASELINE.md gap 4: CONFIRMED** (consistent with "not implemented by the data-foundation fixes") | Open — roadmap packages SHARED-CARD-001+, AUDIO-001+, REVIEW-001+ | Proceed with SHARED-CARD-001 after data acceptance |
+| BL-05 | Medium (coverage) — no B2 browser integration coverage | `rg -n "b2\|B2" tests/e2e/` → zero matches; navigation inventory shows every `page.goto` targets `/index.html`, `/level.html?level=a1` (`tests/e2e/activity-streak.spec.js:211`), or `/verbs.html`. No test ever loads `level.html?level=b2`. **BASELINE.md gap 5: CONFIRMED** — B2 browser parity is not established despite 3031 B2 cards and passing B2 unit/validation tests | Open — mandatory new B2 cases per TESTING_AND_SUCCESS.md ("No current B2 E2E coverage should be assumed merely because A1 passes") and SHARED-CARD-003/AUDIO-003 criteria | Assign B2 E2E coverage within SHARED-CARD-003 / AUDIO-003 |
+| BL-06 | Medium (test quality) — VM loaders strip exports; no utterance-language assertion in E2E | Export-stripping loaders at `tests/unit/flashcards.test.mjs:9-10`, `tests/unit/storage.test.mjs:8`, `tests/unit/verb-challenge-engine.test.mjs:12`, `tests/unit/level-data.test.mjs:14,27`; `tests/e2e/words-audio.spec.js:31-33` captures utterance `text` but not `lang`. **BASELINE.md gap 6: CONFIRMED** (documented limitation of the current tooling; browser tests supplement per TS-TEST-006) | Open — quality review scheduled within future code WPs (AC-21) | None now; enforce in SHARED-CARD/AUDIO packages |
+| BL-07 | Info (deferred scope) — B1/A2 sources deferred | No B1/A2 content or import code exists in the checkout (no `js/levels/b1.config.js` / `a2.config.js`); deferral is documented in BASELINE.md item 7 and WORK_PACKAGES CONTENT-*. Nothing to confirm beyond documentation consistency. **BASELINE.md gap 7: NOTED, consistent** | No action — deferred by design | None |
+| BL-08 | Info (positive verification) — "already implemented" data-foundation claims are accurate | Unit run (this report, section 5 row 14): LEVEL-DATA-004/005/006 pass, asserting A1 24 units / 711 cards (`tests/unit/level-data.test.mjs:156,206-208`) and B2 70 units / 3031 cards (`:213-214`) incl. snapshot digests; validator exists (`js/core/level-data-validator.mjs`) and passes on real configs; LEVEL-DATA-010 legacy progress load passes; LEVEL-DATA-012/013/014 wrapper speech-selection tests pass. IDs remain position-based (`unit-position`, `js/levels/a1.config.js:732`). **BASELINE.md "What is already implemented": CONFIRMED** | Verified — supports accepting LEVEL-DATA-001..003 | Owner may accept the data WPs per BASELINE.md "First external action" |
+
+- Remaining product risks, environment restrictions and untested requirements:
+  1. Full E2E suite (100 inventoried cases) NOT run — assignment explicitly limited execution to the two focused Chromium anchors; pass/fail of the other 98 cases is unknown and not claimed.
+  2. `Mobile Chrome` project not run (not assigned); no real-device or Safari certification (per TS matrix note).
+  3. Real hardware voice playback NOT tested — all speech evidence is synthetic (mocks); per TS-DONE-006 this does not establish real voice availability or correct OS voice selection.
+  4. `npx playwright install --with-deps chromium` failed (root/sudo required for system packages; sandbox-provider permission unavailable). Plain Chromium install + launch succeeded, so testing was not blocked; recorded as an environment restriction, not a test result.
+  5. No production accounts, no Firebase writes, no real user data; tests ran in the app's offline mode with synthetic storage (console confirmed "📱 Using offline mode").
+  6. Outbound CDN access was available (HTTP 200 probe; gstatic/firebase imports loaded during E2E), so no network restriction prevented startup.
+  7. Chromium-only, single-worker run; `--reporter=line` as assigned.
+- Final diff/status and no unintended ID/content/storage/dependency changes: after all checks, `git status --short` was empty and `git diff --check` exit 0. The only change introduced by this package is this report file (`docs/cefr/reports/BASELINE-001-01.md`). No source, test, contract, content, dependency, lockfile, or workflow file was touched; no IDs, stored progress, or content changed.
+- Branch/commit/patch retrieval: report committed locally on task branch `report/BASELINE-001-01` (created from `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986`); the delivery branch `codex/cefr-glm-handoff` is left untouched at `d2f4c79`. Commit hash and patch artifact recorded in section 10 footer after creation. Not pushed — pushing/merging/deploying were not authorized. Task-local logs: `/home/z/my-project/baseline-001-artifacts/` (test-units.log, e2e-focused.log, playwright-list.log).
+- Next proposed WP (do not start without assignment): per `docs/cefr/BASELINE.md` "First external action" — owner/reviewer first accepts or corrects the already-implemented data work (LEVEL-DATA-001..003, supported by BL-08), then assigns **SHARED-CARD-001**. Prerequisite owner decisions from this audit: (a) triage BL-03 scheduler mismatch before any Guided-card package (a dedicated scheduler WP superseding the named test is the cleanest path); (b) confirm AUDIO-003 will fix and prove the `app.js` language-forwarding gap (BL-02); (c) schedule mandatory B2 E2E cases (BL-05) inside SHARED-CARD-003/AUDIO-003.
+
+## 10. Owner/reviewer disposition — not executor approval
+
+- Reviewer and reviewed exact revision: pending — code revision `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986`; report revision per commit below.
+- Verdict: pending / CHANGES_REQUESTED / ACCEPTED
+- Criteria/findings accepted or declined; explicit waivers and reason: *(left for reviewer)*
