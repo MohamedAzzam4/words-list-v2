@@ -3036,6 +3036,39 @@ const RAW_B2_DATA = [
 
 ];
 
+const ARABIC_TEXT_PATTERN = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/u;
+
+function normalizeTranslatedText(value) {
+    const display = (value || '').trim();
+    if (!display) {
+        return {
+            display: '',
+            language: null,
+            translations: { en: '', ar: '' }
+        };
+    }
+
+    // Source rows separate language alternatives with a spaced slash. Slashes
+    // inside one English expression (for example "recovered/brought back")
+    // remain part of that expression.
+    const segments = display.split(/\s+\/\s+/).map(segment => segment.trim()).filter(Boolean);
+    const english = [];
+    const arabic = [];
+    for (const segment of segments) {
+        (ARABIC_TEXT_PATTERN.test(segment) ? arabic : english).push(segment);
+    }
+
+    const translations = {
+        en: english.join(' / '),
+        ar: arabic.join(' / ')
+    };
+    const language = translations.en && translations.ar
+        ? 'mixed'
+        : (translations.ar ? 'ar' : 'en');
+
+    return { display, language, translations };
+}
+
 // 🔧 Parser: Handles B2's empty type field & bilingual examples
 function parseRawB2Data(rawArray) {
     const units = {};
@@ -3086,34 +3119,37 @@ function parseRawB2Data(rawArray) {
 
         if (!units[unitNum]) units[unitNum] = [];
         const exampleDe = parts[4] ? parts[4].trim() : '';
-        const exampleTranslation = parts[5] ? parts[5].trim() : '';
-        const translationLanguage = parts[3] && parts[3].includes(' / ') ? 'mixed' : 'en';
-        const exampleTranslationLanguage = exampleTranslation
-            ? (exampleTranslation.includes(' / ') ? 'mixed' : 'en')
-            : null;
+        const translationData = normalizeTranslatedText(parts[3]);
+        const exampleTranslationData = normalizeTranslatedText(parts[5]);
+        const exampleTranslation = exampleTranslationData.display;
         units[unitNum].push({
             id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
+            levelId: 'b2',
             unitId: unitNum,
             de: deMain,
             deContext: deContext,
-            en: parts[3] ? parts[3].trim() : '',
+            en: translationData.display,
             type: tType,
             context: exampleDe, // Legacy alias used by the current UI
-            translation: parts[3] ? parts[3].trim() : '',
-            translationLanguage,
+            translation: translationData.display,
+            translationLanguage: translationData.language,
+            translations: translationData.translations,
+            speechText: { de: deMain, ...translationData.translations },
             exampleDe,
             exampleTranslation,
-            exampleTranslationLanguage,
+            exampleTranslationLanguage: exampleTranslationData.language,
             examples: exampleDe ? [{
                 de: exampleDe,
                 translation: exampleTranslation,
-                translationLanguage: exampleTranslationLanguage
+                translationLanguage: exampleTranslationData.language,
+                translations: exampleTranslationData.translations,
+                speechText: { de: exampleDe, ...exampleTranslationData.translations }
             }] : []
         });
     });
 
-    // Use actual max unit from data (will be 68). Do NOT pad to 70 — that creates
-    // empty Modul 4 and Porträt slots in Chapter 10 that confuse the user.
+    // Use the actual maximum unit from the source data. Units 69 and 70 are
+    // intentional extra Vocabulary and Phrases collections, not padded slots.
     const maxUnit = Math.max(...Object.keys(units).map(Number));
     const result = [];
     for (let i = 1; i <= maxUnit; i++) {
@@ -3138,6 +3174,7 @@ const unitTitles = {
 };
 
 export const levelConfig = {
+    levelId: 'b2',
     appId: 'german-b2-app',
     levelTitle: '📚 B2 German',
     levelSubtitle: 'Aspekte Textbook',
@@ -3155,6 +3192,20 @@ export const levelConfig = {
     ],
 
     vocabulary: parseRawB2Data(RAW_B2_DATA),
+    validation: {
+        // Existing source-content duplicates are preserved deliberately. The
+        // validator accepts only these exact ID pairs and rejects new pairs.
+        allowedDuplicateWordIdPairs: [
+            ['12-13', '12-51'],
+            ['15-5', '15-6'],
+            ['17-47', '17-48'],
+            ['19-59', '19-61'],
+            ['37-13', '37-14'],
+            ['38-37', '38-39'],
+            ['46-37', '46-38'],
+            ['60-34', '60-35']
+        ]
+    },
     parseRules: { format: 'context' },
     uiOverrides: {
         flashcardBackScroll: true,

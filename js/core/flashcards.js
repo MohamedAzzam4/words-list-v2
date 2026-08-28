@@ -116,7 +116,9 @@ export class FlashcardEngine {
         if (isDeVisible) {
             window.app.speakText(w.de, 'de');
         } else {
-            window.app.speakText(w.en || w.de, 'en');
+            const hasNormalizedSpeech = w.speechText && w.translations;
+            const englishText = hasNormalizedSpeech ? w.speechText.en : (w.en || w.de);
+            if (englishText) window.app.speakText(englishText, 'en');
         }
     }
 

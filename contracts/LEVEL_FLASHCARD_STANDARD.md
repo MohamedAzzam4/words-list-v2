@@ -22,12 +22,17 @@ Define the shared ordinary-vocabulary experience for A1, B2, and future CEFR lev
 Every ordinary vocabulary card must expose:
 
 - a stable ID;
-- its CEFR level and unit identity;
+- its lowercase CEFR `levelId` and numeric `unitId` identity;
 - German term and display translation;
-- translation-language metadata;
+- `translations.en` and `translations.ar` language-specific text;
+- display-translation language metadata (`en`, `ar`, or `mixed`);
 - zero or more structured examples;
 - for the flashcard, the first German example and its translation when available;
-- language-safe text for speech.
+- `speechText.de`, `speechText.en`, and `speechText.ar` copied from their matching language fields.
+
+The legacy `en`, `translation`, and `context` fields remain temporary aliases for existing consumers. Validation must reject disagreement between an alias and its normalized source.
+
+Exact duplicate German terms already present in approved source content may be preserved only through an explicit stable-ID-pair allowance. New duplicates and stale allowances must fail validation.
 
 Existing A1/B2 IDs and stored progress must remain valid. Parsers must not silently discard example translations that exist in source data.
 

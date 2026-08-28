@@ -726,8 +726,11 @@ export function parseRawData(rawArray) {
         if (!units[unitNum]) units[unitNum] = [];
         const exampleDe = deEx || '';
         const exampleTranslation = enEx || '';
+        const translations = { en, ar: '' };
+        const exampleTranslations = { en: exampleTranslation, ar: '' };
         units[unitNum].push({
             id: unitNum + '-' + units[unitNum].length, // WP-009: deterministic string ID
+            levelId: 'a1',
             unitId: unitNum,
             de: de,
             en: en,
@@ -735,13 +738,17 @@ export function parseRawData(rawArray) {
             context: exampleDe, // Legacy alias used by the current UI
             translation: en,
             translationLanguage: 'en',
+            translations,
+            speechText: { de, ...translations },
             exampleDe,
             exampleTranslation,
             exampleTranslationLanguage: exampleTranslation ? 'en' : null,
             examples: exampleDe ? [{
                 de: exampleDe,
                 translation: exampleTranslation,
-                translationLanguage: exampleTranslation ? 'en' : null
+                translationLanguage: exampleTranslation ? 'en' : null,
+                translations: exampleTranslations,
+                speechText: { de: exampleDe, ...exampleTranslations }
             }] : []
         });
     });
@@ -756,6 +763,7 @@ export function parseRawData(rawArray) {
 }
 
 export const levelConfig = {
+    levelId: 'a1',
     appId: 'german-a1-app',
     levelTitle: '📚 A1 German',
     levelSubtitle: 'Massive Vocabulary Set',
