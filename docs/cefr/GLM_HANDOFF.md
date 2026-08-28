@@ -9,6 +9,8 @@ Follow the complete reading order in `AGENTS.md`. The roadmap is `Refactoring do
 
 Do not read an old task JSON as authority. Do not install/launch the paused hook system. These instructions work without OpenCode, Antigravity, a sidecar, or the owner's machine.
 
+Delivery now uses GitHub task branches, not sandbox attachments. Read `docs/cefr/GITHUB_DELIVERY.md`. The owner authorizes pushing the assigned deliverable only to its own task branch; no shared-branch push, merge or deployment is authorized. If the baseline session already finished under the older instructions, use the delivery-only follow-up in that document instead of restarting it.
+
 ## Sandbox prerequisites and setup
 
 Use an isolated fresh checkout and synthetic local browser state. Record OS, shell, Node, npm, Python and Playwright versions. Node 24 is the preparation runtime; use the lockfile, not an arbitrary new dependency version. A different runtime must pass the same tests and be reported.
@@ -28,7 +30,7 @@ npx playwright --version
 npx playwright install --with-deps chromium
 ```
 
-Installing browser system dependencies may require sandbox-provider permission. Request it or report the exact limitation; do not disable browser tests and claim success. No global dependency upgrades, API credentials, production login or deployment is needed. `--ignore-scripts` is sufficient for the current dependency set; reassess only under an approved dependency change.
+Installing browser system dependencies may require sandbox-provider permission. Request it or report the exact limitation; do not disable browser tests and claim success. No global dependency upgrades, production credentials, production login or deployment is needed. Use the provider's secure Git credentials for the authorized task-branch push; never print or commit them. `--ignore-scripts` is sufficient for the current dependency set; reassess only under an approved dependency change.
 
 `playwright.config.js` starts `python -m http.server 9012`. Ensure a Python 3 executable named `python` is available to child processes. If only `python3` exists, use the provider's environment setup or request a narrow config adjustment; do not silently modify tests to hide missing tooling. Ensure port 9012 serves THIS checkout: `reuseExistingServer` can otherwise connect to unrelated/stale code. Stop only servers you own.
 
@@ -105,6 +107,7 @@ docs/cefr/BASELINE.md
 docs/cefr/WORK_PACKAGES.md
 docs/cefr/ACCEPTANCE_MATRIX.md
 docs/cefr/GLM_HANDOFF.md
+docs/cefr/GITHUB_DELIVERY.md
 Refactoring documentation/plans/CEFR_LEVEL_FLASHCARD_STANDARD_AND_REVIEW_CENTER_ROADMAP.md
 
 Record the actual HEAD and clean working-tree state. Confirm that commit
@@ -120,13 +123,16 @@ source/test evidence, especially real speech-language forwarding, example render
 and the difference between published Verbs code and the newer GC contract.
 
 Write only docs/cefr/reports/BASELINE-001-01.md using the tracked report template,
-plus task-local evidence artifacts. Include all attempted commands, exits/counts,
+plus sanitized retained logs and INDEX.md under docs/cefr/evidence/BASELINE-001/01/.
+Include all attempted commands, exits/counts,
 failures, environment limits, criteria results, and proposed next action.
 Do not hide failures, weaken tests, fix unrelated code, or claim owner acceptance.
 If a browser cannot run, report BLOCKED or INCOMPLETE with the exact reason.
 
-Return the report and its patch/commit from your sandbox. Do not merge, deploy or
-start another package. The owner/Codex reviewer will accept the baseline, triage
+Commit and push this delivery only to codex/glm-baseline-001-01 in
+MohamedAzzam4/words-list-v2. Never force-push or push to the shared handoff branch.
+Verify the remote SHA and return full commit-pinned report/evidence URLs.
+Do not merge, deploy or start another package. The owner/Codex reviewer will accept the baseline, triage
 known gaps, and assign the next implementation package.
 ```
 
@@ -134,7 +140,7 @@ known gaps, and assign the next implementation package.
 
 After baseline review, the owner can accept the already-implemented data work (or assign its concrete corrections), then assign `SHARED-CARD-001` and later extraction/adoption. Use `docs/cefr/templates/EXECUTOR_PROMPT.md`, fill all fields, and include the accepted base commit. Keep each delivery small enough to review; do not give the entire roadmap to a fast model in one instruction.
 
-Every delivery needs its report and reproducible tests. The owner may send the branch/commit and report to Codex for independent review. The reviewer should inspect high-risk code and tests even if the report is clean. This is deliberate product assurance, not a hidden automatic loop.
+Every delivery needs its report and reproducible tests on its own GitHub branch. The owner need only identify the branch (or say the assigned branch is ready); Codex can fetch the delivered commit and read the report/logs directly. The reviewer should inspect high-risk code and tests even if the report is clean. This is deliberate product assurance, not a hidden automatic loop or background monitoring service.
 
 ## Deferred decisions
 

@@ -58,3 +58,5 @@ Read these files completely before an assigned package, in this order:
 - Include failed attempts, exact commands and exit codes, evidence paths, untested cases, and remaining risks. Never replace missing evidence with a confident summary.
 - Do not change rules, acceptance thresholds, snapshots, or dependencies merely to make your own task pass. Propose a contract change for owner review.
 - Submit one assigned package for review and stop. The executor cannot grant owner acceptance, merge, deploy, or start the next package without authorization.
+- GitHub is the default delivery channel: push the assigned package's commits, report, and sanitized text evidence to its own task branch under `codex/glm-<wp-id>-<attempt>`. Follow `docs/cefr/GITHUB_DELIVERY.md`; never push to shared baseline/integration branches or force-push. A task-specific owner restriction overrides this default.
+- Return the remote branch, full delivered commit SHA, and commit-pinned report/evidence links. Sandbox-local paths and unpushed commit hashes are not a completed handoff.

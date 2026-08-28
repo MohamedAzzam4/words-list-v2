@@ -5,7 +5,9 @@
 - Status: IN_PROGRESS / BLOCKED / INCOMPLETE / READY_FOR_REVIEW
 - Assigned goal and task type:
 - Owner assignment reference:
-- Branch; base commit; final tested code commit; report commit (fill after creation):
+- GitHub task branch; base commit; final tested code commit:
+- Evidence index: `docs/cefr/evidence/<WP-ID>/<attempt>/INDEX.md`
+- Final delivered SHA is returned after commit/push in the handoff message, not embedded into its own commit.
 - Executor/model and sandbox OS/runtime versions:
 - Start/end time; work directory (repository-relative in shared reports):
 - Dependency acceptance references:
@@ -77,7 +79,7 @@ If none found, record the exact search boundary and approach. Do not claim the w
 
 - Remaining product risks, environment restrictions and untested requirements:
 - Final diff/status and no unintended ID/content/storage/dependency changes:
-- Branch/commit/patch retrieval:
+- GitHub delivery branch and report/evidence paths; remote-SHA verification returned in the final message:
 - Next proposed WP (do not start without assignment):
 
 ## 10. Owner/reviewer disposition — not executor approval

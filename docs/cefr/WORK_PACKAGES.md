@@ -12,7 +12,8 @@ Common requirements for EVERY package:
 - Before edits: list exact write paths within the scope below, before/after behavior, contract IDs, risk, test map, and existing failures.
 - Scope: listed paths are boundaries, not an instruction to edit them all. New files in allowed families need exact names in the pre-edit plan. Read relevant callers freely, excluding secrets/private data. Scope expansion requires approval.
 - Exit: every package-specific criterion AND `TS-DONE-*` and `DR-*` satisfied; complete `docs/cefr/reports/<WP-ID>-<attempt>.md`; no open unwaived required criteria. Owner acceptance is separate.
-- Common allowed documentation: the current package report and narrowly affected architecture notes under `docs/cefr/`. Only documentation WPs explicitly assigned by the owner may change contracts, roadmap, or this catalog.
+- Common allowed documentation: the current package report, its sanitized text logs and `INDEX.md` under `docs/cefr/evidence/<WP-ID>/<attempt>/`, and narrowly affected architecture notes under `docs/cefr/`. Only documentation WPs explicitly assigned by the owner may change contracts, roadmap, or this catalog.
+- Delivery: publish the assigned deliverable on its own `codex/glm-<wp-id>-<attempt>` branch using `docs/cefr/GITHUB_DELIVERY.md`; return full commit-pinned links. No shared-branch push, force-push, merge or deployment. Evidence packaging alone does not require another test run.
 - Default forbidden scope: enforcement, hooks, CI, dependency manifests/lockfile, auth/cloud configuration, unrelated code/content, stored-ID changes, other packages. Exceptions must be explicitly assigned.
 - Tests: existing anchors in `contracts/TESTING_AND_SUCCESS.md`; new test paths below are proposed deliverables, NOT already-existing passing tests. Evidence must include failed and final runs, test-quality review, and dead-code inventory.
 - Medium/high-risk code changes require distinct fault probes per TS-MUT, in disposable copies only. No mutation is required for report-only packages.
@@ -59,7 +60,7 @@ Default delivery is top-to-bottom. Independent pure-logic packages can be reorde
 
 - Goal/type: DOCUMENTATION/diagnostic; establish what the sandbox actually received, not what older local screenshots showed.
 - Read: `docs/cefr/BASELINE.md`, all tracked source/tests, `package.json`, `playwright.config.js`, product contracts.
-- Write: only the package report and task-local logs/artifacts. No source, test, contract, dependency, or workflow edits.
+- Write: only the package report and its sanitized text evidence/index under `docs/cefr/evidence/BASELINE-001/<attempt>/`. No source, test, contract, dependency, or workflow edits.
 - Work: record HEAD/branch/status; inventory files and test selection; run full units, focused favorites/SRS browser checks, and list broad tests. Inspect the real audio adapter, first-example renderer, and verb contract gaps named in BASELINE. Record network/browser/voice limitations.
 - Success: exact baseline and results are reproducible; each known gap is confirmed/refuted with file/line evidence; local-only work is not assumed published; no hidden app edits. Report proposed next package and any prerequisite correction separately.
 - Test proof: units; two focused Chromium anchors; `--list` inventory; diff/status. Broad failing behavior need not be fixed here.

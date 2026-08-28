@@ -4,7 +4,8 @@ The owner fills all bracketed fields before sending. This is a template, not a r
 
 ```text
 Work only on [WP-ID] in MohamedAzzam4/words-list-v2.
-Base branch/commit: [branch and exact SHA]. Create/use [task branch].
+Base branch/commit: [branch and exact SHA].
+Delivery branch: codex/glm-[lowercase-wp-id]-[attempt].
 Goal: [one concrete outcome]. Dependency acceptance: [report/revision references].
 
 Read AGENTS.md, contracts/README.md, contracts/PORTABLE_AGENT_EXECUTION.md,
@@ -14,6 +15,7 @@ contracts/DELIVERY_REPORTING.md, contracts/LEVEL_FLASHCARD_STANDARD.md,
 docs/cefr/BASELINE.md, docs/cefr/WORK_PACKAGES.md,
 docs/cefr/ACCEPTANCE_MATRIX.md, and
 Refactoring documentation/plans/CEFR_LEVEL_FLASHCARD_STANDARD_AND_REVIEW_CENTER_ROADMAP.md.
+Read docs/cefr/GITHUB_DELIVERY.md for required branch/report/evidence delivery.
 Also read [specific additional product contract and source/test paths].
 
 Approved before/after behavior: [description].
@@ -35,7 +37,11 @@ Do not reactivate .agent-control, hooks, sidecars, or local-only workflows.
 Do not weaken tests, fabricate evidence, self-approve, merge, or deploy.
 If required context/authority/environment is missing, report it explicitly.
 
-Delivery: [commit/patch policy, permitted task-branch push if any].
-Final response: WP ID and status, tested revision, report path, commands/results,
+Delivery: Commit the assigned changes, report and sanitized retained text logs;
+push only the specified task branch to MohamedAzzam4/words-list-v2. Never push
+to the base/integration branch, force-push, merge, or deploy. Include an evidence
+INDEX.md under docs/cefr/evidence/[WP-ID]/[attempt]/. Verify remote SHA after push.
+Final response: WP ID and status, tested revision, full delivered SHA,
+commit-pinned GitHub report/evidence links, commands/results,
 remaining findings and next owner action. Stop after this assigned package.
 ```
