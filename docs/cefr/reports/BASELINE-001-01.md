@@ -10,7 +10,7 @@
   - Base commit: `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` — **matches the expected starting commit exactly**; no difference to report.
   - Tested tree: `70d42d36c6b83fb282fd948e909379e8e0b883ef` (clean tree at the base commit; no source/test edits in this package)
   - Final tested code commit: `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986` (unchanged; report-only package)
-  - Report commit: see "Branch/commit/patch retrieval" in section 9 (filled after commit; report committed on a local task branch, not pushed).
+  - Report commit: initial report content committed as `d152f1f461a266f5df3dddf22724ff940c9aff07`; this reference-field update is a subsequent report-only commit (per DR-007 it does not invalidate code evidence; tested code commit is unchanged). Final commit hash given in the delivery response.
 - Executor/model and sandbox OS/runtime versions:
   - OS: Debian GNU/Linux 13 (trixie), kernel `5.10.134-013.8.3.kangaroo.al8.x86_64` (Linux container, bash)
   - Node `v24.19.0`; npm `11.17.0`; Python `3.12.14` (executable named `python` available for the Playwright webServer)
@@ -148,7 +148,7 @@ Scoped existence verification performed instead (supports BL-04): directory list
   6. Outbound CDN access was available (HTTP 200 probe; gstatic/firebase imports loaded during E2E), so no network restriction prevented startup.
   7. Chromium-only, single-worker run; `--reporter=line` as assigned.
 - Final diff/status and no unintended ID/content/storage/dependency changes: after all checks, `git status --short` was empty and `git diff --check` exit 0. The only change introduced by this package is this report file (`docs/cefr/reports/BASELINE-001-01.md`). No source, test, contract, content, dependency, lockfile, or workflow file was touched; no IDs, stored progress, or content changed.
-- Branch/commit/patch retrieval: report committed locally on task branch `report/BASELINE-001-01` (created from `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986`); the delivery branch `codex/cefr-glm-handoff` is left untouched at `d2f4c79`. Commit hash and patch artifact recorded in section 10 footer after creation. Not pushed — pushing/merging/deploying were not authorized. Task-local logs: `/home/z/my-project/baseline-001-artifacts/` (test-units.log, e2e-focused.log, playwright-list.log).
+- Branch/commit/patch retrieval: report committed locally on task branch `report/BASELINE-001-01` (created from `d2f4c79909c4c89e5efbdbeb5d93ebac2b206986`); initial report commit `d152f1f461a266f5df3dddf22724ff940c9aff07` (1 file, 158 insertions); patch artifact `BASELINE-001-01.patch` in the task-local artifacts directory. The delivery branch `codex/cefr-glm-handoff` is untouched at `d2f4c79`. Not pushed — pushing/merging/deploying were not authorized. Task-local logs: `/home/z/my-project/baseline-001-artifacts/` (test-units.log, e2e-focused.log, playwright-list.log, BASELINE-001-01.patch).
 - Next proposed WP (do not start without assignment): per `docs/cefr/BASELINE.md` "First external action" — owner/reviewer first accepts or corrects the already-implemented data work (LEVEL-DATA-001..003, supported by BL-08), then assigns **SHARED-CARD-001**. Prerequisite owner decisions from this audit: (a) triage BL-03 scheduler mismatch before any Guided-card package (a dedicated scheduler WP superseding the named test is the cleanest path); (b) confirm AUDIO-003 will fix and prove the `app.js` language-forwarding gap (BL-02); (c) schedule mandatory B2 E2E cases (BL-05) inside SHARED-CARD-003/AUDIO-003.
 
 ## 10. Owner/reviewer disposition — not executor approval
