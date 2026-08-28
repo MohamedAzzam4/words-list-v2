@@ -2,10 +2,14 @@
 
 ## Status
 
-- Planning document only.
-- No application implementation is authorized by this document.
+- Approved product direction; this document alone does not assign implementation work.
+- The owner authorized external sandbox preparation on 2026-08-29. Execute only the assigned work package.
 - Enforcement-workflow development is paused by owner direction.
-- Product implementation starts only after the owner explicitly chooses either Codex implementation or prompts for another executor.
+- Detailed delivery scopes: `docs/cefr/WORK_PACKAGES.md`.
+- Current published baseline and known gaps: `docs/cefr/BASELINE.md`.
+- External executor startup and first prompt: `docs/cefr/GLM_HANDOFF.md`.
+- Binding acceptance matrix: `docs/cefr/ACCEPTANCE_MATRIX.md`.
+- Reporting/testing rules: `contracts/README.md`. Product completion is not claimed by this roadmap.
 
 ## Objective
 
@@ -81,7 +85,7 @@ Session rules:
 
 The raw A1 and B2 vocabulary rows contain more information than the current parser exposes to the flashcard engine.
 
-Observed examples:
+Original observations before the data-foundation fixes (retained to explain sequencing):
 
 - A1 rows contain a German example and an English example translation. The parser keeps the German example but currently drops the English example translation.
 - B2 rows contain a German example and a translated example field. The parser currently drops the translated example field.
@@ -91,9 +95,11 @@ This means a visual-only migration would make the level card look like the Germa
 
 This phase does not rewrite the vocabulary content. It only prevents existing fields from being discarded and gives the UI explicit, language-safe properties.
 
+The handoff includes the additive parser/validator corrections. The UI migration and complete audio adapter integration remain unfinished; see the baseline rather than treating this historical paragraph as current parser behavior.
+
 ## Delivery strategy
 
-Each task below has one primary responsibility and should be implemented and reviewed independently. Broad refactoring must not be mixed into feature tasks.
+Each task below has one primary responsibility and should be implemented and reviewed independently. Broad refactoring must not be mixed into feature tasks. The detailed work-package catalog supplies the execution order, scopes, evidence, and package-level criteria; it does not replace these product decisions.
 
 ## Phase 0 — Product baseline
 
@@ -447,6 +453,8 @@ Reject an implementation if:
 - unrelated broad refactoring is included.
 
 ## Phase 9 — Verification ladder
+
+`contracts/TESTING_AND_SUCCESS.md` is the current portable verification authority. `VERIFY-001` in the detailed catalog is the release-wide verification package. The ladder applies during every implementation package, not only at the end of the roadmap.
 
 Avoid rerunning expensive browser suites after every edit.
 

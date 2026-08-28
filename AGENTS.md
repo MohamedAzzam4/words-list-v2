@@ -32,3 +32,29 @@ The experimental enforcement and universal-review workflow is paused.
 ## Active roadmap
 
 The product roadmap is `Refactoring documentation/plans/CEFR_LEVEL_FLASHCARD_STANDARD_AND_REVIEW_CENTER_ROADMAP.md`.
+
+## Portable external execution (owner-approved, 2026-08-29)
+
+This repository can be developed by an external sandbox agent, including GLM. A work package becomes executable only when the owner assigns it; this document is not permission to execute the entire roadmap.
+
+Read these files completely before an assigned package, in this order:
+
+1. `AGENTS.md`
+2. `contracts/README.md`
+3. `contracts/PORTABLE_AGENT_EXECUTION.md`
+4. `contracts/CHANGE_MANAGEMENT.md`
+5. `contracts/CODE_FINGERPRINT.md`
+6. `contracts/TESTING_AND_SUCCESS.md`
+7. `contracts/DEAD_CODE_AND_REFACTORING.md`
+8. `contracts/DELIVERY_REPORTING.md`
+9. `contracts/LEVEL_FLASHCARD_STANDARD.md`
+10. `docs/cefr/BASELINE.md`, `docs/cefr/WORK_PACKAGES.md`, and `docs/cefr/ACCEPTANCE_MATRIX.md`
+11. The roadmap above, the assigned package's extra references, and its actual implementation/tests.
+
+- Use `docs/cefr/GLM_HANDOFF.md` for sandbox setup and the first assignment.
+- Preserve all product-safety requirements; the paused automation is NOT a requirement to run hooks, a sidecar, or `.agent-control` commands.
+- `AI_RAM.md`, `AI_ROM.md`, local runtime state, and old transcripts are not prerequisites in portable mode. Report to `docs/cefr/reports/<WP-ID>-<attempt>.md` using the tracked template instead.
+- New or modified behavior requires positive, negative, boundary, and regression coverage as applicable. Inspect tests for false passes and inspect the touched dependency boundary for dead code.
+- Include failed attempts, exact commands and exit codes, evidence paths, untested cases, and remaining risks. Never replace missing evidence with a confident summary.
+- Do not change rules, acceptance thresholds, snapshots, or dependencies merely to make your own task pass. Propose a contract change for owner review.
+- Submit one assigned package for review and stop. The executor cannot grant owner acceptance, merge, deploy, or start the next package without authorization.
