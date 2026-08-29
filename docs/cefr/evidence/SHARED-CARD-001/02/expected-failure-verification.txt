@@ -1,0 +1,57 @@
+# SHARED-CARD-001 attempt 02 — expected-failure selection verification
+
+Source (machine-readable): expected-failure-selection-chromium.json
+Tests in report: 9
+
+Verification rule: every test.fail case must carry Playwright status
+"expected" (failed as intended) AND its error message must contain the
+intended target assertion marker below. A setup, navigation, selector, or
+browser-launch failure would produce a different message and FAIL this
+verification — it is never accepted as proof of a product finding.
+
+VERIFIED | SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere
+  intended assertion : sweepOrdinaryCardSubtree(...).unique toEqual([]) — complete pre-reveal subtree sweep (visible/hidden text + every attribute) must find zero leaks
+  pw status          : expected (result=failed)
+  error (first line) : Error: pre-reveal leaks (31 unique carriers): text:<root #view-flashcard> → "machen" | text:<root #view-flashcard> → "Ich mache die Hausaufgaben." | text:<root #view-flashcard> → "mac..." | text:<div.verb-flashcard-wrapper> → "machen" | text:<div.verb-flashcard-wrapper> → "Ich mache die Hausaufgaben
+
+VERIFIED | SC-01 TARGET (audio secrecy): pre-reveal audio cannot speak the German answer
+  intended assertion : calls.every((c) => !c.text.includes("machen")) toBe(true) — pre-reveal audio must not speak the German answer
+  pw status          : expected (result=failed)
+  error (first line) : Error: pre-reveal audio must not speak the German answer
+
+VERIFIED | SC-02 TARGET: revealed back shows only the first example with its translation always visible
+  intended assertion : back-example-box .ex-sentence-span toHaveCount(1) — only the first example shown
+  pw status          : expected (result=failed)
+  error (first line) : Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+VERIFIED | SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels
+  intended assertion : fav/speak boundingBox width+height toBeGreaterThanOrEqual(44) — primary touch targets
+  pw status          : expected (result=failed)
+  error (first line) : Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThanOrEqual[2m([22m[32mexpected[39m[2m)[22m
+
+VERIFIED | SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator
+  intended assertion : visibleFocusIndicator(baseline, focused) toBe(true) per control — keyboard-focus indicator via outline/box-shadow/border/background
+  pw status          : expected (result=failed)
+  error (first line) : Error: .verb-card-front [data-action="toggle-hint"] must show a keyboard-focus indicator via outline, box-shadow, border, or background
+
+VERIFIED | SC-05 TARGET: reduced-motion preference disables the flip animation
+  intended assertion : transitionDuration toBe("0s") under prefers-reduced-motion
+  pw status          : expected (result=failed)
+  error (first line) : Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+VERIFIED | SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once
+  intended assertion : tabWalk flipSurfaceFocused toBe(true) — flip surface must be keyboard-reachable before Enter activation
+  pw status          : expected (result=failed)
+  error (first line) : Error: LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation
+
+VERIFIED | SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once
+  intended assertion : tabWalk flipSurfaceFocused toBe(true) — flip surface must be keyboard-reachable before Space activation
+  pw status          : expected (result=failed)
+  error (first line) : Error: LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation
+
+VERIFIED | SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)
+  intended assertion : #guided-challenge-root .verb-flashcard toHaveCount(1) — guided card must use the ordinary shell
+  pw status          : expected (result=failed)
+  error (first line) : Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+RESULT: ALL EXPECTED-FAILURE CASES VERIFIED AT THEIR INTENDED TARGET ASSERTIONS (9/9)

@@ -1,0 +1,853 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/home/z/my-project/words-list-v2/node_modules/.bin/playwright",
+      "test",
+      "tests/e2e/cefr-card-reference.spec.js",
+      "--project=chromium",
+      "--grep",
+      "SC-0[1-7] TARGET",
+      "--reporter=line,json"
+    ],
+    "configFile": "/home/z/my-project/words-list-v2/playwright.config.js",
+    "rootDir": "/home/z/my-project/words-list-v2/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/z/my-project/words-list-v2/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/z/my-project/words-list-v2/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/z/my-project/words-list-v2/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/home/z/my-project/words-list-v2/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 1,
+    "webServer": {
+      "command": "python -m http.server 9012",
+      "port": 9012,
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "cefr-card-reference.spec.js",
+      "file": "cefr-card-reference.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings)",
+          "file": "cefr-card-reference.spec.js",
+          "line": 1476,
+          "column": 6,
+          "specs": [
+            {
+              "title": "SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1490,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 660,
+                      "error": {
+                        "message": "Error: pre-reveal leaks (31 unique carriers): text:<root #view-flashcard> → \"machen\" | text:<root #view-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<root #view-flashcard> → \"mac...\" | text:<div.verb-flashcard-wrapper> → \"machen\" | text:<div.verb-flashcard-wrapper> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard-wrapper> → \"mac...\" | text:<div.verb-flashcard> → \"machen\" | text:<div.verb-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard> → \"mac...\" | text:<div.verb-card-front> → \"mac...\" | attr:<span.fav-icon-btn>[data-verb-id] → \"machen\" | text:<div.verb-center-content> → \"mac...\" | text:<div.verb-hint-box> → \"mac...\" | text:<div.verb-card-back> → \"machen\" | text:<div.verb-card-back> → \"Ich mache die Hausaufgaben.\" | text:<div.back-main-row-block> → \"machen\" | text:<div.back-main-row> → \"machen\" | text:<div.back-field> → \"machen\" | text:<strong> → \"machen\" | text:<div.back-example-box> → \"Ich mache die Hausaufgaben.\" | text:<div.ex-text> → \"Ich mache die Hausaufgaben.\" | text:<span.ex-sentence-span> → \"Ich mache die Hausaufgaben.\" | attr:<span.ex-sentence-span>[onclick] → \"Ich mache die Hausaufgaben.\" | text:<div.origins-block> → \"machen\" | text:<div.origins-card-inner> → \"machen\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 27\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-front> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.fav-icon-btn>[data-verb-id] → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-center-content> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-hint-box> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-field> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<strong> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-example-box> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.ex-text> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<span.ex-sentence-span> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.ex-sentence-span>[onclick] → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-card-inner> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                        "stack": "Error: pre-reveal leaks (31 unique carriers): text:<root #view-flashcard> → \"machen\" | text:<root #view-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<root #view-flashcard> → \"mac...\" | text:<div.verb-flashcard-wrapper> → \"machen\" | text:<div.verb-flashcard-wrapper> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard-wrapper> → \"mac...\" | text:<div.verb-flashcard> → \"machen\" | text:<div.verb-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard> → \"mac...\" | text:<div.verb-card-front> → \"mac...\" | attr:<span.fav-icon-btn>[data-verb-id] → \"machen\" | text:<div.verb-center-content> → \"mac...\" | text:<div.verb-hint-box> → \"mac...\" | text:<div.verb-card-back> → \"machen\" | text:<div.verb-card-back> → \"Ich mache die Hausaufgaben.\" | text:<div.back-main-row-block> → \"machen\" | text:<div.back-main-row> → \"machen\" | text:<div.back-field> → \"machen\" | text:<strong> → \"machen\" | text:<div.back-example-box> → \"Ich mache die Hausaufgaben.\" | text:<div.ex-text> → \"Ich mache die Hausaufgaben.\" | text:<span.ex-sentence-span> → \"Ich mache die Hausaufgaben.\" | attr:<span.ex-sentence-span>[onclick] → \"Ich mache die Hausaufgaben.\" | text:<div.origins-block> → \"machen\" | text:<div.origins-card-inner> → \"machen\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 27\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-front> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.fav-icon-btn>[data-verb-id] → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-center-content> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-hint-box> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-field> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<strong> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-example-box> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.ex-text> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<span.ex-sentence-span> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.ex-sentence-span>[onclick] → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-card-inner> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1508:118",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 118,
+                          "line": 1508
+                        },
+                        "snippet": "  1506 |         // separately below.\n  1507 |         const sweep = await sweepOrdinaryCardSubtree(page, ['machen', 'Ich mache die Hausaufgaben.', 'mac...']);\n> 1508 |         expect(sweep.unique, `pre-reveal leaks (${sweep.uniqueCount} unique carriers): ${sweep.unique.join(' | ')}`).toEqual([]);\n       |                                                                                                                      ^\n  1509 |     });\n  1510 |\n  1511 |     test.fail('SC-01 TARGET (audio secrecy): pre-reveal audio cannot speak the German answer', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 118,
+                            "line": 1508
+                          },
+                          "message": "Error: pre-reveal leaks (31 unique carriers): text:<root #view-flashcard> → \"machen\" | text:<root #view-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<root #view-flashcard> → \"mac...\" | text:<div.verb-flashcard-wrapper> → \"machen\" | text:<div.verb-flashcard-wrapper> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard-wrapper> → \"mac...\" | text:<div.verb-flashcard> → \"machen\" | text:<div.verb-flashcard> → \"Ich mache die Hausaufgaben.\" | text:<div.verb-flashcard> → \"mac...\" | text:<div.verb-card-front> → \"mac...\" | attr:<span.fav-icon-btn>[data-verb-id] → \"machen\" | text:<div.verb-center-content> → \"mac...\" | text:<div.verb-hint-box> → \"mac...\" | text:<div.verb-card-back> → \"machen\" | text:<div.verb-card-back> → \"Ich mache die Hausaufgaben.\" | text:<div.back-main-row-block> → \"machen\" | text:<div.back-main-row> → \"machen\" | text:<div.back-field> → \"machen\" | text:<strong> → \"machen\" | text:<div.back-example-box> → \"Ich mache die Hausaufgaben.\" | text:<div.ex-text> → \"Ich mache die Hausaufgaben.\" | text:<span.ex-sentence-span> → \"Ich mache die Hausaufgaben.\" | attr:<span.ex-sentence-span>[onclick] → \"Ich mache die Hausaufgaben.\" | text:<div.origins-block> → \"machen\" | text:<div.origins-card-inner> → \"machen\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 27\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<root #view-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard-wrapper> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-flashcard> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-front> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.fav-icon-btn>[data-verb-id] → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-center-content> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-hint-box> → \\\"mac...\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.verb-card-back> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-main-row> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-field> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<strong> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.back-example-box> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.ex-text> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<span.ex-sentence-span> → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"attr:<span.ex-sentence-span>[onclick] → \\\"Ich mache die Hausaufgaben.\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-block> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+   \"text:<div.origins-card-inner> → \\\"machen\\\"\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  1506 |         // separately below.\n  1507 |         const sweep = await sweepOrdinaryCardSubtree(page, ['machen', 'Ich mache die Hausaufgaben.', 'mac...']);\n> 1508 |         expect(sweep.unique, `pre-reveal leaks (${sweep.uniqueCount} unique carriers): ${sweep.unique.join(' | ')}`).toEqual([]);\n       |                                                                                                                      ^\n  1509 |     });\n  1510 |\n  1511 |     test.fail('SC-01 TARGET (audio secrecy): pre-reveal audio cannot speak the German answer', async ({ page }) => {\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1508:118"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:51.328Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1490,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-e8032-r-text-or-metadata-anywhere-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 118,
+                        "line": 1508
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-1444136cffd0d1eeedc1",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1490,
+              "column": 10
+            },
+            {
+              "title": "SC-01 TARGET (audio secrecy): pre-reveal audio cannot speak the German answer",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1511,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 563,
+                      "error": {
+                        "message": "Error: pre-reveal audio must not speak the German answer\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: pre-reveal audio must not speak the German answer\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1524:117",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 117,
+                          "line": 1524
+                        },
+                        "snippet": "  1522 |         expect(calls.length).toBeGreaterThan(0);\n  1523 |         // INTENDED TARGET ASSERTION (fails while SC-01 holds):\n> 1524 |         expect(calls.every((c) => !c.text.includes('machen')), 'pre-reveal audio must not speak the German answer').toBe(true);\n       |                                                                                                                     ^\n  1525 |     });\n  1526 |\n  1527 |     test.fail('SC-02 TARGET: revealed back shows only the first example with its translation always visible', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 117,
+                            "line": 1524
+                          },
+                          "message": "Error: pre-reveal audio must not speak the German answer\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  1522 |         expect(calls.length).toBeGreaterThan(0);\n  1523 |         // INTENDED TARGET ASSERTION (fails while SC-01 holds):\n> 1524 |         expect(calls.every((c) => !c.text.includes('machen')), 'pre-reveal audio must not speak the German answer').toBe(true);\n       |                                                                                                                     ^\n  1525 |     });\n  1526 |\n  1527 |     test.fail('SC-02 TARGET: revealed back shows only the first example with its translation always visible', async ({ page }) => {\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1524:117"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:52.099Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1511,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-71ba9-not-speak-the-German-answer-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 117,
+                        "line": 1524
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-f2172504d2a348a5d03d",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1511,
+              "column": 10
+            },
+            {
+              "title": "SC-02 TARGET: revealed back shows only the first example with its translation always visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1527,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5574,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span')\u001b[22m\n\u001b[2m    14 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span')\u001b[22m\n\u001b[2m    14 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1534:75",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 75,
+                          "line": 1534
+                        },
+                        "snippet": "  1532 |         await expect(page.locator('.back-example-box')).toBeVisible();\n  1533 |\n> 1534 |         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);\n       |                                                                           ^\n  1535 |         await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('Ich mache die Hausaufgaben.');\n  1536 |         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();\n  1537 |         await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 75,
+                            "line": 1534
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m3\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span')\u001b[22m\n\u001b[2m    14 × locator resolved to 3 elements\u001b[22m\n\u001b[2m       - unexpected value \"3\"\u001b[22m\n\n\n  1532 |         await expect(page.locator('.back-example-box')).toBeVisible();\n  1533 |\n> 1534 |         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);\n       |                                                                           ^\n  1535 |         await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('Ich mache die Hausaufgaben.');\n  1536 |         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();\n  1537 |         await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1534:75"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:52.693Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1527,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-3e7eb--translation-always-visible-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 75,
+                        "line": 1534
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-4f6a997af66587bd2cb0",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1527,
+              "column": 10
+            },
+            {
+              "title": "SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1540,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 516,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m44\u001b[39m\nReceived:    \u001b[31m28\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m44\u001b[39m\nReceived:    \u001b[31m28\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1552:31",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 31,
+                          "line": 1552
+                        },
+                        "snippet": "  1550 |         const favBox = await fav.boundingBox();\n  1551 |         const speakBox = await speak.boundingBox();\n> 1552 |         expect(favBox.height).toBeGreaterThanOrEqual(44);\n       |                               ^\n  1553 |         expect(favBox.width).toBeGreaterThanOrEqual(44);\n  1554 |         expect(speakBox.height).toBeGreaterThanOrEqual(44);\n  1555 |         expect(speakBox.width).toBeGreaterThanOrEqual(44);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 31,
+                            "line": 1552
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m44\u001b[39m\nReceived:    \u001b[31m28\u001b[39m\n\n  1550 |         const favBox = await fav.boundingBox();\n  1551 |         const speakBox = await speak.boundingBox();\n> 1552 |         expect(favBox.height).toBeGreaterThanOrEqual(44);\n       |                               ^\n  1553 |         expect(favBox.width).toBeGreaterThanOrEqual(44);\n  1554 |         expect(speakBox.height).toBeGreaterThanOrEqual(44);\n  1555 |         expect(speakBox.width).toBeGreaterThanOrEqual(44);\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1552:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:58.281Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1540,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-09ad1-e-at-least-44x44-CSS-pixels-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 31,
+                        "line": 1552
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-3da4722803158384393e",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1540,
+              "column": 10
+            },
+            {
+              "title": "SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1558,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 891,
+                      "error": {
+                        "message": "Error: .verb-card-front [data-action=\"toggle-hint\"] must show a keyboard-focus indicator via outline, box-shadow, border, or background\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: .verb-card-front [data-action=\"toggle-hint\"] must show a keyboard-focus indicator via outline, box-shadow, border, or background\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1589:125",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 125,
+                          "line": 1589
+                        },
+                        "snippet": "  1587 |         for (const sel of wanted) {\n  1588 |             const indicated = visibleFocusIndicator(baseline[sel].styles, walk.seen.get(sel).styles);\n> 1589 |             expect(indicated, `${sel} must show a keyboard-focus indicator via outline, box-shadow, border, or background`).toBe(true);\n       |                                                                                                                             ^\n  1590 |         }\n  1591 |     });\n  1592 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 125,
+                            "line": 1589
+                          },
+                          "message": "Error: .verb-card-front [data-action=\"toggle-hint\"] must show a keyboard-focus indicator via outline, box-shadow, border, or background\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  1587 |         for (const sel of wanted) {\n  1588 |             const indicated = visibleFocusIndicator(baseline[sel].styles, walk.seen.get(sel).styles);\n> 1589 |             expect(indicated, `${sel} must show a keyboard-focus indicator via outline, box-shadow, border, or background`).toBe(true);\n       |                                                                                                                             ^\n  1590 |         }\n  1591 |     });\n  1592 |\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1589:125"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:58.811Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1558,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-09127-t-a-visible-focus-indicator-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 125,
+                        "line": 1589
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-aa1f78dbf7258092cbd4",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1558,
+              "column": 10
+            },
+            {
+              "title": "SC-05 TARGET: reduced-motion preference disables the flip animation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1593,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 487,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"0s\"\u001b[39m\nReceived: \u001b[31m\"0\u001b[7m.6\u001b[27ms\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"0s\"\u001b[39m\nReceived: \u001b[31m\"0\u001b[7m.6\u001b[27ms\"\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1604:26",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 26,
+                          "line": 1604
+                        },
+                        "snippet": "  1602 |             return window.getComputedStyle(card).transitionDuration;\n  1603 |         });\n> 1604 |         expect(duration).toBe('0s');\n       |                          ^\n  1605 |     });\n  1606 |\n  1607 |     test.fail('SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 26,
+                            "line": 1604
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"0s\"\u001b[39m\nReceived: \u001b[31m\"0\u001b[7m.6\u001b[27ms\"\u001b[39m\n\n  1602 |             return window.getComputedStyle(card).transitionDuration;\n  1603 |         });\n> 1604 |         expect(duration).toBe('0s');\n       |                          ^\n  1605 |     });\n  1606 |\n  1607 |     test.fail('SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once', async ({ page }) => {\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1604:26"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:13:59.715Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1593,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-12a30-disables-the-flip-animation-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 26,
+                        "line": 1604
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-e8ae0e52fe7a171ffdbb",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1593,
+              "column": 10
+            },
+            {
+              "title": "SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1607,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 755,
+                      "error": {
+                        "message": "Error: LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1625:146",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 146,
+                          "line": 1625
+                        },
+                        "snippet": "  1623 |         // \"Enter activation\" presupposes a card that keyboard navigation can\n  1624 |         // reach and focus.\n> 1625 |         expect(walk.flipSurfaceFocused, 'LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation').toBe(true);\n       |                                                                                                                                                  ^\n  1626 |\n  1627 |         // Remaining approved target — not reached while SC-06 holds: Enter\n  1628 |         // performs exactly one reveal transition, and a duplicate Enter does"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 146,
+                            "line": 1625
+                          },
+                          "message": "Error: LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  1623 |         // \"Enter activation\" presupposes a card that keyboard navigation can\n  1624 |         // reach and focus.\n> 1625 |         expect(walk.flipSurfaceFocused, 'LF-CARD Enter activation: the flip surface must be reachable and focusable by keyboard Tab navigation').toBe(true);\n       |                                                                                                                                                  ^\n  1626 |\n  1627 |         // Remaining approved target — not reached while SC-06 holds: Enter\n  1628 |         // performs exactly one reveal transition, and a duplicate Enter does\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1625:146"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:14:00.216Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1607,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-3a202-ter-reveals-it-exactly-once-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 146,
+                        "line": 1625
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-02f2b46efeaf93c9e722",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1607,
+              "column": 10
+            },
+            {
+              "title": "SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1646,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 696,
+                      "error": {
+                        "message": "Error: LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                        "stack": "Error: LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1660:146",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 146,
+                          "line": 1660
+                        },
+                        "snippet": "  1658 |         expect(walk.seen.size > 0 || walk.flipSurfaceFocused, 'Tab navigation must enter the card region').toBe(true);\n  1659 |         // INTENDED TARGET ASSERTION (fails while SC-06 holds):\n> 1660 |         expect(walk.flipSurfaceFocused, 'LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation').toBe(true);\n       |                                                                                                                                                  ^\n  1661 |\n  1662 |         // Remaining approved target — not reached while SC-06 holds: Space\n  1663 |         // performs exactly one reveal transition; a duplicate Space does no"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 146,
+                            "line": 1660
+                          },
+                          "message": "Error: LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  1658 |         expect(walk.seen.size > 0 || walk.flipSurfaceFocused, 'Tab navigation must enter the card region').toBe(true);\n  1659 |         // INTENDED TARGET ASSERTION (fails while SC-06 holds):\n> 1660 |         expect(walk.flipSurfaceFocused, 'LF-CARD Space activation: the flip surface must be reachable and focusable by keyboard Tab navigation').toBe(true);\n       |                                                                                                                                                  ^\n  1661 |\n  1662 |         // Remaining approved target — not reached while SC-06 holds: Space\n  1663 |         // performs exactly one reveal transition; a duplicate Space does no\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1660:146"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:14:00.993Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1646,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-92b7b-ace-reveals-it-exactly-once-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 146,
+                        "line": 1660
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-1b97d02d88e511e7328a",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1646,
+              "column": 10
+            },
+            {
+              "title": "SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1681,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5791,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#guided-challenge-root .verb-flashcard')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#guided-challenge-root .verb-flashcard')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#guided-challenge-root .verb-flashcard')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#guided-challenge-root .verb-flashcard')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1690:78",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 78,
+                          "line": 1690
+                        },
+                        "snippet": "  1688 |         await expect(page.locator('button:has-text(\"Reveal Answer\")')).toBeVisible();\n  1689 |\n> 1690 |         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(1);\n       |                                                                              ^\n  1691 |         await page.locator('.guided-prompt-main').click();\n  1692 |         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveClass(/flipped/);\n  1693 |         await expect(page.locator('.guided-answer')).toBeVisible();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 78,
+                            "line": 1690
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#guided-challenge-root .verb-flashcard')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('#guided-challenge-root .verb-flashcard')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n\n  1688 |         await expect(page.locator('button:has-text(\"Reveal Answer\")')).toBeVisible();\n  1689 |\n> 1690 |         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(1);\n       |                                                                              ^\n  1691 |         await page.locator('.guided-prompt-main').click();\n  1692 |         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveClass(/flipped/);\n  1693 |         await expect(page.locator('.guided-answer')).toBeVisible();\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1690:78"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T19:14:01.701Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1681,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-d75fd--flip-reveal-GC-UI-001-002--chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 78,
+                        "line": 1690
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-44be1fe129d8e6ff9000",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1681,
+              "column": 10
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-08-29T19:13:50.676Z",
+    "duration": 16885.493000000002,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
