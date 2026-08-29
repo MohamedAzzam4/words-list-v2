@@ -44,6 +44,13 @@ import { TrophyEngine, VERB_TROPHIES } from './trophies.js?v=3';
 import { LeaderboardService } from './leaderboard-service.js?v=3';
 import { getLocalDateString, calculateNextReview } from './srs-logic.js?v=3';
 import {
+    renderCardAffordances,
+    renderCardFront,
+    renderExampleBlock,
+    renderHintBox,
+    renderSharedCard
+} from './shared-card.js';
+import {
     VerbChallengeEngine,
     PHASE_ACQUISITION,
     PHASE_RECOGNITION,
@@ -1183,10 +1190,124 @@ class VerbsEngineClass {
         }
 
         const verb = activeQueue[this.currentIndex];
-        const isFav = this.isVerbFavorite(verb);
-        const isKnown = this.isVerbKnown(verb);
 
+        // SHARED-CARD-002: the ordinary card renders through the shared
+        // presentation module (same shell as Guided Challenge). The answer
+        // side is built only while the card is flipped, so an unrevealed card
+        // carries no answer markup anywhere (LF-CARD secrecy, SC-01).
+        cardContainer.innerHTML = renderSharedCard({
+            mode: 'ordinary',
+            flippable: true,
+            flipped: this.isFlipped,
+            ariaLabel: 'Verb flashcard: activate to flip',
+            frontHtml: this._buildOrdinaryFrontHtml(verb),
+            backHtml: this.isFlipped ? this._buildOrdinaryBackHtml(verb) : '',
+            actionsHtml: this._buildOrdinaryActionsHtml(verb, activeQueue)
+        });
+    }
+
+    _currentFlashcardVerb() {
+        const activeQueue = this._getFlashcardQueue();
+        return activeQueue[this.currentIndex] || null;
+    }
+
+    // Hint text per direction. Computed on demand and rendered only while the
+    // hint is visible — never parked hidden in the DOM (SC-01b).
+    _ordinaryHintText(verb) {
+        if (this.cardDirectionMode === 'en-to-de') {
+            return `Verb Infinitive: ${verb.infinitive.substring(0, 3)}... (${verb.prefixInfo.prefix || 'Base'})`;
+        }
+        if (this.cardDirectionMode === 'audio-to-de') {
+            return `Meaning: ${verb.meaning}`;
+        }
+        if (this.cardDirectionMode === 'ex-de-to-all') {
+            return `Verb: ${verb.infinitive} | Meaning: ${verb.meaning}`;
+        }
+        if (this.cardDirectionMode === 'ex-en-to-all') {
+            return `German Verb: ${verb.infinitive}`;
+        }
+        return verb.meaning;
+    }
+
+    _buildOrdinaryFrontHtml(verb) {
+        const isFav = this.isVerbFavorite(verb);
+        const examplePairs = this._getExamplePairs(verb);
         const tagsHTML = verb.tags.map(t => `<span class="verb-tag-badge">${t}</span>`).join(' ');
+
+        // Front affordance policy (LF-CARD secrecy): when the hidden answer
+        // is German (en-to-de, ex-en-to-all), the front offers no German
+        // audio — the answer must not be speakable before reveal (SC-01c).
+        const hidesGermanAudio = this.cardDirectionMode === 'en-to-de' || this.cardDirectionMode === 'ex-en-to-all';
+        const affordancesHtml = renderCardAffordances({
+            hint: { label: this.showHint ? 'Hide Hint' : 'Get a hint' },
+            speak: hidesGermanAudio ? null : { title: 'Speak Verb' },
+            favorite: { active: isFav }
+        });
+
+        let frontMainHTML = '';
+        if (this.cardDirectionMode === 'en-to-de') {
+            frontMainHTML = `
+                <div class="verb-label">Meaning (English)</div>
+                <h2 class="verb-infinitive" style="font-size: 2.2rem; color: var(--primary);">${verb.meaning}</h2>
+                <div class="verb-tags-container">${tagsHTML}</div>
+            `;
+        } else if (this.cardDirectionMode === 'audio-to-de') {
+            frontMainHTML = `
+                <div class="verb-label">Listening Practice 🔊</div>
+                <div style="display: flex; justify-content: center; width: 100%; margin: 16px 0;">
+                    <button class="btn btn-primary" style="font-size: 1.3rem; padding: 14px 28px; border-radius: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" data-action="speak">
+                        🔊 Listen to Verb
+                    </button>
+                </div>
+                <div class="verb-tags-container">${tagsHTML}</div>
+            `;
+        } else if (this.cardDirectionMode === 'ex-de-to-all') {
+            const firstEx = examplePairs.length > 0 ? examplePairs[0].de : verb.infinitive;
+            frontMainHTML = `
+                <div class="verb-label">German Example 💬</div>
+                <h3 class="verb-infinitive" style="font-size: 1.5rem; color: var(--primary); font-weight: 500; text-align: center; margin: 16px 0; line-height: 1.4;">
+                    ${sanitize(firstEx)}
+                </h3>
+                <div class="verb-tags-container">${tagsHTML}</div>
+            `;
+        } else if (this.cardDirectionMode === 'ex-en-to-all') {
+            const firstExEn = (examplePairs.length > 0 && examplePairs[0].en) ? examplePairs[0].en : verb.meaning;
+            frontMainHTML = `
+                <div class="verb-label">English Example 💬</div>
+                <h3 class="verb-infinitive" style="font-size: 1.5rem; color: var(--primary); font-weight: 500; text-align: center; margin: 16px 0; line-height: 1.4;">
+                    ${sanitize(firstExEn)}
+                </h3>
+                <div class="verb-tags-container">${tagsHTML}</div>
+            `;
+        } else {
+            frontMainHTML = `
+                <div class="verb-label">Verb (German)</div>
+                <h2 class="verb-infinitive">${verb.infinitive}</h2>
+                <div class="verb-tags-container">${tagsHTML}</div>
+            `;
+        }
+
+        return renderCardFront({
+            affordancesHtml,
+            contentHtml: `
+                ${frontMainHTML}
+                ${renderHintBox({ visible: this.showHint, html: `<span>Hint:</span> ${this._ordinaryHintText(verb)}` })}
+            `,
+            flipHintText: 'Tap card to flip to back 🔄'
+        });
+    }
+
+    // Answer side of the ordinary card — built ONLY after reveal (SC-01a).
+    _buildOrdinaryBackHtml(verb) {
+        const isFav = this.isVerbFavorite(verb);
+        const isExMode = (this.cardDirectionMode === 'ex-de-to-all' || this.cardDirectionMode === 'ex-en-to-all');
+        const examplePairs = this._getExamplePairs(verb);
+        const firstPair = examplePairs.length > 0 ? examplePairs[0] : null;
+
+        const affordancesHtml = renderCardAffordances({
+            speak: { title: 'Speak Verb' },
+            favorite: { active: isFav }
+        });
 
         const conj = verb.conjugation;
         const conjTableHTML = `
@@ -1240,230 +1361,60 @@ class VerbsEngineClass {
             </div>
         `;
 
-        const examplePairs = this._getExamplePairs(verb);
-        const hasEn = examplePairs.some(p => p.en);
-
-        let frontMainHTML = '';
-        let frontHintText = '';
-
-        if (this.cardDirectionMode === 'en-to-de') {
-            frontMainHTML = `
-                <div class="verb-label">Meaning (English)</div>
-                <h2 class="verb-infinitive" style="font-size: 2.2rem; color: var(--primary);">${verb.meaning}</h2>
-                <div class="verb-tags-container">${tagsHTML}</div>
-            `;
-            frontHintText = `Verb Infinitive: ${verb.infinitive.substring(0, 3)}... (${verb.prefixInfo.prefix || 'Base'})`;
-        } else if (this.cardDirectionMode === 'audio-to-de') {
-            frontMainHTML = `
-                <div class="verb-label">Listening Practice 🔊</div>
-                <div style="display: flex; justify-content: center; width: 100%; margin: 16px 0;">
-                    <button class="btn btn-primary" style="font-size: 1.3rem; padding: 14px 28px; border-radius: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" data-action="speak">
-                        🔊 Listen to Verb
-                    </button>
-                </div>
-                <div class="verb-tags-container">${tagsHTML}</div>
-            `;
-            frontHintText = `Meaning: ${verb.meaning}`;
-        } else if (this.cardDirectionMode === 'ex-de-to-all') {
-            const firstEx = examplePairs.length > 0 ? examplePairs[0].de : verb.infinitive;
-            frontMainHTML = `
-                <div class="verb-label">German Example 💬</div>
-                <h3 class="verb-infinitive" style="font-size: 1.5rem; color: var(--primary); font-weight: 500; text-align: center; margin: 16px 0; line-height: 1.4;">
-                    ${sanitize(firstEx)}
-                </h3>
-                <div class="verb-tags-container">${tagsHTML}</div>
-            `;
-            frontHintText = `Verb: ${verb.infinitive} | Meaning: ${verb.meaning}`;
-        } else if (this.cardDirectionMode === 'ex-en-to-all') {
-            const firstExEn = (examplePairs.length > 0 && examplePairs[0].en) ? examplePairs[0].en : verb.meaning;
-            frontMainHTML = `
-                <div class="verb-label">English Example 💬</div>
-                <h3 class="verb-infinitive" style="font-size: 1.5rem; color: var(--primary); font-weight: 500; text-align: center; margin: 16px 0; line-height: 1.4;">
-                    ${sanitize(firstExEn)}
-                </h3>
-                <div class="verb-tags-container">${tagsHTML}</div>
-            `;
-            frontHintText = `German Verb: ${verb.infinitive}`;
-        } else {
-            frontMainHTML = `
-                <div class="verb-label">Verb (German)</div>
-                <h2 class="verb-infinitive">${verb.infinitive}</h2>
-                <div class="verb-tags-container">${tagsHTML}</div>
-            `;
-            frontHintText = verb.meaning;
-        }
-
-        const cardHTML = `
-            <div class="verb-flashcard ${this.isFlipped ? 'flipped' : ''}" data-action="flip">
-                <!-- FRONT OF CARD -->
-                <div class="verb-card-front">
-                    <div class="verb-card-topbar">
-                        <button class="hint-btn" data-action="toggle-hint" title="Get a hint">
-                            💡 ${this.showHint ? 'Hide Hint' : 'Get a hint'}
-                        </button>
-                        <div class="topbar-right-btns" style="display:flex; align-items:center; gap:12px;">
-                            <button class="speak-btn" data-action="speak" title="Speak Verb">🔊</button>
-                            <span class="fav-icon-btn ${isFav ? 'active' : ''}" data-action="fav" data-verb-id="${verb.id}" title="Toggle Favorite">${isFav ? '⭐' : '☆'}</span>
-                        </div>
-                    </div>
-
-                    <div class="verb-center-content">
-                        ${frontMainHTML}
-                        <div class="verb-hint-box ${this.showHint ? '' : 'hidden'}">
-                            <span>Hint:</span> ${frontHintText}
-                        </div>
-                    </div>
-
-                    <div class="verb-tap-hint">Tap card to flip to back 🔄</div>
-                </div>
-
-                <!-- BACK OF CARD -->
-                <div class="verb-card-back">
-                    <div class="verb-card-topbar">
-                        <span class="back-accent-sparkles">✨✨✨✨✨✨✨✨✨✨</span>
-                        <div class="topbar-right-btns" style="display:flex; align-items:center; gap:12px;">
-                            <button class="speak-btn" data-action="speak" title="Speak Verb">🔊</button>
-                            <span class="fav-icon-btn ${isFav ? 'active' : ''}" data-action="fav" data-verb-id="${verb.id}" title="Toggle Favorite">${isFav ? '⭐' : '☆'}</span>
-                        </div>
-                    </div>
-
-                        <!-- BACK OF CARD CONTENT -->
-                        ${(() => {
-                            const isExMode = (this.cardDirectionMode === 'ex-de-to-all' || this.cardDirectionMode === 'ex-en-to-all');
-
-                            const mainVerbRowHTML = `
-                                <div class="back-main-row-block ${isExMode && !this.showVerbDetails ? 'hidden' : ''}">
-                                    <div class="back-main-row">
-                                        <div class="back-field"><span>Infinitive:</span> <strong style="font-size: 1.2rem; color: var(--primary);">${verb.infinitive}</strong></div>
-                                        <div class="back-field meaning-field"><span>Meaning:</span> <strong>${verb.meaning}</strong></div>
-                                        ${verb.prefixInfo.prefix ? `<div class="back-field"><span>Prefix:</span> <strong>${verb.prefixInfo.prefix}</strong> (separable)</div>` : ''}
-                                        <div class="back-field"><span>Participle (Partizip II):</span> <strong>${conj.participle}</strong></div>
-                                        <div class="back-field"><span>Auxiliary:</span> <strong>${conj.auxiliary}</strong></div>
-                                    </div>
-                                </div>
-                            `;
-
-                            if (isExMode) {
-                                const firstPair = examplePairs.length > 0 ? examplePairs[0] : null;
-                                return `
-                                    <!-- Priority Example & Full Translation Section -->
-                                    <div class="back-example-priority-box" style="background: var(--surface-hover); border: 1.5px solid var(--primary); border-radius: 14px; padding: 14px 16px; margin-bottom: 14px;">
-                                        <div style="font-weight: 700; font-size: 0.88rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
-                                            <span>💬 Example Sentence & Full Translation</span>
-                                            ${firstPair ? `<button class="speak-btn" style="font-size: 1rem;" onclick="event.stopPropagation(); window.verbsEngine.speakText('${firstPair.de.replace(/"/g, '&quot;')}', 'de')" title="Listen to German Sentence">🔊</button>` : ''}
-                                        </div>
-                                        ${firstPair ? `
-                                            <!-- Main First Example -->
-                                            <div style="margin-bottom: 6px;">
-                                                <div style="font-size: 1.15rem; font-weight: 600; color: var(--text-main); line-height: 1.4; display: flex; align-items: flex-start; gap: 8px;">
-                                                    <span style="font-size: 1.1rem; flex-shrink: 0;">🇩🇪</span>
-                                                    <span class="ex-sentence-span" style="cursor:pointer;" onclick="event.stopPropagation(); window.verbsEngine.speakText('${firstPair.de.replace(/"/g, '&quot;')}', 'de')" title="Click sentence to pronounce">
-                                                        ${sanitize(firstPair.de)}
-                                                    </span>
-                                                </div>
-                                                <div style="font-size: 1.05rem; font-weight: 500; color: var(--text-muted); line-height: 1.4; margin-top: 6px; display: flex; align-items: flex-start; gap: 8px;">
-                                                    <span style="font-size: 1.1rem; flex-shrink: 0;">🇺🇸</span>
-                                                    <span>${firstPair.en ? sanitize(firstPair.en) : '—'}</span>
-                                                </div>
-                                            </div>
-
-                                            ${examplePairs.length > 1 ? `
-                                                <!-- Toggle for additional examples -->
-                                                <div style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 8px;">
-                                                    <button class="ex-row-toggle-btn" style="padding: 4px 10px; font-size: 0.8rem;" onclick="event.stopPropagation(); const container = this.closest('.back-example-priority-box').querySelector('.extra-card-examples'); container.classList.toggle('hidden'); this.textContent = container.classList.contains('hidden') ? '+${examplePairs.length - 1} More Examples ▾' : '▲ Hide Extra Examples';" title="Toggle additional examples">
-                                                        +${examplePairs.length - 1} More Examples ▾
-                                                    </button>
-
-                                                    <div class="extra-card-examples hidden" style="margin-top: 10px;">
-                                                        ${examplePairs.slice(1).map((pair) => {
-                                                            const safeDe = pair.de.replace(/"/g, '&quot;');
-                                                            return `
-                                                                <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--border);">
-                                                                    <div style="font-size: 1.05rem; font-weight: 600; color: var(--text-main); line-height: 1.4; display: flex; align-items: flex-start; gap: 8px;">
-                                                                        <span style="font-size: 1rem; flex-shrink: 0;">🇩🇪</span>
-                                                                        <span class="ex-sentence-span" style="cursor:pointer;" onclick="event.stopPropagation(); window.verbsEngine.speakText('${safeDe}', 'de')" title="Click sentence to pronounce">
-                                                                            ${sanitize(pair.de)}
-                                                                        </span>
-                                                                    </div>
-                                                                    <div style="font-size: 0.98rem; font-weight: 500; color: var(--text-muted); line-height: 1.4; margin-top: 4px; display: flex; align-items: flex-start; gap: 8px;">
-                                                                        <span style="font-size: 1rem; flex-shrink: 0;">🇺🇸</span>
-                                                                        <span>${pair.en ? sanitize(pair.en) : '—'}</span>
-                                                                    </div>
-                                                                </div>
-                                                            `;
-                                                        }).join('')}
-                                                    </div>
-                                                </div>
-                                            ` : ''}
-                                        ` : `<div style="color:var(--text-muted); opacity:0.8;">No example sentence available for this verb.</div>`}
-                                    </div>
-
-                                    ${mainVerbRowHTML}
-
-                                    <!-- Accordion Toggles -->
-                                    <div class="accordion-toggles-row">
-                                        <button class="accordion-btn" id="btn-toggle-verb-details" data-action="toggle-verb-details">
-                                            🔍 ${this.showVerbDetails ? 'Hide Verb Details' : `Show Verb Details (${verb.infinitive} — ${verb.meaning})`}
-                                        </button>
-                                        <button class="accordion-btn" id="btn-toggle-orig" data-action="toggle-orig">
-                                            🧠 ${this.showOrigins ? 'Hide Verb Origins & Prefix Logic' : 'View Verb Origins & Prefix Logic'}
-                                        </button>
-                                        <button class="accordion-btn" id="btn-toggle-conj" data-action="toggle-conj">
-                                            📊 ${this.showConjugations ? 'Hide Conjugation Tables' : 'View Conjugation Tables'}
-                                        </button>
-                                    </div>
-                                `;
-                            } else {
-                                return `
-                                    ${mainVerbRowHTML}
-
-                                    ${examplePairs.length > 0 ? `
-                                        <div class="back-example-box">
-                                            <div class="ex-label" style="margin-bottom: 6px;">Example Sentences:</div>
-                                            <div class="ex-text" style="margin: 6px 0; line-height: 1.5;">
-                                                💬 ${examplePairs.map((pair, idx) => {
-                                                    const safeDe = pair.de.replace(/"/g, '&quot;');
-                                                    return `
-                                                        <span class="ex-sentence-span" style="cursor:pointer;" onclick="window.verbsEngine.speakText('${safeDe}')" title="Click sentence to pronounce">
-                                                            ${sanitize(pair.de)}
-                                                        </span>
-                                                        ${idx < examplePairs.length - 1 ? '<span style="color:var(--text-muted); opacity:0.4; margin: 0 4px;">|</span>' : ''}
-                                                    `;
-                                                }).join('')}
-                                            </div>
-
-                                            ${hasEn ? `
-                                                <div style="margin-top: 6px;">
-                                                    <button class="ex-en-chip" onclick="this.closest('.back-example-box').querySelector('.ex-en-line').classList.toggle('hidden');" title="Toggle English Example Translations">
-                                                        🇺🇸 EN
-                                                    </button>
-                                                    <div class="ex-en-line hidden" style="margin-top: 4px; font-size: 0.88rem; color: var(--text-muted);">
-                                                        (${sanitize(examplePairs.map(p => p.en).filter(Boolean).join(' | '))})
-                                                    </div>
-                                                </div>
-                                            ` : ''}
-                                        </div>
-                                    ` : ''}
-
-                                    <!-- Accordion Toggles -->
-                                    <div class="accordion-toggles-row">
-                                        <button class="accordion-btn" id="btn-toggle-orig" data-action="toggle-orig">
-                                            🧠 ${this.showOrigins ? 'Hide Verb Origins & Prefix Logic' : 'View Verb Origins & Prefix Logic'}
-                                        </button>
-                                        <button class="accordion-btn" id="btn-toggle-conj" data-action="toggle-conj">
-                                            📊 ${this.showConjugations ? 'Hide Conjugation Tables' : 'View Conjugation Tables'}
-                                        </button>
-                                    </div>
-                                `;
-                            }
-                        })()}
-
-                        ${originsHTML}
-                        ${conjTableHTML}
-                    </div>
+        const mainVerbRowHTML = `
+            <div class="back-main-row-block ${isExMode && !this.showVerbDetails ? 'hidden' : ''}">
+                <div class="back-main-row">
+                    <div class="back-field"><span>Infinitive:</span> <strong style="font-size: 1.2rem; color: var(--primary);">${verb.infinitive}</strong></div>
+                    <div class="back-field meaning-field"><span>Meaning:</span> <strong>${verb.meaning}</strong></div>
+                    ${verb.prefixInfo.prefix ? `<div class="back-field"><span>Prefix:</span> <strong>${verb.prefixInfo.prefix}</strong> (separable)</div>` : ''}
+                    <div class="back-field"><span>Participle (Partizip II):</span> <strong>${conj.participle}</strong></div>
+                    <div class="back-field"><span>Auxiliary:</span> <strong>${conj.auxiliary}</strong></div>
                 </div>
             </div>
+        `;
 
+        // SHARED-CARD-002 / SC-02: only the FIRST example is shown on the
+        // flashcard and its translation is always visible with it. Additional
+        // examples stay available in the glossary and autoplay experiences.
+        const exampleHTML = firstPair
+            ? renderExampleBlock({ de: firstPair.de, en: firstPair.en, label: 'Example:' })
+            : '';
+
+        const detailsToggleHTML = isExMode ? `
+            <button class="accordion-btn" id="btn-toggle-verb-details" data-action="toggle-verb-details">
+                🔍 ${this.showVerbDetails ? 'Hide Verb Details' : `Show Verb Details (${verb.infinitive} — ${verb.meaning})`}
+            </button>
+        ` : '';
+
+        return `
+            <div class="verb-card-topbar">
+                <span class="back-accent-sparkles">✨✨✨✨✨✨✨✨✨✨</span>
+                ${affordancesHtml}
+            </div>
+
+            ${mainVerbRowHTML}
+
+            ${exampleHTML}
+
+            <!-- Accordion Toggles -->
+            <div class="accordion-toggles-row">
+                ${detailsToggleHTML}
+                <button class="accordion-btn" id="btn-toggle-orig" data-action="toggle-orig">
+                    🧠 ${this.showOrigins ? 'Hide Verb Origins & Prefix Logic' : 'View Verb Origins & Prefix Logic'}
+                </button>
+                <button class="accordion-btn" id="btn-toggle-conj" data-action="toggle-conj">
+                    📊 ${this.showConjugations ? 'Hide Conjugation Tables' : 'View Conjugation Tables'}
+                </button>
+            </div>
+
+            ${originsHTML}
+            ${conjTableHTML}
+        `;
+    }
+
+    _buildOrdinaryActionsHtml(verb, activeQueue) {
+        const isKnown = this.isVerbKnown(verb);
+        return `
             <!-- CARD CONTROLS -->
             <div class="verb-card-controls">
                 <button class="fc-btn btn-learning" data-action="mark-learning">
@@ -1480,8 +1431,6 @@ class VerbsEngineClass {
                 <button class="btn" data-action="next-card" ${this.currentIndex === activeQueue.length - 1 ? 'disabled' : ''}>Next ▶</button>
             </div>
         `;
-
-        cardContainer.innerHTML = cardHTML;
     }
 
     flipCard() {
@@ -1489,6 +1438,15 @@ class VerbsEngineClass {
         const card = document.querySelector('.verb-flashcard');
         if (card) {
             card.classList.toggle('flipped', this.isFlipped);
+            // Lazy revealed back (SC-01): the answer markup exists only while
+            // the card is on its answer side; flipping back removes it again.
+            // The flip is a surgical class toggle so keyboard focus on the
+            // card and per-flip transition counting stay intact.
+            const backFace = card.querySelector('.verb-card-back');
+            if (backFace) {
+                const verb = this._currentFlashcardVerb();
+                backFace.innerHTML = (this.isFlipped && verb) ? this._buildOrdinaryBackHtml(verb) : '';
+            }
         }
     }
 
@@ -1496,8 +1454,17 @@ class VerbsEngineClass {
         this.showHint = !this.showHint;
         const hintBox = document.querySelector('.verb-hint-box');
         const hintBtn = document.querySelector('[data-action="toggle-hint"]');
+        // The hint text is injected only while the hint is visible, so a
+        // hidden hint never leaves answer fragments in the DOM (SC-01b).
         if (hintBox) {
-            hintBox.classList.toggle('hidden', !this.showHint);
+            if (this.showHint) {
+                const verb = this._currentFlashcardVerb();
+                hintBox.innerHTML = verb ? `<span>Hint:</span> ${this._ordinaryHintText(verb)}` : '';
+                hintBox.classList.remove('hidden');
+            } else {
+                hintBox.innerHTML = '';
+                hintBox.classList.add('hidden');
+            }
         }
         if (hintBtn) {
             hintBtn.innerHTML = `💡 ${this.showHint ? 'Hide Hint' : 'Get a hint'}`;
@@ -2038,7 +2005,7 @@ class VerbsEngineClass {
                     <div class="guided-milestone-title">${title}</div>
                     <div class="guided-milestone-sub">${sub}</div>
                     <div class="guided-controls">
-                        <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeContinue(${this._challengeRenderToken})">
+                        <button class="btn primary guided-btn-answer" data-action="challenge-continue" data-token="${this._challengeRenderToken}">
                             Continue${p.to ? ` to ${this._phaseBadgeText(p.to)}` : ''} →
                         </button>
                     </div>
@@ -2068,9 +2035,9 @@ class VerbsEngineClass {
                 <div class="guided-complete-sub">${subtitle}</div>
                 <div class="guided-controls">
                     ${!isReview && p.win === PHASE_RECOGNITION ? `
-                        <button class="btn primary" onclick="window.verbsEngine.challengeStartProduction(${this._challengeRenderToken})">🚀 Continue to Production</button>
+                        <button class="btn primary" data-action="challenge-start-production" data-token="${this._challengeRenderToken}">🚀 Continue to Production</button>
                     ` : ''}
-                    <button class="btn" onclick="window.verbsEngine.exitGuidedChallenge(true)">✅ Finish</button>
+                    <button class="btn" data-action="challenge-finish">✅ Finish</button>
                 </div>
             </div>
         `;
@@ -2083,20 +2050,25 @@ class VerbsEngineClass {
         const ex = examplePairs[0];
         const de = sanitize(ex?.de || '');
         const en = ex?.en ? sanitize(ex.en) : '';
-        return `
-            <div class="guided-card">
-                <div class="guided-label">New Word</div>
+        // SHARED-CARD-002 (GC-UI-001): the intro uses the shared card shell —
+        // a single-face presentation card. Nothing is hidden, so it does not
+        // flip; the intro actions stay adapter-owned inside the card.
+        const frontHtml = renderCardFront({
+            contentHtml: `
+                <div class="verb-label guided-label">New Word</div>
                 <div class="guided-prompt-main">${sanitize(v.infinitive)}</div>
                 <div class="guided-prompt-sub">${sanitize(v.meaning)}</div>
                 ${de ? `<div class="guided-prompt-example">💬 ${de}</div>` : ''}
                 ${en ? `<div class="guided-example-en">🔤 ${en}</div>` : ''}
-                <div class="guided-spacer-note" style="display:none;"></div>
+            `,
+            footerActionsHtml: `
                 <div class="guided-controls">
-                    <button class="btn" onclick="window.verbsEngine.challengeSpeakVerb('${p.verbId}')">🔊 Listen</button>
-                    <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeIntroDone(${this._challengeRenderToken})">Got it — Continue →</button>
+                    <button type="button" class="btn" data-action="challenge-listen" data-verb-id="${sanitize(p.verbId)}">🔊 Listen</button>
+                    <button type="button" class="btn primary guided-btn-answer" data-action="challenge-intro-done" data-token="${this._challengeRenderToken}">Got it — Continue →</button>
                 </div>
-            </div>
-        `;
+            `
+        });
+        return renderSharedCard({ mode: 'guided', flippable: false, frontHtml });
     }
 
     renderChallengeRecall(p) {
@@ -2115,64 +2087,72 @@ class VerbsEngineClass {
         } else {
             frontLabel = 'Verb (German)';
             frontMain = sanitize(v.infinitive);
-            backMain = sanitize(v.meaning) + (ex ? ` — ${sanitize(ex.de)}` : '');
+            backMain = sanitize(v.meaning);
         }
 
         const revealed = this.challengeRevealed;
-        const spacer = this.challengePresentation && this.challengePresentation.spacer;
-        const spacerNote = spacer
-            ? '<div class="guided-spacer-note">Spacing card — this card is a non-scored spacer.</div>'
-            : '';
+        const noteHtml = `
+            ${p.forced && !p.spacer ? '<div class="guided-spacer-note">Scheduled review — take your time.</div>' : ''}
+            ${isSpacer ? '<div class="guided-spacer-note">Spacing card — this card is a non-scored spacer.</div>' : ''}
+        `;
 
-        const answerHTML = revealed ? `
+        // SHARED-CARD-002 (GC-UI-001/002): the recall card IS the ordinary
+        // flip shell — the shared front carries the prompt, and the shared
+        // back with the answer is built only after reveal (GC-UI-005).
+        const frontHtml = renderCardFront({
+            contentHtml: `
+                <div class="verb-label guided-label">${frontLabel}</div>
+                <div class="guided-prompt-main">${frontMain}</div>
+                ${noteHtml}
+            `,
+            flipHintText: revealed ? '' : 'Tap card to reveal the answer 👁'
+        });
+
+        const backHtml = revealed ? `
+            <div class="verb-card-topbar">
+                <span class="back-accent-sparkles">✨✨✨✨✨✨✨✨✨✨</span>
+            </div>
             <div class="guided-answer">
                 <div class="guided-answer-main">${backMain}</div>
-                ${ex ? `<div class="guided-example-en">💬 ${sanitize(ex.de)}</div>` : ''}
             </div>
+            ${renderExampleBlock({ de: ex ? ex.de : '', en: ex ? ex.en : '' })}
         ` : '';
 
-        // German audio is feedback after the answer is revealed. It never runs
-        // automatically and is never offered on the Production front.
-        const listenBtn = (revealed && !isSpacer)
-            ? `<button class="btn" onclick="window.verbsEngine.challengeSpeakVerb('${p.verbId}')">🔊 Listen</button>`
-            : '';
-
+        // Guided controls stay adapter-owned (GC-UI-004): reveal, grading
+        // and continue actions render below the shared card.
         let controls = '';
         if (isSpacer) {
             // Spacer feedback: reveal, show the answer, continue without grading.
-            controls = revealed
-                ? `
-                    <div class="guided-controls">
-                        <button class="btn primary guided-btn-answer" onclick="window.verbsEngine.challengeDismissSpacer(${this._challengeRenderToken})">Continue →</button>
-                    </div>`
-                : `
-                    <div class="guided-controls">
-                        <button class="btn btn-primary guided-btn-answer" onclick="window.verbsEngine.challengeRevealAnswer()">👁 Reveal Answer</button>
-                    </div>`;
+            controls = revealed ? `
+                <div class="guided-controls">
+                    <button type="button" class="btn primary guided-btn-answer" data-action="challenge-spacer" data-token="${this._challengeRenderToken}">Continue →</button>
+                </div>` : `
+                <div class="guided-controls">
+                    <button type="button" class="btn btn-primary guided-btn-answer" data-action="challenge-reveal">👁 Reveal Answer</button>
+                </div>`;
         } else if (!revealed) {
             controls = `
                 <div class="guided-controls">
-                    <button class="btn btn-primary guided-btn-answer" onclick="window.verbsEngine.challengeRevealAnswer()">👁 Reveal Answer</button>
+                    <button type="button" class="btn btn-primary guided-btn-answer" data-action="challenge-reveal">👁 Reveal Answer</button>
                 </div>`;
         } else {
             controls = `
                 <div class="guided-controls">
-                    ${listenBtn}
-                    <button class="btn primary" onclick="window.verbsEngine.challengeGrade(true, ${this._challengeRenderToken})">✅ I knew it</button>
-                    <button class="btn danger" onclick="window.verbsEngine.challengeGrade(false, ${this._challengeRenderToken})">❌ I forgot</button>
+                    <button type="button" class="btn" data-action="challenge-listen" data-verb-id="${sanitize(p.verbId)}">🔊 Listen</button>
+                    <button type="button" class="btn primary" data-action="challenge-grade" data-remembered="true" data-token="${this._challengeRenderToken}">✅ I knew it</button>
+                    <button type="button" class="btn danger" data-action="challenge-grade" data-remembered="false" data-token="${this._challengeRenderToken}">❌ I forgot</button>
                 </div>`;
         }
 
-        return `
-            <div class="guided-card">
-                <div class="guided-label">${frontLabel}</div>
-                <div class="guided-prompt-main">${frontMain}</div>
-                ${p.forced && !p.spacer ? '<div class="guided-spacer-note">Scheduled review — take your time.</div>' : ''}
-                ${spacerNote}
-                ${answerHTML}
-            </div>
-            ${controls}
-        `;
+        return renderSharedCard({
+            mode: 'guided',
+            flippable: true,
+            flipped: revealed,
+            ariaLabel: 'Guided challenge card: activate to reveal the answer',
+            frontHtml,
+            backHtml,
+            actionsHtml: controls
+        });
     }
 
     challengeSpeakVerb(verbId) {
@@ -2691,17 +2671,62 @@ class VerbsEngineClass {
                 const rowIdx = parseInt(actionBtn.dataset.arrayIdx, 10) || 0;
                 this.playAllVerbsAudio(rowIdx);
             }
-            else if (action === 'fav') this.toggleFavorite(actionBtn.dataset.verbId);
+            else if (action === 'fav') {
+                // Shared-card favorite buttons carry no id (secrecy, SC-01d):
+                // the adapter resolves the current card. Glossary rows keep
+                // their explicit data-verb-id.
+                const current = this._currentFlashcardVerb();
+                const favVerbId = actionBtn.dataset.verbId || (current ? current.id : null);
+                if (favVerbId) this.toggleFavorite(favVerbId);
+            }
             else if (action === 'mark-known') this.markCard(true);
             else if (action === 'mark-learning') this.markCard(false);
             else if (action === 'prev-card') this.prevCard();
             else if (action === 'next-card') this.nextCard();
+            else if (action === 'challenge-reveal') this.challengeRevealAnswer();
+            else if (action === 'challenge-grade') this.challengeGrade(actionBtn.dataset.remembered === 'true', parseInt(actionBtn.dataset.token, 10));
+            else if (action === 'challenge-intro-done') this.challengeIntroDone(parseInt(actionBtn.dataset.token, 10));
+            else if (action === 'challenge-continue') this.challengeContinue(parseInt(actionBtn.dataset.token, 10));
+            else if (action === 'challenge-spacer') this.challengeDismissSpacer(parseInt(actionBtn.dataset.token, 10));
+            else if (action === 'challenge-start-production') this.challengeStartProduction(parseInt(actionBtn.dataset.token, 10));
+            else if (action === 'challenge-listen') this.challengeSpeakVerb(actionBtn.dataset.verbId);
+            else if (action === 'challenge-finish') this.exitGuidedChallenge(true);
             else if (action === 'flip') {
-                if (!e.target.closest('button') && !e.target.closest('.accordion-btn') && !e.target.closest('.ex-en-chip') && !e.target.closest('.ex-sentence-span')) {
-                    this.flipCard();
+                // Every inner control is a real button, so only card-body
+                // clicks (never control clicks) reach the flip action.
+                if (!e.target.closest('button')) {
+                    if (this.activeMode === 'guided') this._activateGuidedCardFlip();
+                    else this.flipCard();
                 }
             }
         });
+
+        // Shared-card keyboard activation (LF-CARD: pointer, Enter and Space;
+        // finding SC-06): Enter and Space on the flip surface flip/reveal the
+        // card exactly once per keypress. Real buttons inside the card keep
+        // their native key handling and are excluded, and key repeats are
+        // ignored, so one activation can never cause a second transition.
+        document.body.addEventListener('keydown', (e) => {
+            if (e.repeat) return;
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const target = e.target;
+            if (!target || typeof target.closest !== 'function') return;
+            if (target.closest('button, a, select, input, textarea')) return;
+            const card = target.closest('.verb-flashcard[data-action="flip"]');
+            if (!card) return;
+            e.preventDefault();
+            if (this.activeMode === 'guided') this._activateGuidedCardFlip();
+            else this.flipCard();
+        });
+    }
+
+    _activateGuidedCardFlip() {
+        // GC-UI-002: the shared-card body reveals the answer with the ordinary
+        // flip interaction. Only an unrevealed recall card flips; the revealed
+        // back stays until the scheduler advances the presentation.
+        const p = this.challengePresentation;
+        if (!p || p.kind !== 'recall') return;
+        if (!this.challengeRevealed) this.challengeRevealAnswer();
     }
 }
 

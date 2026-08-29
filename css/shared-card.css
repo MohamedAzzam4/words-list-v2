@@ -1,0 +1,74 @@
+/* SHARED-CARD-002 — shared flashcard presentation (ordinary Verbs + Guided Challenge).
+   All rules are scoped under .shared-card-block so page-level button styling,
+   the glossary table and other views keep their current appearance. */
+
+.shared-card-block {
+    max-width: 640px;
+    margin: 0 auto 20px;
+    perspective: 1200px;
+}
+
+/* Non-flippable shared cards (Guided intro) must not suggest a flip. */
+.shared-card-block .verb-flashcard:not([data-action="flip"]) {
+    cursor: default;
+}
+
+/* Visible keyboard focus (LF-CARD / GC-UI-009, finding SC-04): every operable
+   control inside the shared block — including the flip surface itself — paints
+   a high-contrast outline in the keyboard modality. Scoped to win over the
+   global `button { outline: none }` reset in css/core.css. */
+.shared-card-block :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Minimum primary touch targets (LF-CARD / GC-UI-009, finding SC-03). */
+.shared-card-block .card-affordance {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.shared-card-block .guided-controls .btn,
+.shared-card-block .verb-card-controls .btn,
+.shared-card-block .verb-card-nav .btn {
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+/* Shared example block (finding SC-02): the sentence is a real button that
+   speaks through the delegated data-action handler; its translation is always
+   visible — the EN chip toggle is gone. */
+.shared-card-block .ex-sentence-span {
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    font: inherit;
+    color: var(--text-main);
+    text-align: left;
+    cursor: pointer;
+}
+
+.shared-card-block .ex-sentence-span:hover {
+    color: var(--primary);
+}
+
+.shared-card-block .ex-en-line {
+    margin-top: 4px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+/* Reduced motion (LF-CARD, finding SC-05): disable the flip and control
+   transition animations while the OS prefers reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+    .shared-card-block .verb-flashcard,
+    .shared-card-block .verb-flashcard * {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+    }
+}

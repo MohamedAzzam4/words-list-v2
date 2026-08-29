@@ -47,6 +47,18 @@ import path from 'node:path';
 //   the failure lands on the intended target assertion; the machine-
 //   readable JSON result in the attempt-02 evidence records the exact
 //   assertion that failed for each expected-failure case.
+//
+// SHARED-CARD-002 (shared-card extraction, owner-approved):
+// - The nine attempt-01/02 expected-failure findings SC-01..SC-07 are now
+//   TARGET tests again: the shared presentation module (js/core/shared-card.js)
+//   implements the approved behavior, the `test.fail` wrappers were removed
+//   only after the transition run proved each finding's intended assertions
+//   pass against the corrected implementation (unexpected passes recorded in
+//   the SHARED-CARD-002/01 evidence).
+// - CHaracterization tests that pinned DEFECTIVE attempt-01 behavior
+//   (SC-01/02/03/04/05/06/07 carriers) were consciously rewritten to pin the
+//   approved target instead; every rewrite is listed in the SHARED-CARD-002
+//   report's superseded-test ledger (CM-MOD-002/003).
 
 const FIXTURE_BODY = readFileSync(
     path.join(__dirname, '..', 'fixtures', 'cefr', 'verbs-card-reference.json'),
@@ -209,7 +221,10 @@ async function startGuided(page) {
     await page.goto('/verbs.html');
     await page.locator('button:has-text("Guided Challenge")').click();
     await expect(page.locator('#view-guided')).toBeVisible();
-    await expect(page.locator('.guided-card')).toBeVisible();
+    // The guided cards render through the shared shell now (SC-07 resolved);
+    // the phase topbar + shared card block are the stable guided-view markers.
+    await expect(page.locator('#guided-challenge-root .shared-card-block')).toBeVisible();
+    await expect(page.locator('.guided-phase-badge')).toBeVisible();
 }
 
 // Deterministically wait for the guided card identity to change after a click.
@@ -543,14 +558,18 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('machen');
         await expect(page.locator('.verb-card-front .verb-tag-badge').first()).toHaveText('ref-base');
 
-        // Front affordances: hint, speak, favorite (inactive star)
+        // Front affordances: hint, speak, favorite (inactive star) — all real
+        // buttons now (keyboard-operable, 44x44 via css/shared-card.css)
         await expect(page.locator('.verb-card-front [data-action="toggle-hint"]')).toBeVisible();
         await expect(page.locator('.verb-card-front [data-action="speak"]')).toBeVisible();
         await expect(page.locator('.verb-card-front [data-action="fav"]')).toHaveText('☆');
         await expect(page.locator('.verb-card-front [data-action="fav"]')).not.toHaveClass(/active/);
 
-        // Back face exists in the DOM from the start (3D flip, not conditional render)
+        // Back face exists in the DOM from the start (3D flip mechanics) but
+        // stays EMPTY before reveal — answer content is rendered lazily
+        // (SHARED-CARD-002, LF-CARD secrecy).
         await expect(page.locator('.verb-card-back')).toHaveCount(1);
+        await expect(page.locator('.verb-card-back')).toBeEmpty();
 
         // Grade + navigation controls live OUTSIDE the flip card
         await expect(page.locator('.verb-card-controls .btn-learning')).toHaveText('❌ Still Learning');
@@ -583,30 +602,25 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         expect(state.flipped).toBe(false);
     });
 
-    test('CHAR-03 (finding SC-02): default back shows ALL German examples and hides translations behind the EN chip', async ({ page }) => {
+    test('CHAR-03 (TARGET, SC-02 resolved): back shows ONLY the first example with its translation always visible', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await flipToBack(page);
 
-        // Current behavior: every German example is inline, not only the first
+        // Approved target (LF-CARD after reveal, owner decision 2): exactly the
+        // FIRST German example, no chip toggle, translation always visible.
         const sentences = page.locator('.back-example-box .ex-sentence-span');
-        await expect(sentences).toHaveCount(3);
-        await expect(sentences.nth(0)).toHaveText('Ich mache die Hausaufgaben.');
-        await expect(sentences.nth(1)).toHaveText('Er macht das Fenster auf.');
-        await expect(sentences.nth(2)).toHaveText('Wir haben Kuchen gemacht.');
+        await expect(sentences).toHaveCount(1);
+        await expect(sentences.nth(0)).toHaveText('💬 Ich mache die Hausaufgaben.');
+        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
+        // The other examples never reach the flashcard (glossary/autoplay keep them)
+        await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
+        await expect(page.locator('.verb-card-back')).not.toContainText('Wir haben Kuchen gemacht.');
+        await expect(page.locator('.ex-en-chip')).toHaveCount(0);
 
-        // Current behavior: the translations are rendered but NOT visible until
-        // the extra EN chip click — LF-CARD wants them always visible (SC-02).
-        const enLine = page.locator('.back-example-box .ex-en-line');
-        await expect(enLine).toHaveClass(/hidden/);
-        await expect(enLine).not.toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-chip')).toBeVisible();
-
-        await page.locator('.back-example-box .ex-en-chip').click();
-        await expect(enLine).toBeVisible();
-        await expect(enLine).toHaveText('(I do the homework. | He opens the window. | We made cake.)');
-
-        // The chip click must not have flipped, graded, or advanced the card
+        // The chip is gone, so translation visibility needs no click — and no
+        // card interaction may flip, grade, or advance anything.
         const state = await readCardState(page);
         expect(state.index).toBe(0);
         expect(state.flipped).toBe(true);
@@ -624,9 +638,9 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await flipToBack(page);
         const sentences = page.locator('.back-example-box .ex-sentence-span');
         await expect(sentences).toHaveCount(1);
-        await expect(sentences.nth(0)).toHaveText('Sie sagt die Wahrheit.');
-
-        await page.locator('.back-example-box .ex-en-chip').click();
+        await expect(sentences.nth(0)).toHaveText('💬 Sie sagt die Wahrheit.');
+        // Translation is visible without any extra click
+        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
         await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(She tells the truth.)');
     });
 
@@ -664,12 +678,12 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
 
         const sentences = page.locator('.back-example-box .ex-sentence-span');
         await expect(sentences).toHaveCount(1);
-        await expect(sentences.nth(0)).toHaveText('Ich grüble über die Frage.');
+        await expect(sentences.nth(0)).toHaveText('💬 Ich grüble über die Frage.');
         await expect(page.locator('.ex-en-chip')).toHaveCount(0);
         await expect(page.locator('.back-example-box .ex-en-line')).toHaveCount(0);
     });
 
-    test('CHAR-07: example-direction backs lead with the first example and its full translation', async ({ page }) => {
+    test('CHAR-07 (TARGET, SC-02 resolved): example-direction backs show the first example with its always-visible translation', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await setDirectionMode(page, 'ex-de-to-all');
@@ -679,15 +693,23 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('Ich mache die Hausaufgaben.');
 
         await flipToBack(page);
-        await expect(page.locator('.back-example-priority-box')).toBeVisible();
-        await expect(page.locator('.back-example-priority-box .ex-sentence-span').first())
-            .toHaveText('Ich mache die Hausaufgaben.');
-        await expect(page.locator('.back-example-priority-box')).toContainText('I do the homework.');
-        // Additional examples stay collapsed behind the toggle
-        await expect(page.locator('.extra-card-examples')).toHaveClass(/hidden/);
+        // Unified shared example block: FIRST example + always-visible translation
+        await expect(page.locator('.back-example-box')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);
+        await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveText('💬 Ich mache die Hausaufgaben.');
+        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
+        // No additional examples on the flashcard (owner decision 2)
+        await expect(page.locator('.extra-card-examples')).toHaveCount(0);
+        await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
+        // Ex-mode keeps the verb identity behind the details accordion
+        await expect(page.locator('.back-main-row-block')).toHaveClass(/hidden/);
+        await page.locator('#btn-toggle-verb-details').click();
+        await expect(page.locator('.back-main-row-block')).toBeVisible();
+        await expect(page.locator('.verb-card-back')).toContainText('machen');
     });
 
-    test('CHAR-08: zero-example verb in example direction states the absence explicitly', async ({ page }) => {
+    test('CHAR-08: zero-example verb in example direction renders no example box and no stale content', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await setDirectionMode(page, 'ex-de-to-all');
@@ -697,12 +719,17 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         }
         await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('koppeln');
         await flipToBack(page);
-        await expect(page.locator('.back-example-priority-box'))
-            .toContainText('No example sentence available for this verb.');
+        // Unified no-example state: no example box at all, nothing stale
+        await expect(page.locator('.verb-card-back .back-example-box')).toHaveCount(0);
         await expect(page.locator('.verb-card-back .ex-sentence-span')).toHaveCount(0);
+        await expect(page.locator('.verb-card-back')).not.toContainText('Hausaufgaben');
+        // The rest of the back still renders safely
+        await expect(page.locator('.verb-card-back')).toContainText('koppeln');
+        await expect(page.locator('.verb-card-back')).toContainText('to link, to couple');
+        await expect(page.locator('.verb-card-back')).toContainText('gekoppelt');
     });
 
-    test('CHAR-09 (finding SC-01): en-to-de front hides the German answer visually but keeps it in the DOM and speaks it', async ({ page }) => {
+    test('CHAR-09 (TARGET, SC-01 resolved): en-to-de front carries no German answer in the DOM, metadata, or audio', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await setDirectionMode(page, 'en-to-de');
@@ -712,33 +739,28 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('to make, to do');
         await expect(page.locator('.verb-card-front')).not.toContainText('machen');
 
-        // Current behavior (SC-01a): the full German answer (and examples,
-        // conjugations, participle) already sit in the pre-reveal DOM on the
-        // rotated back face. LF-CARD / AC-06 forbid exactly this.
+        // Approved target (SHARED-CARD-002, LF-CARD secrecy / AC-06): the back
+        // face is EMPTY before reveal — no infinitive, participle, conjugations
+        // or examples anywhere in the pre-reveal DOM (SC-01a).
         const backText = await page.locator('.verb-card-back').textContent();
-        expect(backText).toContain('machen');
-        expect(backText).toContain('gemacht');
+        expect(backText).toBe('');
 
-        // Current behavior (SC-01b): the hidden hint box carries a partial
-        // German answer in the DOM ("Verb Infinitive: mac...")
+        // The hidden hint box carries no partial German answer (SC-01b): it is
+        // rendered empty until the user explicitly opens the hint.
         const hintText = await page.locator('.verb-hint-box').textContent();
-        expect(hintText).toContain('mac...');
+        expect(hintText.trim()).toBe('');
 
-        // Current behavior (SC-01d): the favorite affordance carries the
-        // German answer stem in a data-* attribute value on the pre-reveal
-        // front (data-verb-id="v_ref_machen") — equivalent accessible
-        // metadata under LF-CARD/AC-06.
+        // The favorite affordance carries NO answer-bearing id attribute (SC-01d)
         const favAttr = await page.locator('.verb-card-front [data-action="fav"]').getAttribute('data-verb-id');
-        expect(favAttr).toBe('v_ref_machen');
+        expect(favAttr).toBe(null);
 
-        // Current behavior (SC-01c): the FRONT speak button speaks the hidden
-        // German infinitive through the German voice before reveal.
-        await page.locator('.verb-card-front [data-action="speak"]').click();
+        // German-answer audio is unavailable before reveal (SC-01c): no front
+        // speak control exists in this direction and nothing has spoken.
+        await expect(page.locator('.verb-card-front [data-action="speak"]')).toHaveCount(0);
         const calls = await page.evaluate(() => window.__ttsCalls);
-        expect(calls).toHaveLength(1);
-        expect(calls[0].text).toBe('machen');
-        expect(calls[0].lang).toBe('de-DE');
-        // And it did not flip or advance the card
+        expect(calls).toHaveLength(0);
+
+        // Card state is untouched by all these assertions
         const state = await readCardState(page);
         expect(state.flipped).toBe(false);
         expect(state.index).toBe(0);
@@ -757,7 +779,9 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.verb-card-back')).toContainText('machen');
         const first = page.locator('.back-example-box .ex-sentence-span').first();
         await expect(first).toBeVisible();
-        await expect(first).toHaveText('Ich mache die Hausaufgaben.');
+        await expect(first).toHaveText('💬 Ich mache die Hausaufgaben.');
+        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
     });
 
     test('CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance', async ({ page }) => {
@@ -834,8 +858,7 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.conjugation-tables-block')).toBeVisible();
         await expect(page.locator('.verb-card-back')).toContainText('werde machen');
 
-        // EN chip toggle (also covered in CHAR-03) leaves state intact
-        await page.locator('.back-example-box .ex-en-chip').click();
+        // Translation visibility needs no interaction anymore (SC-02 resolved)
         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
 
         const state = await readCardState(page);
@@ -872,43 +895,32 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         expect(persisted.known).toEqual(['v_ref_sagen']);
     });
 
-    test('CHAR-14 (finding SC-06): full keyboard traversal reaches card controls but never the flip surface', async ({ page }) => {
+    test('CHAR-14 (TARGET, SC-06 resolved): full keyboard traversal reaches every card control INCLUDING the flip surface', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
 
         const focusable = [
             '.verb-card-front [data-action="toggle-hint"]',
             '.verb-card-front [data-action="speak"]',
-            '.verb-card-back [data-action="speak"]',
-            '[data-action="toggle-orig"]',
-            '[data-action="toggle-conj"]',
+            '.verb-card-front [data-action="fav"]',
             '.verb-card-controls .btn-learning',
             '.verb-card-controls .btn-known',
             '.verb-card-nav [data-action="next-card"]'
         ];
-        const clickOnly = [
-            '.verb-card-front [data-action="fav"]',
-            '.verb-card-back [data-action="fav"]'
-        ];
-        const walk = await tabWalk(page, { wantedSelectors: [...focusable, ...clickOnly], maxTabs: 70 });
+        const walk = await tabWalk(page, { wantedSelectors: focusable, maxTabs: 70 });
 
-        // Keyboard navigation DOES enter the card region: every focusable
-        // card control is reached by Tab (setup proof for every keyboard
-        // test in this spec — if this fails, the navigation itself is
-        // broken, not the card).
+        // Keyboard navigation enters the card region: every focusable card
+        // control — including the favorite affordance, now a real button —
+        // is reached by Tab (setup proof for every keyboard test here).
         for (const sel of focusable) {
             expect(walk.seen.has(sel), `Tab traversal must reach ${sel}`).toBe(true);
         }
 
-        // Current behavior (SC-06): the flip surface — the .verb-flashcard
-        // element and its .verb-center-content click target — is a plain div
-        // without tabindex or role, so keyboard navigation can never focus
-        // it. The card has no keyboard activation path at all.
-        expect(walk.flipSurfaceFocused).toBe(false);
+        // Approved target (SC-06 resolved): the flip surface itself is
+        // keyboard-focusable, so Enter/Space activation is reachable.
+        expect(walk.flipSurfaceFocused).toBe(true);
 
-        // The favorite affordances are click-only spans: keyboard-unreachable.
-        expect(walk.seen.has(clickOnly[0])).toBe(false);
-        expect(walk.seen.has(clickOnly[1])).toBe(false);
+        // The traversal itself must not have flipped the card.
         expect((await readCardState(page)).flipped).toBe(false);
     });
 
@@ -922,7 +934,10 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         const speakSel = '.verb-card-front [data-action="speak"]';
         const walk = await tabWalk(page, { wantedSelectors: [speakSel], stopSelector: speakSel, maxTabs: 70 });
         expect(walk.seen.has(speakSel), 'Tab navigation must reach the front speak control').toBe(true);
-        expect(walk.flipSurfaceFocused).toBe(false);
+        // The walk passes THROUGH the flip surface (now keyboard-focusable,
+        // SC-06 resolved) on its way to the control — that is expected; what
+        // matters below is that Enter/Space on the CONTROL does not flip.
+        expect(walk.flipSurfaceFocused).toBe(true);
         await expect(page.locator(speakSel)).toBeFocused();
 
         // First Enter: only the control's own documented function runs (the
@@ -962,7 +977,7 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         const speakSel = '.verb-card-front [data-action="speak"]';
         const walk = await tabWalk(page, { wantedSelectors: [speakSel], stopSelector: speakSel, maxTabs: 70 });
         expect(walk.seen.has(speakSel), 'Tab navigation must reach the front speak control').toBe(true);
-        expect(walk.flipSurfaceFocused).toBe(false);
+        expect(walk.flipSurfaceFocused).toBe(true);
         await expect(page.locator(speakSel)).toBeFocused();
 
         await page.keyboard.press(' ');
@@ -991,26 +1006,32 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         expect(await page.evaluate(() => window.__flipMutations)).toBe(0);
     });
 
-    test('CHAR-15 (finding SC-03): primary card targets measure below the 44x44 minimum', async ({ page }) => {
+    test('CHAR-15 (TARGET, SC-03 resolved): primary card touch targets are at least 44x44 CSS pixels', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
 
+        // Front affordances (the previous finding pinned fav 28x28, speak ~27,
+        // hint ~28 high): all are .card-affordance buttons now and must meet
+        // LF-CARD's 44x44 minimum. Grade buttons were already compliant.
         const favBox = await page.locator('.verb-card-front [data-action="fav"]').boundingBox();
         const speakBox = await page.locator('.verb-card-front [data-action="speak"]').boundingBox();
         const hintBox = await page.locator('.verb-card-front [data-action="toggle-hint"]').boundingBox();
         const gradeBox = await page.locator('.verb-card-controls .btn-known').boundingBox();
+        const navBox = await page.locator('.verb-card-nav [data-action="next-card"]').boundingBox();
 
-        // Current behavior pinned exactly: favorite 28x28, speak ~27x27, hint
-        // ~28 high — all under LF-CARD's 44x44; grade buttons are compliant.
-        expect(favBox.width).toBe(28);
-        expect(favBox.height).toBe(28);
-        expect(speakBox.height).toBeLessThan(44);
-        expect(hintBox.height).toBeLessThan(44);
+        expect(favBox.width).toBeGreaterThanOrEqual(44);
+        expect(favBox.height).toBeGreaterThanOrEqual(44);
+        expect(speakBox.width).toBeGreaterThanOrEqual(44);
+        expect(speakBox.height).toBeGreaterThanOrEqual(44);
+        expect(hintBox.width).toBeGreaterThanOrEqual(44);
+        expect(hintBox.height).toBeGreaterThanOrEqual(44);
         expect(gradeBox.height).toBeGreaterThanOrEqual(44);
         expect(gradeBox.width).toBeGreaterThanOrEqual(44);
+        expect(navBox.height).toBeGreaterThanOrEqual(44);
+        expect(navBox.width).toBeGreaterThanOrEqual(44);
     });
 
-    test('CHAR-16 (finding SC-04): keyboard-focused card controls match :focus-visible but paint no focus indicator', async ({ page }) => {
+    test('CHAR-16 (TARGET, SC-04 resolved): keyboard-focused card controls match :focus-visible and paint a visible indicator', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
 
@@ -1036,21 +1057,19 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
             // focus (real Tab navigation — programmatic .focus() would not
             // match :focus-visible here and is never used as proof).
             expect(info.focusVisible, `keyboard focus on ${sel} must match :focus-visible`).toBe(true);
-            // Current behavior (SC-04): the global `button { outline: none }`
-            // reset has no :focus-visible replacement and no other technique
-            // kicks in — the keyboard-focused styles are IDENTICAL to the
-            // unfocused baseline.
-            expect(info.styles, `focused styles must equal the unfocused baseline for ${sel}`).toEqual(frontBaseline[sel].styles);
+            // Approved target (SC-04 resolved): every keyboard-focused control
+            // paints an indicator via at least one legal technique.
+            const indicated = visibleFocusIndicator(frontBaseline[sel].styles, info.styles);
+            expect(indicated, `${sel} must show a keyboard-focus indicator via outline, box-shadow, border, or background`).toBe(true);
         }
 
-        // Back (revealed) phase — the flip is pointer-only (SC-06), so the
-        // back face is reached by pointer, then the keyboard proof repeats.
+        // Back (revealed) phase — reached by pointer flip, then the keyboard
+        // proof repeats for the revealed-back controls.
         await flipToBack(page);
         const backWanted = [
             '.verb-card-back [data-action="speak"]',
             '[data-action="toggle-orig"]',
             '[data-action="toggle-conj"]',
-            '.back-example-box .ex-en-chip',
             '.verb-card-controls .btn-learning',
             '.verb-card-controls .btn-known'
         ];
@@ -1063,11 +1082,12 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
             expect(backWalk.seen.has(sel), `Tab navigation must reach ${sel}`).toBe(true);
             const info = backWalk.seen.get(sel);
             expect(info.focusVisible, `keyboard focus on ${sel} must match :focus-visible`).toBe(true);
-            expect(info.styles, `focused styles must equal the unfocused baseline for ${sel}`).toEqual(backBaseline[sel].styles);
+            const indicated = visibleFocusIndicator(backBaseline[sel].styles, info.styles);
+            expect(indicated, `${sel} must show a keyboard-focus indicator via outline, box-shadow, border, or background`).toBe(true);
         }
     });
 
-    test('CHAR-17 (finding SC-05): reduced-motion preference does not reduce the flip transition', async ({ page }) => {
+    test('CHAR-17 (TARGET, SC-05 resolved): reduced-motion preference disables the flip transition', async ({ page }) => {
         await prepareSyntheticPage(page);
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await openFlashcardsView(page);
@@ -1096,12 +1116,13 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
             };
         });
 
-        // Current behavior: full 0.6s flip animation regardless of the OS
-        // reduced-motion setting; no prefers-reduced-motion rule exists (SC-05).
+        // Approved target (SC-05 resolved): the flip transition is disabled
+        // under prefers-reduced-motion and a rule exists for it.
         expect(motionFacts.transitionProperty).toContain('transform');
-        expect(motionFacts.transitionDuration).toBe('0.6s');
-        expect(motionFacts.reducedMotionRules).toBe(0);
+        expect(motionFacts.transitionDuration).toBe('0s');
+        expect(motionFacts.reducedMotionRules).toBeGreaterThanOrEqual(1);
 
+        // The flip still works, just without animation.
         await page.locator('.verb-flashcard .verb-center-content').click();
         await expect(page.locator('.verb-flashcard')).toHaveClass(/flipped/);
     });
@@ -1156,7 +1177,7 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
 
 test.describe('SHARED-CARD-001 ordinary card reference — real published dataset', () => {
 
-    test('CHAR-20: real deck 1 renders the reference shell and first example set on the back', async ({ page }) => {
+    test('CHAR-20: real deck 1 renders the reference shell and the first example with its translation on the back', async ({ page }) => {
         await prepareRealPage(page);
         await openFlashcardsView(page);
 
@@ -1165,27 +1186,28 @@ test.describe('SHARED-CARD-001 ordinary card reference — real published datase
 
         await flipToBack(page);
         await expect(page.locator('.verb-card-back')).toContainText('to become, to get, to turn');
+        // Only the FIRST example (werden has three) with its visible translation
         const sentences = page.locator('.back-example-box .ex-sentence-span');
-        await expect(sentences).toHaveCount(3);
-        await expect(sentences.nth(0)).toHaveText('Ich werde Lehrer.');
-        await expect(page.locator('.back-example-box .ex-en-chip')).toBeVisible();
+        await expect(sentences).toHaveCount(1);
+        await expect(sentences.nth(0)).toHaveText('💬 Ich werde Lehrer.');
+        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I become a teacher.)');
+        await expect(page.locator('.verb-card-back')).not.toContainText('Er wurde letztes Jahr befördert.');
     });
 });
 
 test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => {
 
-    test('CHAR-21 (finding SC-07): guided card is a separate shell, not the ordinary flashcard', async ({ page }) => {
+    test('CHAR-21 (TARGET, SC-07 resolved): guided intro uses the shared card shell with adapter-owned controls', async ({ page }) => {
         await prepareSyntheticPage(page);
         await startGuided(page);
 
-        // Current behavior: the Guided Challenge renders its own .guided-card
-        // implementation inside the guided root; GC-UI-001 targets the shared
-        // ordinary shell (SC-07). The ordinary card may still exist in the
-        // HIDDEN #view-flashcard container — it must not be visible or present
-        // inside the guided root.
-        await expect(page.locator('.guided-card')).toHaveCount(1);
-        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(0);
-        await expect(page.locator('.verb-flashcard')).not.toBeVisible();
+        // Approved target (GC-UI-001): Guided Challenge cards use the ordinary
+        // flashcard shell. The intro is a single-face presentation card of the
+        // shared shell — no flip (nothing is hidden on an intro).
+        await expect(page.locator('#guided-challenge-root .shared-card-block')).toHaveCount(1);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(1);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).not.toHaveAttribute('data-action');
         await expect(page.locator('.guided-label')).toHaveText('New Word');
 
         // Intro card content boundaries: infinitive, meaning, first example pair
@@ -1194,18 +1216,15 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('.guided-prompt-example')).toHaveText('💬 Ich mache die Hausaufgaben.');
         await expect(page.locator('.guided-example-en')).toHaveText('🔤 I do the homework.');
 
-        // Guided controls are real buttons. Current behavior nuance: the INTRO
-        // card carries its controls INSIDE .guided-card, while recall controls
-        // render OUTSIDE the card (see renderChallengeRecall) — one more way
-        // the guided shell diverges from the ordinary card layout (SC-07).
+        // Intro controls are adapter-owned and live INSIDE the shared card
         const introBtn = page.locator('button:has-text("Got it — Continue")');
         await expect(introBtn).toBeVisible();
-        const insideCard = await introBtn.evaluate((el) => !!el.closest('.guided-card'));
+        const insideCard = await introBtn.evaluate((el) => !!el.closest('.verb-flashcard'));
         expect(insideCard).toBe(true);
         await expect(page.locator('button:has-text("🔊 Listen")')).toBeVisible();
     });
 
-    test('CHAR-22 (finding SC-07): guided reveal is a button action, and card-body clicks do nothing', async ({ page }) => {
+    test('CHAR-22 (TARGET, SC-07 resolved): guided recall uses the shared shell with tap-to-flip reveal', async ({ page }) => {
         await prepareSyntheticPage(page);
         await startGuided(page);
 
@@ -1214,20 +1233,12 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('button:has-text("Reveal Answer")')).toBeVisible();
         await expect(page.locator('.guided-label')).toHaveText('Verb (German)');
 
-        // Current behavior: clicking the card body does NOT reveal (SC-07 —
-        // GC-UI-002 targets the ordinary tap-to-flip interaction).
+        // Approved target (GC-UI-002): the recall card IS the ordinary flip
+        // shell — tapping the card body reveals the answer.
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(1);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveAttribute('data-action', 'flip');
         await page.locator('.guided-prompt-main').click();
-        await expect(page.locator('.guided-answer')).toHaveCount(0);
-        const state = await readGuidedState(page);
-        expect(state.revealed).toBe(false);
-
-        // Contrast with the intro card: RECALL controls render OUTSIDE the card
-        const revealOutside = await page.locator('button:has-text("Reveal Answer")')
-            .evaluate((el) => !el.closest('.guided-card'));
-        expect(revealOutside).toBe(true);
-
-        // The dedicated button is the only reveal path
-        await page.locator('button:has-text("Reveal Answer")').click();
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveClass(/flipped/);
         await expect(page.locator('.guided-answer')).toBeVisible();
         expect((await readGuidedState(page)).revealed).toBe(true);
 
@@ -1236,7 +1247,11 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('.guided-answer')).toBeVisible();
         const afterState = await readGuidedState(page);
         expect(afterState.revealed).toBe(true);
-        expect(afterState.verbId).toBe(state.verbId);
+
+        // Recall controls stay adapter-owned, OUTSIDE the shared card
+        const revealOutside = await page.locator('button:has-text("I knew it")')
+            .evaluate((el) => !el.closest('.verb-flashcard'));
+        expect(revealOutside).toBe(true);
     });
 
     test('CHAR-23 (TARGET, GC-UI-005 analog): German-front recall keeps the English answer out of the DOM until reveal', async ({ page }) => {
@@ -1253,9 +1268,13 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('.guided-label')).toHaveText('Verb (German)');
         await expect(page.locator('.guided-prompt-main')).toHaveText(served.infinitive);
 
-        // The answer is not in the card subtree before reveal
-        await expect(page.locator('.guided-card')).not.toContainText(served.meaning);
+        // The answer is not in the shared card subtree before reveal — the
+        // back face stays empty (lazy reveal, GC-UI-005 analog). Scoped to the
+        // guided root: the ordinary card still exists in the hidden flashcard view.
+        const guidedCard = page.locator('#guided-challenge-root .verb-flashcard');
+        await expect(guidedCard).not.toContainText(served.meaning);
         await expect(page.locator('.guided-answer')).toHaveCount(0);
+        await expect(page.locator('#guided-challenge-root .verb-card-back')).toBeEmpty();
         // German audio control is absent from the pre-reveal front
         await expect(page.locator('button:has-text("🔊 Listen")')).toHaveCount(0);
 
@@ -1290,7 +1309,9 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         const served = await page.evaluate(() => {
             const e = window.verbsEngine;
             const v = e._challengeVerb(e.challengePresentation.verbId);
-            return { infinitive: v.infinitive, meaning: v.meaning, exampleDe: v.exampleDe.split(' | ')[0] };
+            const firstEn = (v.exampleEn || '').split(' | ')[0]
+                .replace(/\s*\((Präsens|Präteritum|Partizip II|Futur I)\)/gi, '').trim();
+            return { infinitive: v.infinitive, meaning: v.meaning, exampleDe: v.exampleDe.split(' | ')[0], exampleEn: firstEn };
         });
 
         await expect(page.locator('.guided-prompt-main')).toHaveText(served.meaning);
@@ -1321,10 +1342,19 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
 
         await expect(page.locator('button:has-text("🔊 Listen")')).toHaveCount(0);
 
-        // After reveal the German answer and example appear, and Listen unlocks
+        // After reveal the German answer appears, the shared example block
+        // shows the first example, and Listen unlocks. The translation
+        // expectation is keyed off the FIXTURE data (independent oracle):
+        // visible when the served example has one, absent otherwise.
         await page.locator('button:has-text("Reveal Answer")').click();
         await expect(page.locator('.guided-answer-main')).toHaveText(served.infinitive);
-        await expect(page.locator('.guided-example-en')).toHaveText(`💬 ${served.exampleDe}`);
+        await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveText(`💬 ${served.exampleDe}`);
+        if (served.exampleEn) {
+            await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+            await expect(page.locator('.back-example-box .ex-en-line')).toHaveText(`(${served.exampleEn})`);
+        } else {
+            await expect(page.locator('.back-example-box .ex-en-line')).toHaveCount(0);
+        }
         await expect(page.locator('button:has-text("🔊 Listen")')).toBeVisible();
     });
 
@@ -1473,21 +1503,22 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
     });
 });
 
-test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings)', () => {
+test.describe('SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card', () => {
 
-    // Each test below asserts the APPROVED target and is declared test.fail():
-    // it runs, fails against the published implementation, and thereby
-    // demonstrates the named finding. If the target is ever met, Playwright
-    // reports the unexpected pass as a failure, so the finding cannot
-    // silently disappear without a conscious test update. Every test opens
-    // with setup proofs that pass today (visibility/selector/navigation
-    // checks), so the failure always lands on the intended target assertion —
-    // a setup, navigation, or selector failure is never accepted as proof of
-    // a product finding. The machine-readable JSON result in
-    // docs/cefr/evidence/SHARED-CARD-001/02/ records the exact assertion that
-    // failed for each case.
+    // History: in SHARED-CARD-001 each test below was declared test.fail() and
+    // genuinely failed at its intended target assertion (findings SC-01..SC-07,
+    // evidence in docs/cefr/evidence/SHARED-CARD-001/02/). SHARED-CARD-002
+    // implements the approved targets in the shared presentation module. Per
+    // the owner's test-first protocol the wrappers were removed ONLY after a
+    // transition run (test.fail still in place) proved the intended assertions
+    // now pass — six cases flipped to unexpected passes outright, and the
+    // remaining three (SC-01 audio, SC-02, SC-07) were verified case-by-case
+    // before their assertions were aligned to the approved implementation
+    // details (no pre-reveal German-audio affordance; the 💬 glyph now inside
+    // the sentence button; the guided recall shell selector). The transition
+    // evidence lives in docs/cefr/evidence/SHARED-CARD-002/01/.
 
-    test.fail('SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere', async ({ page }) => {
+    test('SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await setDirectionMode(page, 'en-to-de');
@@ -1496,35 +1527,48 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         await expect(page.locator('.verb-card-front .verb-label')).toHaveText('Meaning (English)');
         await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('to make, to do');
 
-        // INTENDED TARGET ASSERTION (fails while SC-01 holds): the COMPLETE
-        // ordinary-card subtree — every element, visible or hidden, every
-        // attribute value (title, aria-label, accessible naming, data-*) —
-        // must be free of the German infinitive, the German example, and the
-        // partial-answer hint. Answer-bearing audio metadata (e.g. a
-        // title/aria-label containing the German answer) is covered by the
-        // same attribute sweep; the audio CONTROL behavior is proven
-        // separately below.
+        // TARGET ASSERTION: the COMPLETE ordinary-card subtree — every element,
+        // visible or hidden, every attribute value (title, aria-label,
+        // accessible naming, data-*) — must be free of the German infinitive,
+        // the German example, and the partial-answer hint. Answer-bearing audio
+        // metadata (e.g. a title/aria-label containing the German answer) is
+        // covered by the same attribute sweep; the audio CONTROL behavior is
+        // proven separately below.
         const sweep = await sweepOrdinaryCardSubtree(page, ['machen', 'Ich mache die Hausaufgaben.', 'mac...']);
         expect(sweep.unique, `pre-reveal leaks (${sweep.uniqueCount} unique carriers): ${sweep.unique.join(' | ')}`).toEqual([]);
     });
 
-    test.fail('SC-01 TARGET (audio secrecy): pre-reveal audio cannot speak the German answer', async ({ page }) => {
+    test('SC-01 TARGET (audio secrecy): pre-reveal German-answer audio is unavailable in en-to-de mode', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await setDirectionMode(page, 'en-to-de');
 
-        const speak = page.locator('.verb-card-front [data-action="speak"]');
-        await expect(speak).toBeVisible();
+        // Setup proof: the front face shows the English prompt for card 1.
+        await expect(page.locator('.verb-card-front .verb-label')).toHaveText('Meaning (English)');
+        await expect(page.locator('.verb-card-front .verb-infinitive')).toHaveText('to make, to do');
 
-        // The only pre-reveal audio affordance is the front speak control.
-        await speak.click();
+        // TARGET ASSERTION (owner decision 1 / LF-CARD): German-answer audio
+        // must be UNAVAILABLE before reveal — the en-to-de front offers no
+        // German audio affordance at all (mirroring GC-UI-005), and nothing
+        // has spoken through any path.
+        await expect(page.locator('.verb-card-front [data-action="speak"]')).toHaveCount(0);
         const calls = await page.evaluate(() => window.__ttsCalls);
-        expect(calls.length).toBeGreaterThan(0);
-        // INTENDED TARGET ASSERTION (fails while SC-01 holds):
-        expect(calls.every((c) => !c.text.includes('machen')), 'pre-reveal audio must not speak the German answer').toBe(true);
+        expect(calls).toHaveLength(0);
+        expect((await readCardState(page)).flipped).toBe(false);
+
+        // Positive contrast (de-to-en): the German PROMPT stays speakable —
+        // hiding the answer never breaks prompt audio in open directions.
+        await setDirectionMode(page, 'de-to-en');
+        const promptSpeak = page.locator('.verb-card-front [data-action="speak"]');
+        await expect(promptSpeak).toBeVisible();
+        await promptSpeak.click();
+        const promptCalls = await page.evaluate(() => window.__ttsCalls);
+        expect(promptCalls).toHaveLength(1);
+        expect(promptCalls[0].text).toBe('machen');
+        expect(promptCalls[0].lang).toBe('de-DE');
     });
 
-    test.fail('SC-02 TARGET: revealed back shows only the first example with its translation always visible', async ({ page }) => {
+    test('SC-02 TARGET: revealed back shows only the first example with its translation always visible', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await flipToBack(page);
@@ -1532,12 +1576,14 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         await expect(page.locator('.back-example-box')).toBeVisible();
 
         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);
-        await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('Ich mache die Hausaufgaben.');
+        await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('💬 Ich mache die Hausaufgaben.');
         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
         await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');
+        // Additional examples never reach the flashcard (owner decision 2)
+        await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
     });
 
-    test.fail('SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels', async ({ page }) => {
+    test('SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
 
@@ -1555,7 +1601,7 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         expect(speakBox.width).toBeGreaterThanOrEqual(44);
     });
 
-    test.fail('SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator', async ({ page }) => {
+    test('SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
 
@@ -1590,7 +1636,7 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         }
     });
 
-    test.fail('SC-05 TARGET: reduced-motion preference disables the flip animation', async ({ page }) => {
+    test('SC-05 TARGET: reduced-motion preference disables the flip animation', async ({ page }) => {
         await prepareSyntheticPage(page);
         await page.emulateMedia({ reducedMotion: 'reduce' });
         await openFlashcardsView(page);
@@ -1604,7 +1650,7 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         expect(duration).toBe('0s');
     });
 
-    test.fail('SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once', async ({ page }) => {
+    test('SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await installFlipClassCounter(page);
@@ -1643,7 +1689,7 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         await expect(page.locator('.verb-flashcard')).not.toHaveClass(/flipped/);
     });
 
-    test.fail('SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once', async ({ page }) => {
+    test('SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once', async ({ page }) => {
         await prepareSyntheticPage(page);
         await openFlashcardsView(page);
         await installFlipClassCounter(page);
@@ -1678,18 +1724,138 @@ test.describe('SHARED-CARD-001 reference vs approved LF/GC targets — expected 
         await expect(page.locator('.verb-flashcard')).not.toHaveClass(/flipped/);
     });
 
-    test.fail('SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)', async ({ page }) => {
+    test('SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)', async ({ page }) => {
         await prepareSyntheticPage(page);
         await startGuided(page);
         await clickIntrosCollecting(page);
-        // Setup proof: a guided recall card is on screen before the shell
-        // identity is checked.
-        await expect(page.locator('.guided-card')).toBeVisible();
+        // Setup proof: a guided recall card is on screen with its reveal control.
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toBeVisible();
         await expect(page.locator('button:has-text("Reveal Answer")')).toBeVisible();
 
+        // TARGET ASSERTIONS: the recall card is the ordinary shared flip shell
+        // and a tap on the card body reveals the answer.
         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveCount(1);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveAttribute('data-action', 'flip');
         await page.locator('.guided-prompt-main').click();
         await expect(page.locator('#guided-challenge-root .verb-flashcard')).toHaveClass(/flipped/);
         await expect(page.locator('.guided-answer')).toBeVisible();
+    });
+});
+
+test.describe('SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation', () => {
+
+    test('SC2-SHELL: ordinary and Guided modes render the SAME core card shell (GC-TEST-009)', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await openFlashcardsView(page);
+        const ordinaryCore = await page.evaluate(() => {
+            const card = document.querySelector('#verbs-card-working-area .verb-flashcard');
+            return {
+                block: card ? card.closest('.shared-card-block') !== null : false,
+                blockMode: card && card.closest('.shared-card-block')
+                    ? card.closest('.shared-card-block').className : '',
+                hasFront: !!card.querySelector('.verb-card-front'),
+                hasCenter: !!card.querySelector('.verb-center-content'),
+                hasBack: !!card.querySelector('.verb-card-back'),
+                flipAttr: card.getAttribute('data-action'),
+                tabindex: card.getAttribute('tabindex'),
+                role: card.getAttribute('role')
+            };
+        });
+
+        await startGuided(page);
+        await clickIntrosCollecting(page);
+        const guidedCore = await page.evaluate(() => {
+            const card = document.querySelector('#guided-challenge-root .verb-flashcard');
+            return {
+                block: card ? card.closest('.shared-card-block') !== null : false,
+                blockMode: card && card.closest('.shared-card-block')
+                    ? card.closest('.shared-card-block').className : '',
+                hasFront: !!card.querySelector('.verb-card-front'),
+                hasCenter: !!card.querySelector('.verb-center-content'),
+                hasBack: !!card.querySelector('.verb-card-back'),
+                flipAttr: card.getAttribute('data-action'),
+                tabindex: card.getAttribute('tabindex'),
+                role: card.getAttribute('role')
+            };
+        });
+
+        // Both modes share the identical core shell contract: same block
+        // wrapper family, same face classes and content placement, same flip
+        // affordance — while their action controls stay adapter-owned.
+        expect(ordinaryCore.block).toBe(true);
+        expect(guidedCore.block).toBe(true);
+        expect(ordinaryCore.blockMode).toContain('shared-card-ordinary');
+        expect(guidedCore.blockMode).toContain('shared-card-guided');
+        expect(ordinaryCore.hasFront && ordinaryCore.hasCenter && ordinaryCore.hasBack).toBe(true);
+        expect(guidedCore.hasFront && guidedCore.hasCenter && guidedCore.hasBack).toBe(true);
+        expect(ordinaryCore.flipAttr).toBe('flip');
+        expect(guidedCore.flipAttr).toBe('flip');
+        expect(ordinaryCore.tabindex).toBe('0');
+        expect(guidedCore.tabindex).toBe('0');
+        expect(ordinaryCore.role).toBe('button');
+        expect(guidedCore.role).toBe('button');
+    });
+
+    test('SC2-KEY-ENTER: guided card is keyboard-reachable; Enter reveals exactly once; duplicate Enter never grades or advances', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await startGuided(page);
+        await clickIntrosCollecting(page);
+        await expect(page.locator('button:has-text("Reveal Answer")')).toBeVisible();
+
+        // Keyboard navigation (never programmatic focus): Tab to the card.
+        const reached = await tabUntilFocused(page, '#guided-challenge-root .verb-flashcard', 40);
+        expect(reached, 'Tab navigation must reach the guided shared card').toBe(true);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toBeFocused();
+
+        const before = await readGuidedState(page);
+        expect(before.revealed).toBe(false);
+
+        // Exactly one reveal transition.
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.guided-answer')).toHaveCount(1);
+        await expect(page.locator('.guided-answer')).toBeVisible();
+        const after = await readGuidedState(page);
+        expect(after.revealed).toBe(true);
+        expect(after.verbId).toBe(before.verbId);
+        expect(after.phase).toBe(before.phase);
+
+        // Duplicate Enter: the re-render replaced the card and focus falls
+        // back to the body, so the duplicate press produces no second
+        // transition, no grading, and no advancement.
+        await page.keyboard.press('Enter');
+        const afterDup = await readGuidedState(page);
+        expect(afterDup.revealed).toBe(true);
+        expect(afterDup.verbId).toBe(before.verbId);
+        expect(afterDup.phase).toBe(before.phase);
+        await expect(page.locator('.guided-answer')).toHaveCount(1);
+    });
+
+    test('SC2-KEY-SPACE: guided card Space reveals exactly once; duplicate Space never grades or advances', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await startGuided(page);
+        await clickIntrosCollecting(page);
+        await expect(page.locator('button:has-text("Reveal Answer")')).toBeVisible();
+
+        const reached = await tabUntilFocused(page, '#guided-challenge-root .verb-flashcard', 40);
+        expect(reached, 'Tab navigation must reach the guided shared card').toBe(true);
+        await expect(page.locator('#guided-challenge-root .verb-flashcard')).toBeFocused();
+
+        const before = await readGuidedState(page);
+        expect(before.revealed).toBe(false);
+
+        await page.keyboard.press(' ');
+        await expect(page.locator('.guided-answer')).toHaveCount(1);
+        await expect(page.locator('.guided-answer')).toBeVisible();
+        const after = await readGuidedState(page);
+        expect(after.revealed).toBe(true);
+        expect(after.verbId).toBe(before.verbId);
+        expect(after.phase).toBe(before.phase);
+
+        await page.keyboard.press(' ');
+        const afterDup = await readGuidedState(page);
+        expect(afterDup.revealed).toBe(true);
+        expect(afterDup.verbId).toBe(before.verbId);
+        expect(afterDup.phase).toBe(before.phase);
+        await expect(page.locator('.guided-answer')).toHaveCount(1);
     });
 });
