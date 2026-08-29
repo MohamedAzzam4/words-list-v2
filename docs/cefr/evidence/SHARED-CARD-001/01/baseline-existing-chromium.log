@@ -1,0 +1,893 @@
+
+Running 27 tests using 1 worker
+
+
+(node:3916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:137:9 › Guided Challenge E2E Suite › starts guided challenge and shows the acquisition phase with intro cards
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[2/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:146:9 › Guided Challenge E2E Suite › keeps the hidden acquisition pool at eight or fewer verbs
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:00:58] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[3/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:186:9 › Guided Challenge E2E Suite › forgot during acquisition never repeats immediately
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:02] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[4/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:212:9 › Guided Challenge E2E Suite › recognition phase prompts German → English and ends with the First Win
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:05] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[5/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:266:9 › Guided Challenge E2E Suite › production phase prompts English → German and ends with the Second Win
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:11] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:12] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[6/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:315:9 › Guided Challenge E2E Suite › restart challenge explicitly resets the session
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:20] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:21] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:21] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:21] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[7/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:331:9 › Guided Challenge E2E Suite › resumes the session after a refresh
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:22] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /verbs.html HTTP/1.1" 304 -
+[8/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:348:9 › Guided Challenge E2E Suite › legacy knownVerbIds aliases are migrated to canonical ids with a backup
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:23] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[9/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:375:9 › Guided Challenge E2E Suite › daily review with no due verbs shows a toast instead of opening
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:24] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[10/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:25] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  1) [chromium] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://localhost:9012/verbs.html", waiting until "load"
+
+
+      382 |     test('daily review with due verbs serves recognition then production tracks', async ({ page }) => {
+      383 |         // seed one recognized verb with a due SRS review date
+    > 384 |         await page.goto('/verbs.html');
+          |                    ^
+      385 |         await page.evaluate((key) => {
+      386 |             const seeded = {
+      387 |                 verbLearning: {
+        at /home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:384:20
+
+    Error Context: test-results/verb-guided-challenge-Guid-f9e99-tion-then-production-tracks-chromium/error-context.md
+
+
+
+(node:4276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:428:9 › Guided Challenge E2E Suite › no browser console errors during the guided flow
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/tts.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:55] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:56] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[12/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:445:9 › Guided Challenge E2E Suite › verbLearning mastery is committed only when a whole phase wins
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:01:57] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[13/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:517:9 › Guided Challenge E2E Suite › GC-01: independent review track ordering and no skipped production when track lengths match
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:03] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:04] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:04] "GET /verbs.html HTTP/1.1" 304 -
+[14/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:06] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  2) [chromium] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://localhost:9012/verbs.html", waiting until "load"
+
+
+      571 |
+      572 |         // Phase 1: Write legacy progress with aliases in BOTH knownVerbIds and verbLearning.verbs
+    > 573 |         await page.goto('/verbs.html');
+          |                    ^
+      574 |         await page.evaluate((key) => {
+      575 |             const legacy = {
+      576 |                 _ownerUid: 't3-profile',
+        at /home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:573:20
+
+    Error Context: test-results/verb-guided-challenge-Guid-3a9d5-ough-real-loading-lifecycle-chromium/error-context.md
+
+
+
+(node:4454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:712:9 › Guided Challenge E2E Suite › GC-06: double reveal does not wipe or replace frozen recall latency
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:37] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:41] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[16/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:42] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:43] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:43] "GET /verbs.html HTTP/1.1" 304 -
+[17/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:771:9 › Guided Challenge E2E Suite › GC-08: one terminal review outcome applies to exactly one SRS track, once, and completion needs every due card
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:44] "GET /verbs.html HTTP/1.1" 304 -
+[18/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:837:9 › Guided Challenge E2E Suite › GC-09: two click attempts on the same grade button apply exactly one grade
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:46] "GET /verbs.html HTTP/1.1" 304 -
+[19/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:942:9 › Guided Challenge E2E Suite › GC-11: two click attempts on the same Intro button introduce exactly one card
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:47] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[20/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:48] "GET /verbs.html HTTP/1.1" 304 -
+[21/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/tts.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:50] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:51] "GET /verbs.html HTTP/1.1" 304 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:52] "GET /verbs.html HTTP/1.1" 304 -
+[22/27] [chromium] › tests/e2e/verb-guided-challenge.spec.js:1265:9 › Guided Challenge E2E Suite › R3: Guided Challenge (learning) still keeps Restart and works end-to-end
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:53] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[23/27] [chromium] › tests/e2e/verbs.spec.js:9:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should recycle Still Learning card to the end of queue and advance to next card
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:54] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[24/27] [chromium] › tests/e2e/verbs.spec.js:24:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should pronounce example sentence when clicking on German sentence text in List View
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:02:59] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:01] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[25/27] [chromium] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:02] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[26/27] [chromium] › tests/e2e/verbs.spec.js:69:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should start Auto-Play from a specific row when clicking play button ▶
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[27/27] [chromium] › tests/e2e/verbs.spec.js:86:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should toggle Favorites Only mode in Flashcards view
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:03] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+  2 failed
+    [chromium] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks
+    [chromium] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle
+  25 passed (2.1m)

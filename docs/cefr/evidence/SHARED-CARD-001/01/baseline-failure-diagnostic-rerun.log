@@ -1,0 +1,98 @@
+
+Running 2 tests using 1 worker
+
+
+(node:4966) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [chromium] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:37] "GET /verbs.html HTTP/1.1" 304 -
+[2/2] [chromium] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:38] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:39] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+  2 passed (4.0s)

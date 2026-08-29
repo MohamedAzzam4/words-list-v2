@@ -1,0 +1,43 @@
+
+Running 1 test using 1 worker
+
+
+(node:12125) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:47] "GET /verbs.html HTTP/1.1" 304 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:17:49] "GET /verbs.html HTTP/1.1" 304 -
+  1 passed (3.2s)

@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Based on the screenshot of the German flashcard app on a mobile viewport:\n\n1.  **Horizontal Overflow:** **No.** There is no content cut off at the left or right edges. All elements, including the header (menu icon, progress bar, \"Local Mode\" button, and theme toggle), dropdowns, and the main card container, are fully contained within the viewport width with appropriate padding.\n2.  **Button/Toggle Usability:** **Yes.** All visible interactive elements are fully within the screen and appear to have sufficient touch targets. This includes the \"Back to List\" button, the \"Front\" and \"Review Scope\" dropdowns, the \"Shuffle: OFF\" toggle, the speaker and star icons on the card, and the bottom action buttons (\"Still Learning\" / \"Known\"). The \"Achievement Unlocked\" toast notification is also fully visible and does not obstruct critical controls.\n3.  **Card Layout Stacking:** **Yes.** The layout stacks correctly for a narrow screen. The card content is arranged in a single vertical column:\n    *   Header row (stars, audio, favorite).\n    *   Definition fields (Infinitive, Meaning, Participle, Auxiliary) stacked vertically.\n    *   \"Example Sentences\" block at the bottom.\n    Text wraps properly within the card's boundaries without breaking the layout.\n4.  **Layout Defects:** **None observed.** The UI is clean and well-structured. The \"Achievement Unlocked\" popup is an overlay that correctly sits on top of the content without causing underlying layout shifts or horizontal scrolling. The spacing is consistent, and all text is legible.\n\n**Summary:** The app appears to be fully responsive and well-optimized for this mobile viewport size.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1787966426,
+  "id": "20260829092022a6953890cef8473d",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260829092022a6953890cef8473d",
+  "usage": {
+    "completion_tokens": 363,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2971,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 3334
+  }
+}

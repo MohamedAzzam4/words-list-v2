@@ -1,0 +1,286 @@
+{
+  "totalVerbs": 8,
+  "totalDecks": 1,
+  "deckSize": 8,
+  "decks": [
+    {
+      "deckId": 1,
+      "title": "Deck 1 (SHARED-CARD-001 reference fixtures)",
+      "count": 8,
+      "verbs": [
+        {
+          "id": "v_ref_machen",
+          "index": 1,
+          "infinitive": "machen",
+          "meaning": "to make, to do",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "machen",
+            "rootMeaning": "to make, to do",
+            "combinedLogic": "Base verb 'machen'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "gemacht",
+            "present3rd": "er/sie/es macht",
+            "past3rd": "er/sie/es machte",
+            "present": { "ich": "mache", "du": "machst", "er_sie_es": "macht", "wir": "machen", "ihr": "macht", "sie_Sie": "machen" },
+            "past": { "ich": "machte", "du": "machtest", "er_sie_es": "machte", "wir": "machten", "ihr": "machtet", "sie_Sie": "machten" },
+            "future": { "ich": "werde machen", "du": "wirst machen", "er_sie_es": "wird machen", "wir": "werden machen", "ihr": "werdet machen", "sie_Sie": "werden machen" }
+          },
+          "exampleDe": "Ich mache die Hausaufgaben. | Er macht das Fenster auf. | Wir haben Kuchen gemacht.",
+          "exampleEn": "I do the homework. (Präsens) | He opens the window. (Präteritum) | We made cake. (Partizip II)",
+          "exampleFull": "Ich mache die Hausaufgaben. | Er macht das Fenster auf. | Wir haben Kuchen gemacht.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "machen",
+            "rootMeaning": "to make, to do",
+            "combinedLogic": "Base verb 'machen'."
+          },
+          "tags": ["ref-base", "regular"]
+        },
+        {
+          "id": "v_ref_sagen",
+          "index": 2,
+          "infinitive": "sagen",
+          "meaning": "to say, to tell",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "sagen",
+            "rootMeaning": "to say, to tell",
+            "combinedLogic": "Base verb 'sagen'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "gesagt",
+            "present3rd": "er/sie/es sagt",
+            "past3rd": "er/sie/es sagte",
+            "present": { "ich": "sage", "du": "sagst", "er_sie_es": "sagt", "wir": "sagen", "ihr": "sagt", "sie_Sie": "sagen" },
+            "past": { "ich": "sagte", "du": "sagtest", "er_sie_es": "sagte", "wir": "sagten", "ihr": "sagtet", "sie_Sie": "sagten" },
+            "future": { "ich": "werde sagen", "du": "wirst sagen", "er_sie_es": "wird sagen", "wir": "werden sagen", "ihr": "werdet sagen", "sie_Sie": "werden sagen" }
+          },
+          "exampleDe": "Sie sagt die Wahrheit.",
+          "exampleEn": "She tells the truth.",
+          "exampleFull": "Sie sagt die Wahrheit.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "sagen",
+            "rootMeaning": "to say, to tell",
+            "combinedLogic": "Base verb 'sagen'."
+          },
+          "tags": ["ref-single-example", "regular"]
+        },
+        {
+          "id": "v_ref_koppeln",
+          "index": 3,
+          "infinitive": "koppeln",
+          "meaning": "to link, to couple",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "koppeln",
+            "rootMeaning": "to link, to couple",
+            "combinedLogic": "Base verb 'koppeln'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "gekoppelt",
+            "present3rd": "er/sie/es koppelt",
+            "past3rd": "er/sie/es koppelte",
+            "present": { "ich": "kopple", "du": "koppelst", "er_sie_es": "koppelt", "wir": "koppeln", "ihr": "koppelt", "sie_Sie": "koppeln" },
+            "past": { "ich": "koppelte", "du": "koppeltest", "er_sie_es": "koppelte", "wir": "koppelten", "ihr": "koppeltet", "sie_Sie": "koppelten" },
+            "future": { "ich": "werde koppeln", "du": "wirst koppeln", "er_sie_es": "wird koppeln", "wir": "werden koppeln", "ihr": "werdet koppeln", "sie_Sie": "werden koppeln" }
+          },
+          "exampleDe": "",
+          "exampleEn": "",
+          "exampleFull": "",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "koppeln",
+            "rootMeaning": "to link, to couple",
+            "combinedLogic": "Base verb 'koppeln'."
+          },
+          "tags": ["ref-no-example", "regular"]
+        },
+        {
+          "id": "v_ref_gruebeln",
+          "index": 4,
+          "infinitive": "grübeln",
+          "meaning": "to ponder, to brood",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "grübeln",
+            "rootMeaning": "to ponder, to brood",
+            "combinedLogic": "Base verb 'grübeln'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "gegrübelt",
+            "present3rd": "er/sie/es grübelt",
+            "past3rd": "er/sie/es grübelte",
+            "present": { "ich": "grüble", "du": "grübelst", "er_sie_es": "grübelt", "wir": "grübeln", "ihr": "grübelt", "sie_Sie": "grübeln" },
+            "past": { "ich": "grübelte", "du": "grübeltest", "er_sie_es": "grübelte", "wir": "grübelten", "ihr": "grübeltet", "sie_Sie": "grübelten" },
+            "future": { "ich": "werde grübeln", "du": "wirst grübeln", "er_sie_es": "wird grübeln", "wir": "werden grübeln", "ihr": "werdet grübeln", "sie_Sie": "werden grübeln" }
+          },
+          "exampleDe": "Ich grüble über die Frage.",
+          "exampleEn": "",
+          "exampleFull": "Ich grüble über die Frage.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "grübeln",
+            "rootMeaning": "to ponder, to brood",
+            "combinedLogic": "Base verb 'grübeln'."
+          },
+          "tags": ["ref-de-only-example", "regular"]
+        },
+        {
+          "id": "v_ref_aufwachen",
+          "index": 5,
+          "infinitive": "aufwachen",
+          "meaning": "to wake up",
+          "prefixInfo": {
+            "isSeparable": true,
+            "prefix": "auf",
+            "prefixMeaning": "up",
+            "rootVerb": "wachen",
+            "rootMeaning": "to be awake, to watch",
+            "combinedLogic": "'auf' (up) + 'wachen' (to be awake) = to wake up."
+          },
+          "conjugation": {
+            "auxiliary": "sein",
+            "participle": "aufgewacht",
+            "present3rd": "er/sie/es wacht auf",
+            "past3rd": "er/sie/es wachte auf",
+            "present": { "ich": "wache auf", "du": "wachst auf", "er_sie_es": "wacht auf", "wir": "wachen auf", "ihr": "wacht auf", "sie_Sie": "wachen auf" },
+            "past": { "ich": "wachte auf", "du": "wachtest auf", "er_sie_es": "wachte auf", "wir": "wachten auf", "ihr": "wachtet auf", "sie_Sie": "wachten auf" },
+            "future": { "ich": "werde aufwachen", "du": "wirst aufwachen", "er_sie_es": "wird aufwachen", "wir": "werden aufwachen", "ihr": "werdet aufwachen", "sie_Sie": "werden aufwachen" }
+          },
+          "exampleDe": "Ich wache um sieben auf. | Er ist früh aufgewacht.",
+          "exampleEn": "I wake up at seven. (Präsens) | He woke up early. (Partizip II)",
+          "exampleFull": "Ich wache um sieben auf. | Er ist früh aufgewacht.",
+          "origins": {
+            "prefix": "auf",
+            "prefixMeaning": "up",
+            "rootVerb": "wachen",
+            "rootMeaning": "to be awake, to watch",
+            "combinedLogic": "'auf' (up) + 'wachen' (to be awake) = to wake up."
+          },
+          "tags": ["ref-separable", "regular"]
+        },
+        {
+          "id": "v_ref_lernen",
+          "index": 6,
+          "infinitive": "lernen",
+          "meaning": "to learn, to study",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "lernen",
+            "rootMeaning": "to learn, to study",
+            "combinedLogic": "Base verb 'lernen'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "gelernt",
+            "present3rd": "er/sie/es lernt",
+            "past3rd": "er/sie/es lernte",
+            "present": { "ich": "lerne", "du": "lernst", "er_sie_es": "lernt", "wir": "lernen", "ihr": "lernt", "sie_Sie": "lernen" },
+            "past": { "ich": "lernte", "du": "lerntest", "er_sie_es": "lernte", "wir": "lernten", "ihr": "lerntet", "sie_Sie": "lernten" },
+            "future": { "ich": "werde lernen", "du": "wirst lernen", "er_sie_es": "wird lernen", "wir": "werden lernen", "ihr": "werdet lernen", "sie_Sie": "werden lernen" }
+          },
+          "exampleDe": "Wir lernen jeden Tag Deutsch. | Sie hat schnell gelernt.",
+          "exampleEn": "We learn German every day. (Präsens) | She learned quickly. (Partizip II)",
+          "exampleFull": "Wir lernen jeden Tag Deutsch. | Sie hat schnell gelernt.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "lernen",
+            "rootMeaning": "to learn, to study",
+            "combinedLogic": "Base verb 'lernen'."
+          },
+          "tags": ["ref-multi-example", "regular"]
+        },
+        {
+          "id": "v_ref_trinken",
+          "index": 7,
+          "infinitive": "trinken",
+          "meaning": "to drink",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "trinken",
+            "rootMeaning": "to drink",
+            "combinedLogic": "Base verb 'trinken'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "getrunken",
+            "present3rd": "er/sie/es trinkt",
+            "past3rd": "er/sie/es trank",
+            "present": { "ich": "trinke", "du": "trinkst", "er_sie_es": "trinkt", "wir": "trinken", "ihr": "trinkt", "sie_Sie": "trinken" },
+            "past": { "ich": "trank", "du": "trankst", "er_sie_es": "trank", "wir": "tranken", "ihr": "trankt", "sie_Sie": "tranken" },
+            "future": { "ich": "werde trinken", "du": "wirst trinken", "er_sie_es": "wird trinken", "wir": "werden trinken", "ihr": "werdet trinken", "sie_Sie": "werden trinken" }
+          },
+          "exampleDe": "Er trinkt einen Kaffee.",
+          "exampleEn": "He drinks a coffee.",
+          "exampleFull": "Er trinkt einen Kaffee.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "trinken",
+            "rootMeaning": "to drink",
+            "combinedLogic": "Base verb 'trinken'."
+          },
+          "tags": ["ref-single-example", "irregular"]
+        },
+        {
+          "id": "v_ref_schlafen",
+          "index": 8,
+          "infinitive": "schlafen",
+          "meaning": "to sleep",
+          "prefixInfo": {
+            "isSeparable": false,
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "schlafen",
+            "rootMeaning": "to sleep",
+            "combinedLogic": "Base verb 'schlafen'."
+          },
+          "conjugation": {
+            "auxiliary": "haben",
+            "participle": "geschlafen",
+            "present3rd": "er/sie/es schläft",
+            "past3rd": "er/sie/es schlief",
+            "present": { "ich": "schlafe", "du": "schläfst", "er_sie_es": "schläft", "wir": "schlafen", "ihr": "schlaft", "sie_Sie": "schlafen" },
+            "past": { "ich": "schlief", "du": "schliefst", "er_sie_es": "schlief", "wir": "schliefen", "ihr": "schlieft", "sie_Sie": "schliefen" },
+            "future": { "ich": "werde schlafen", "du": "wirst schlafen", "er_sie_es": "wird schlafen", "wir": "werden schlafen", "ihr": "werdet schlafen", "sie_Sie": "werden schlafen" }
+          },
+          "exampleDe": "Das Kind schläft jetzt. | Ich habe gut geschlafen.",
+          "exampleEn": "The child is sleeping now. (Präsens) | I slept well. (Partizip II)",
+          "exampleFull": "Das Kind schläft jetzt. | Ich habe gut geschlafen.",
+          "origins": {
+            "prefix": null,
+            "prefixMeaning": null,
+            "rootVerb": "schlafen",
+            "rootMeaning": "to sleep",
+            "combinedLogic": "Base verb 'schlafen'."
+          },
+          "tags": ["ref-multi-example", "irregular"]
+        }
+      ]
+    }
+  ]
+}

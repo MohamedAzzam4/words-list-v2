@@ -1,0 +1,1258 @@
+
+Running 35 tests using 1 worker
+
+
+(node:5143) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:283:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-01: ordinary card shell, front/back faces and below-card controls
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:50] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[2/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:313:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:03:51] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  1) [chromium] › tests/e2e/cefr-card-reference.spec.js:313:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('.verb-flashcard .verb-center-content')
+        - locator resolved to <div class="verb-center-content">…</div>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+          - waiting 100ms
+        - waiting for element to be visible, enabled and stable
+        - element is not stable
+      55 × retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <div class="back-example-box">…</div> from <div class="verb-card-back">…</div> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+      324 |         await expect(page.locator('.verb-card-back')).toContainText('gemacht');
+      325 |
+    > 326 |         await page.locator('.verb-flashcard .verb-center-content').click();
+          |                                                                    ^
+      327 |         await expect(page.locator('.verb-flashcard')).not.toHaveClass(/flipped/);
+      328 |         const state = await readCardState(page);
+      329 |         expect(state.index).toBe(0);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:326:68
+
+    Error Context: test-results/cefr-card-reference-SHARED-ad19b-t-to-back-and-back-to-front-chromium/error-context.md
+
+
+
+(node:5255) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:333:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-03 (finding SC-02): default back shows ALL German examples and hides translations behind the EN chip
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:22] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[4/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:363:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-04: single-example verb shows exactly that example and translation
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:25] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[5/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:380:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state)
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:27] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  2) [chromium] › tests/e2e/cefr-card-reference.spec.js:380:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state)
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.ex-sentence-span')
+    Expected: 0
+    Received: 12
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.ex-sentence-span')
+        14 × locator resolved to 12 elements
+           - unexpected value "12"
+
+
+      389 |         await flipToBack(page);
+      390 |         await expect(page.locator('.back-example-box')).toHaveCount(0);
+    > 391 |         await expect(page.locator('.ex-sentence-span')).toHaveCount(0);
+          |                                                         ^
+      392 |         await expect(page.locator('.ex-en-chip')).toHaveCount(0);
+      393 |         // No stale text from the previous card's example may survive
+      394 |         await expect(page.locator('.verb-card-back')).not.toContainText('Hausaufgaben');
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:391:57
+
+    Error Context: test-results/cefr-card-reference-SHARED-7a9f0-tent-safe-no-example-state--chromium/error-context.md
+
+
+
+(node:5401) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:402:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-06: German-only example verb shows the example but no EN chip
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:35] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[7/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:419:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-07: example-direction backs lead with the first example and its full translation
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[8/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:437:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction states the absence explicitly
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:39] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  3) [chromium] › tests/e2e/cefr-card-reference.spec.js:437:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction states the absence explicitly
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.ex-sentence-span')
+    Expected: 0
+    Received: 12
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.ex-sentence-span')
+        14 × locator resolved to 12 elements
+           - unexpected value "12"
+
+
+      447 |         await expect(page.locator('.back-example-priority-box'))
+      448 |             .toContainText('No example sentence available for this verb.');
+    > 449 |         await expect(page.locator('.ex-sentence-span')).toHaveCount(0);
+          |                                                         ^
+      450 |     });
+      451 |
+      452 |     test('CHAR-09 (finding SC-01): en-to-de front hides the German answer visually but keeps it in the DOM and speaks it', async ({ page }) => {
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:449:57
+
+    Error Context: test-results/cefr-card-reference-SHARED-2bc25-ates-the-absence-explicitly-chromium/error-context.md
+
+
+
+(node:5545) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:452:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09 (finding SC-01): en-to-de front hides the German answer visually but keeps it in the DOM and speaks it
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:54] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[10/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:487:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:55] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  4) [chromium] › tests/e2e/cefr-card-reference.spec.js:487:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "v_ref_machen",
+    +   "machen",
+      ]
+
+      495 |
+      496 |         const state = await readCardState(page);
+    > 497 |         expect(state.favorites).toEqual(['v_ref_machen']);
+          |                                 ^
+      498 |         expect(state.flipped).toBe(false);
+      499 |         expect(state.index).toBe(0);
+      500 |         expect(state.known).toEqual([]);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:497:33
+
+    Error Context: test-results/cefr-card-reference-SHARED-77169-s-not-flip-grade-or-advance-chromium/error-context.md
+
+
+
+(node:5672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:513:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:04:56] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  5) [chromium] › tests/e2e/cefr-card-reference.spec.js:513:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Array [
+        "v_ref_machen",
+    +   "machen",
+      ]
+
+      524 |         expect(state.index).toBe(0);
+      525 |         expect(state.known).toEqual([]);
+    > 526 |         expect(state.favorites).toEqual(['v_ref_machen']);
+          |                                 ^
+      527 |         // No speech side effect from a favorite click
+      528 |         const calls = await page.evaluate(() => window.__ttsCalls);
+      529 |         expect(calls).toHaveLength(0);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:526:33
+
+    Error Context: test-results/cefr-card-reference-SHARED-f460f-d-changes-only-the-favorite-chromium/error-context.md
+
+
+
+(node:5763) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:532:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-12 (TARGET, AC-08): revealed-back controls never flip, grade, or advance the card
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:02] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[13/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:573:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-13: grade controls are the only card actions that grade and advance (by design)
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:04] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[14/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:596:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14 (finding SC-06): the flip card has no keyboard activation — Enter and Space do nothing
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[15/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:625:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-15 (finding SC-03): primary card targets measure below the 44x44 minimum
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:05] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[16/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:644:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (finding SC-04): focused card controls show no visible focus outline
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:06] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  6) [chromium] › tests/e2e/cefr-card-reference.spec.js:644:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (finding SC-04): focused card controls show no visible focus outline
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "0px"
+    Received: "3px"
+
+      674 |             // no :focus-visible replacement for card controls (SC-04).
+      675 |             expect(info.outlineStyle).toBe('none');
+    > 676 |             expect(info.outlineWidth).toBe('0px');
+          |                                       ^
+      677 |         }
+      678 |     });
+      679 |
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:676:39
+
+    Error Context: test-results/cefr-card-reference-SHARED-34cc7-ow-no-visible-focus-outline-chromium/error-context.md
+
+
+
+(node:5958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:680:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-17 (finding SC-05): reduced-motion preference does not reduce the flip transition
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:07] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[18/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:719:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-18 (TARGET, AC-09): no horizontal overflow at the current viewport with a content-heavy back
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:09] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[19/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:749:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-19 (TARGET): real modules boot with a clean console and a live engine export
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:10] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[20/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:769:9 › SHARED-CARD-001 ordinary card reference — real published dataset › CHAR-20: real deck 1 renders the reference shell and first example set on the back
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[21/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (finding SC-07): guided card is a separate shell, not the ordinary flashcard
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:11] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:12] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:12] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:12] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:12] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:12] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+  7) [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (finding SC-07): guided card is a separate shell, not the ordinary flashcard
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.verb-flashcard')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.verb-flashcard')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      792 |         // implementation; GC-UI-001 targets the shared ordinary shell (SC-07).
+      793 |         await expect(page.locator('.guided-card')).toHaveCount(1);
+    > 794 |         await expect(page.locator('.verb-flashcard')).toHaveCount(0);
+          |                                                       ^
+      795 |         await expect(page.locator('.guided-label')).toHaveText('New Word');
+      796 |
+      797 |         // Intro card content boundaries: infinitive, meaning, first example pair
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:794:55
+
+    Error Context: test-results/cefr-card-reference-SHARED-cfb29--not-the-ordinary-flashcard-chromium/error-context.md
+
+
+
+(node:6152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[22/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:811:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-22 (finding SC-07): guided reveal is a button action, and card-body clicks do nothing
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:18] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[23/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:840:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-23 (TARGET, GC-UI-005 analog): German-front recall keeps the English answer out of the DOM until reveal
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:19] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[24/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:865:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:20] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  8) [chromium] › tests/e2e/cefr-card-reference.spec.js:865:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 18
+
+    - Array []
+    + Array [
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:SPAN:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:style",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:DIV:class",
+    +   "attr:BUTTON:class",
+    +   "attr:BUTTON:onclick",
+    +   "root-example",
+    + ]
+
+      893 |             return hits;
+      894 |         }, { infinitive: served.infinitive, exampleDe: served.exampleDe });
+    > 895 |         expect(sweep).toEqual([]);
+          |                       ^
+      896 |
+      897 |         await expect(page.locator('button:has-text("🔊 Listen")')).toHaveCount(0);
+      898 |
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:895:23
+
+    Error Context: test-results/cefr-card-reference-SHARED-20250-where-in-the-guided-subtree-chromium/error-context.md
+
+
+
+(node:6301) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[25/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:906:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-25 (TARGET, AC-08 analog): guided Listen speaks the served verb without grading or advancing
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:30] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[26/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:931:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26: guided controls are keyboard-operable — Enter and Space each activate the reveal button
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:31] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[27/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:953:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:32] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  9) [chromium] › tests/e2e/cefr-card-reference.spec.js:953:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 8
+    Received: 3
+
+      956 |
+      957 |         const intros = await clickIntrosCollecting(page);
+    > 958 |         expect(intros.length).toBe(8);
+          |                               ^
+      959 |
+      960 |         const byPrompt = Object.fromEntries(intros.map((i) => [i.prompt, i]));
+      961 |
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:958:31
+
+    Error Context: test-results/cefr-card-reference-SHARED-99869-th-correct-example-presence-chromium/error-context.md
+
+
+
+(node:6445) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[28/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:983:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-28 (TARGET, AC-09): guided view has no horizontal overflow at the current viewport
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/tts.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:33] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[29/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1010:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-01 TARGET: en-to-de card keeps the German answer out of the pre-reveal DOM and audio
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:35] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[30/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1021:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-02 TARGET: revealed back shows only the first example with its translation always visible
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:40] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[31/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1032:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[32/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1044:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-04 TARGET: keyboard focus on card controls is visibly indicated
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:46] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  10) [chromium] › tests/e2e/cefr-card-reference.spec.js:1044:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-04 TARGET: keyboard focus on card controls is visibly indicated
+
+    Expected to fail, but passed.
+
+
+
+(node:6644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[33/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1058:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-05 TARGET: reduced-motion preference disables the flip animation
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:47] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[34/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1070:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-06 TARGET: Enter and Space each flip the ordinary card (keyboard activation)
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:49] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[35/35] [chromium] › tests/e2e/cefr-card-reference.spec.js:1084:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 01:05:54] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  10 failed
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:313:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:380:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state)
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:437:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction states the absence explicitly
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:487:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:513:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:644:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (finding SC-04): focused card controls show no visible focus outline
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (finding SC-07): guided card is a separate shell, not the ordinary flashcard
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:865:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:953:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:1044:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-04 TARGET: keyboard focus on card controls is visibly indicated
+  25 passed (2.2m)

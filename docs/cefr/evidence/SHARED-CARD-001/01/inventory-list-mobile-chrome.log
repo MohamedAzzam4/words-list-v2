@@ -1,0 +1,37 @@
+Listing tests:
+  [Mobile Chrome] › cefr-card-reference.spec.js:349:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-01: ordinary card shell, front/back faces and below-card controls
+  [Mobile Chrome] › cefr-card-reference.spec.js:379:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front
+  [Mobile Chrome] › cefr-card-reference.spec.js:402:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-03 (finding SC-02): default back shows ALL German examples and hides translations behind the EN chip
+  [Mobile Chrome] › cefr-card-reference.spec.js:432:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-04: single-example verb shows exactly that example and translation
+  [Mobile Chrome] › cefr-card-reference.spec.js:449:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state)
+  [Mobile Chrome] › cefr-card-reference.spec.js:471:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-06: German-only example verb shows the example but no EN chip
+  [Mobile Chrome] › cefr-card-reference.spec.js:488:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-07: example-direction backs lead with the first example and its full translation
+  [Mobile Chrome] › cefr-card-reference.spec.js:506:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction states the absence explicitly
+  [Mobile Chrome] › cefr-card-reference.spec.js:521:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09 (finding SC-01): en-to-de front hides the German answer visually but keeps it in the DOM and speaks it
+  [Mobile Chrome] › cefr-card-reference.spec.js:556:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+  [Mobile Chrome] › cefr-card-reference.spec.js:584:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+  [Mobile Chrome] › cefr-card-reference.spec.js:604:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-12 (TARGET, AC-08): revealed-back controls never flip, grade, or advance the card
+  [Mobile Chrome] › cefr-card-reference.spec.js:645:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-13: grade controls are the only card actions that grade and advance (by design)
+  [Mobile Chrome] › cefr-card-reference.spec.js:668:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14 (finding SC-06): the flip card has no keyboard activation — Enter and Space do nothing
+  [Mobile Chrome] › cefr-card-reference.spec.js:697:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-15 (finding SC-03): primary card targets measure below the 44x44 minimum
+  [Mobile Chrome] › cefr-card-reference.spec.js:716:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (finding SC-04): focused card controls show no visible focus outline
+  [Mobile Chrome] › cefr-card-reference.spec.js:753:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-17 (finding SC-05): reduced-motion preference does not reduce the flip transition
+  [Mobile Chrome] › cefr-card-reference.spec.js:792:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-18 (TARGET, AC-09): no horizontal overflow at the current viewport with a content-heavy back
+  [Mobile Chrome] › cefr-card-reference.spec.js:822:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-19 (TARGET): real modules boot with a clean console and a live engine export
+  [Mobile Chrome] › cefr-card-reference.spec.js:842:9 › SHARED-CARD-001 ordinary card reference — real published dataset › CHAR-20: real deck 1 renders the reference shell and first example set on the back
+  [Mobile Chrome] › cefr-card-reference.spec.js:860:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (finding SC-07): guided card is a separate shell, not the ordinary flashcard
+  [Mobile Chrome] › cefr-card-reference.spec.js:891:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-22 (finding SC-07): guided reveal is a button action, and card-body clicks do nothing
+  [Mobile Chrome] › cefr-card-reference.spec.js:925:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-23 (TARGET, GC-UI-005 analog): German-front recall keeps the English answer out of the DOM until reveal
+  [Mobile Chrome] › cefr-card-reference.spec.js:950:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree
+  [Mobile Chrome] › cefr-card-reference.spec.js:1014:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-25 (TARGET, AC-08 analog): guided Listen speaks the served verb without grading or advancing
+  [Mobile Chrome] › cefr-card-reference.spec.js:1039:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26: guided controls are keyboard-operable — Enter and Space each activate the reveal button
+  [Mobile Chrome] › cefr-card-reference.spec.js:1063:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence
+  [Mobile Chrome] › cefr-card-reference.spec.js:1096:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-28 (TARGET, AC-09): guided view has no horizontal overflow at the current viewport
+  [Mobile Chrome] › cefr-card-reference.spec.js:1123:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-01 TARGET: en-to-de card keeps the German answer out of the pre-reveal DOM and audio
+  [Mobile Chrome] › cefr-card-reference.spec.js:1134:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-02 TARGET: revealed back shows only the first example with its translation always visible
+  [Mobile Chrome] › cefr-card-reference.spec.js:1145:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels
+  [Mobile Chrome] › cefr-card-reference.spec.js:1157:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-04 TARGET: keyboard focus on card controls is visibly indicated
+  [Mobile Chrome] › cefr-card-reference.spec.js:1173:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-05 TARGET: reduced-motion preference disables the flip animation
+  [Mobile Chrome] › cefr-card-reference.spec.js:1185:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-06 TARGET: Enter and Space each flip the ordinary card (keyboard activation)
+  [Mobile Chrome] › cefr-card-reference.spec.js:1199:10 › SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings) › SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)
+Total: 35 tests in 1 file

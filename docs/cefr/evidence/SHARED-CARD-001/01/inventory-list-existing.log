@@ -1,0 +1,29 @@
+Listing tests:
+  [chromium] › verb-guided-challenge.spec.js:137:9 › Guided Challenge E2E Suite › starts guided challenge and shows the acquisition phase with intro cards
+  [chromium] › verb-guided-challenge.spec.js:146:9 › Guided Challenge E2E Suite › keeps the hidden acquisition pool at eight or fewer verbs
+  [chromium] › verb-guided-challenge.spec.js:186:9 › Guided Challenge E2E Suite › forgot during acquisition never repeats immediately
+  [chromium] › verb-guided-challenge.spec.js:212:9 › Guided Challenge E2E Suite › recognition phase prompts German → English and ends with the First Win
+  [chromium] › verb-guided-challenge.spec.js:266:9 › Guided Challenge E2E Suite › production phase prompts English → German and ends with the Second Win
+  [chromium] › verb-guided-challenge.spec.js:315:9 › Guided Challenge E2E Suite › restart challenge explicitly resets the session
+  [chromium] › verb-guided-challenge.spec.js:331:9 › Guided Challenge E2E Suite › resumes the session after a refresh
+  [chromium] › verb-guided-challenge.spec.js:348:9 › Guided Challenge E2E Suite › legacy knownVerbIds aliases are migrated to canonical ids with a backup
+  [chromium] › verb-guided-challenge.spec.js:375:9 › Guided Challenge E2E Suite › daily review with no due verbs shows a toast instead of opening
+  [chromium] › verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks
+  [chromium] › verb-guided-challenge.spec.js:428:9 › Guided Challenge E2E Suite › no browser console errors during the guided flow
+  [chromium] › verb-guided-challenge.spec.js:445:9 › Guided Challenge E2E Suite › verbLearning mastery is committed only when a whole phase wins
+  [chromium] › verb-guided-challenge.spec.js:517:9 › Guided Challenge E2E Suite › GC-01: independent review track ordering and no skipped production when track lengths match
+  [chromium] › verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle
+  [chromium] › verb-guided-challenge.spec.js:712:9 › Guided Challenge E2E Suite › GC-06: double reveal does not wipe or replace frozen recall latency
+  [chromium] › verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion
+  [chromium] › verb-guided-challenge.spec.js:771:9 › Guided Challenge E2E Suite › GC-08: one terminal review outcome applies to exactly one SRS track, once, and completion needs every due card
+  [chromium] › verb-guided-challenge.spec.js:837:9 › Guided Challenge E2E Suite › GC-09: two click attempts on the same grade button apply exactly one grade
+  [chromium] › verb-guided-challenge.spec.js:942:9 › Guided Challenge E2E Suite › GC-11: two click attempts on the same Intro button introduce exactly one card
+  [chromium] › verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state
+  [chromium] › verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+  [chromium] › verb-guided-challenge.spec.js:1265:9 › Guided Challenge E2E Suite › R3: Guided Challenge (learning) still keeps Restart and works end-to-end
+  [chromium] › verbs.spec.js:9:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should recycle Still Learning card to the end of queue and advance to next card
+  [chromium] › verbs.spec.js:24:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should pronounce example sentence when clicking on German sentence text in List View
+  [chromium] › verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+  [chromium] › verbs.spec.js:69:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should start Auto-Play from a specific row when clicking play button ▶
+  [chromium] › verbs.spec.js:86:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should toggle Favorites Only mode in Flashcards view
+Total: 27 tests in 2 files
