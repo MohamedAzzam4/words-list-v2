@@ -1,0 +1,121 @@
+
+Running 2 tests using 1 worker
+
+
+(node:24956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /css/shared-card.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:52] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  1) [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      798 |         const state = await readCardState(page);
+      799 |         expect(state.favorites).toEqual(['v_ref_machen', 'machen']);
+    > 800 |         expect(state.flipped).toBe(false);
+          |                               ^
+      801 |         expect(state.index).toBe(0);
+      802 |         expect(state.known).toEqual([]);
+      803 |
+        at /home/z/my-project/mutation-copies/probe-57df256/tests/e2e/cefr-card-reference.spec.js:800:31
+
+    Error Context: test-results/cefr-card-reference-SHARED-77169-s-not-flip-grade-or-advance-chromium/error-context.md
+
+
+
+(node:25057) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/2] [chromium] › tests/e2e/cefr-card-reference.spec.js:815:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /verbs.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /css/shared-card.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/tts.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/utils.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [29/Aug/2026 21:30:54] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  2) [chromium] › tests/e2e/cefr-card-reference.spec.js:815:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('.verb-card-back [data-action="fav"]')
+    Expected: "⭐"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('.verb-card-back [data-action="fav"]')
+
+
+      820 |         const backFav = page.locator('.verb-card-back [data-action="fav"]');
+      821 |         await backFav.click();
+    > 822 |         await expect(backFav).toHaveText('⭐');
+          |                               ^
+      823 |
+      824 |         const state = await readCardState(page);
+      825 |         expect(state.flipped).toBe(true);
+        at /home/z/my-project/mutation-copies/probe-57df256/tests/e2e/cefr-card-reference.spec.js:822:31
+
+    Error Context: test-results/cefr-card-reference-SHARED-f460f-d-changes-only-the-favorite-chromium/error-context.md
+
+
+  2 failed
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:815:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite

@@ -1,0 +1,276 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/home/z/my-project/words-list-v2/node_modules/.bin/playwright",
+      "test",
+      "tests/e2e/cefr-card-reference.spec.js",
+      "--project=chromium",
+      "--grep",
+      "SC-01 TARGET \\(audio\\)|SC-02 TARGET|SC-07 TARGET",
+      "--reporter=json"
+    ],
+    "configFile": "/home/z/my-project/words-list-v2/playwright.config.js",
+    "rootDir": "/home/z/my-project/words-list-v2/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/z/my-project/words-list-v2/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/z/my-project/words-list-v2/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/z/my-project/words-list-v2/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/home/z/my-project/words-list-v2/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.1",
+    "workers": 1,
+    "webServer": {
+      "command": "python -m http.server 9012",
+      "port": 9012,
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "cefr-card-reference.spec.js",
+      "file": "cefr-card-reference.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "SHARED-CARD-001 reference vs approved LF/GC targets — expected failures (product findings)",
+          "file": "cefr-card-reference.spec.js",
+          "line": 1476,
+          "column": 6,
+          "specs": [
+            {
+              "title": "SC-02 TARGET: revealed back shows only the first example with its translation always visible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1527,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5627,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span').first()\nExpected: \u001b[32m\"Ich mache die Hausaufgaben.\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m💬 \u001b[27mIch mache die Hausaufgaben.\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span').first()\u001b[22m\n\u001b[2m    14 × locator resolved to <button type=\"button\" data-action=\"speak-text\" title=\"Click sentence to pronounce\" data-text=\"Ich mache die Hausaufgaben.\" class=\"ex-sentence-span card-affordance\">💬 Ich mache die Hausaufgaben.</button>\u001b[22m\n\u001b[2m       - unexpected value \"💬 Ich mache die Hausaufgaben.\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span').first()\nExpected: \u001b[32m\"Ich mache die Hausaufgaben.\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m💬 \u001b[27mIch mache die Hausaufgaben.\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span').first()\u001b[22m\n\u001b[2m    14 × locator resolved to <button type=\"button\" data-action=\"speak-text\" title=\"Click sentence to pronounce\" data-text=\"Ich mache die Hausaufgaben.\" class=\"ex-sentence-span card-affordance\">💬 Ich mache die Hausaufgaben.</button>\u001b[22m\n\u001b[2m       - unexpected value \"💬 Ich mache die Hausaufgaben.\"\u001b[22m\n\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1535:83",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 83,
+                          "line": 1535
+                        },
+                        "snippet": "  1533 |\n  1534 |         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);\n> 1535 |         await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('Ich mache die Hausaufgaben.');\n       |                                                                                   ^\n  1536 |         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();\n  1537 |         await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');\n  1538 |     });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 83,
+                            "line": 1535
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.back-example-box .ex-sentence-span').first()\nExpected: \u001b[32m\"Ich mache die Hausaufgaben.\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m💬 \u001b[27mIch mache die Hausaufgaben.\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.back-example-box .ex-sentence-span').first()\u001b[22m\n\u001b[2m    14 × locator resolved to <button type=\"button\" data-action=\"speak-text\" title=\"Click sentence to pronounce\" data-text=\"Ich mache die Hausaufgaben.\" class=\"ex-sentence-span card-affordance\">💬 Ich mache die Hausaufgaben.</button>\u001b[22m\n\u001b[2m       - unexpected value \"💬 Ich mache die Hausaufgaben.\"\u001b[22m\n\n\n  1533 |\n  1534 |         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);\n> 1535 |         await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('Ich mache die Hausaufgaben.');\n       |                                                                                   ^\n  1536 |         await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();\n  1537 |         await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');\n  1538 |     });\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1535:83"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T21:05:41.591Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1527,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-3e7eb--translation-always-visible-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 83,
+                        "line": 1535
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-4f6a997af66587bd2cb0",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1527,
+              "column": 10
+            },
+            {
+              "title": "SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "line": 1681,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "failed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 5519,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.guided-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.guided-card')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.guided-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.guided-card')\u001b[22m\n\n    at startGuided (/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:212:48)\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1683:9",
+                        "location": {
+                          "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                          "column": 48,
+                          "line": 212
+                        },
+                        "snippet": "  210 |     await page.locator('button:has-text(\"Guided Challenge\")').click();\n  211 |     await expect(page.locator('#view-guided')).toBeVisible();\n> 212 |     await expect(page.locator('.guided-card')).toBeVisible();\n      |                                                ^\n  213 | }\n  214 |\n  215 | // Deterministically wait for the guided card identity to change after a click."
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "column": 48,
+                            "line": 212
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.guided-card')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.guided-card')\u001b[22m\n\n\n  210 |     await page.locator('button:has-text(\"Guided Challenge\")').click();\n  211 |     await expect(page.locator('#view-guided')).toBeVisible();\n> 212 |     await expect(page.locator('.guided-card')).toBeVisible();\n      |                                                ^\n  213 | }\n  214 |\n  215 | // Deterministically wait for the guided card identity to change after a click.\n    at startGuided (/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:212:48)\n    at /home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js:1683:9"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-08-29T21:05:47.316Z",
+                      "annotations": [
+                        {
+                          "type": "fail",
+                          "location": {
+                            "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                            "line": 1681,
+                            "column": 10
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/z/my-project/words-list-v2/test-results/cefr-card-reference-SHARED-d75fd--flip-reveal-GC-UI-001-002--chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/z/my-project/words-list-v2/tests/e2e/cefr-card-reference.spec.js",
+                        "column": 48,
+                        "line": 212
+                      }
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c842eeea1f11758530a-44be1fe129d8e6ff9000",
+              "file": "cefr-card-reference.spec.js",
+              "line": 1681,
+              "column": 10
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-08-29T21:05:40.729Z",
+    "duration": 12170.53,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

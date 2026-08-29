@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "1) **Label and Main Text:** The label is **\"Meaning (English)\"** and the main text is **\"to make, to do\"**.\n2) **German Text:** No German text is visible on the card (the answer is hidden).\n3) **Topbar Controls:** Yes, the \"Get a hint\" button (top-left) and the star icon (top-right) are reasonably sized and do not overlap with each other or the card's content.\n4) **Layout Defects:** No layout defects are visible; all text is fully contained within its containers without any overflow, clipping, or overlapping elements.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1788039373,
+  "id": "2026083005361000bce615141344e5",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "2026083005361000bce615141344e5",
+  "usage": {
+    "completion_tokens": 131,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1532,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1663
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "Based on the visual evidence of the Guided Challenge card after the reveal:\n\n1.  **Yes**, the German answer (**aufwachen**) is visible in a highlighted area (displayed in large green text).\n2.  **Yes**, a German example sentence (\"Ich wache um sieben auf.\") and its English translation (\"(I wake up at seven.)\") are directly visible inside a framed \"EXAMPLE\" box without requiring any toggle.\n3.  The action buttons appearing below the card are **Listen** (with a speaker icon), **I knew it** (purple), and **I forgot** (red).\n4.  **Yes**, the card visually matches an ordinary flashcard back, featuring top bar sparkles (sparkle icons) and a clean, white, rounded-corner framed box.\n5.  **No**, there is no overflow, clipping, or overlap; all elements are neatly contained within their respective areas.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1788039407,
+  "id": "2026083005364505ddad9dc8154323",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "2026083005364505ddad9dc8154323",
+  "usage": {
+    "completion_tokens": 189,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1528,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1717
+  }
+}

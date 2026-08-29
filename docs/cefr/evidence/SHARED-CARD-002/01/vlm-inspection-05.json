@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "1) **Yes**, a visible focus indicator (a blue circular outline/ring) is present around the **speaker (🔊) button** in the top-right corner of the flashcard.\n2) **Yes**, the focused element is clearly distinguishable from unfocused controls (like the adjacent star icon or the \"Get a hint\" button) due to the prominent blue ring.\n3) **No**, there are no obvious layout defects; all elements appear properly aligned and spaced.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1788039419,
+  "id": "202608300536587becdb31c43b4390",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "202608300536587becdb31c43b4390",
+  "usage": {
+    "completion_tokens": 99,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1492,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1591
+  }
+}

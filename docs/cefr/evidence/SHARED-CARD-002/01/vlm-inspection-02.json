@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "1) Yes, the participle (gemacht) and auxiliary (haben) are visible.\n2) One German example sentence is shown, and its English translation is visible directly beneath it without a toggle chip.\n3) Yes, the accordion buttons for \"View Verb Origins & Prefix Logic\" and \"View Conjugation Tables\" are present and readable.\n4) No, there is no overflow, clipping, or overlap.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1788039383,
+  "id": "20260830053622d4a71dec1d464b4d",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260830053622d4a71dec1d464b4d",
+  "usage": {
+    "completion_tokens": 87,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 1515,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 1602
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "1) **Yes**, the card content fits the screen width without horizontal overflow or clipped text.\n2) **Yes**, both the example sentence (\"Ich mache die Hausaufgaben.\") and its translation (\"(I do the homework.)\") are fully readable.\n3) **Yes**, the grade/nav buttons at the bottom (e.g., \"Still Learning\", \"Know\") appear large enough for comfortable tapping.\n4) **Yes**, there is an overlap: the \"Achievement Unlocked!\" toast/notification is overlapping and partially obscuring the bottom of the example sentence box and the navigation buttons.",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1788039422,
+  "id": "20260830053700654a5c1391094cbf",
+  "model": "glm-5v-turbo",
+  "object": "chat.completion",
+  "request_id": "20260830053700654a5c1391094cbf",
+  "usage": {
+    "completion_tokens": 120,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "prompt_tokens": 2962,
+    "prompt_tokens_details": {
+      "cached_tokens": 2
+    },
+    "total_tokens": 3082
+  }
+}
