@@ -1,0 +1,133 @@
+
+Running 2 tests using 1 worker
+
+
+(node:1616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [chromium] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /index.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /level.html?level=a1 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:42] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+[2/2] [chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /index.html HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /level.html?level=a1 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /css/core.css HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:43] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /level.html?level=a1 HTTP/1.1" 304 -
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[WebServer] 127.0.0.1 - - [28/Aug/2026 23:22:44] "GET /level.html?level=a1 HTTP/1.1" 304 -
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+  2 passed (3.8s)
