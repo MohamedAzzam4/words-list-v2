@@ -1,0 +1,53 @@
+
+Running 1 test using 1 worker
+
+(node:22440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:554:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06) (893ms)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:554:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06)
+
+    Error: pre-reveal leaks (19 unique carriers): text:<root #view-flashcard> → "Hallo, ich bin Anna." | text:<root #view-flashcard> → "Hallo!" | text:<div.flashcard-container> → "Hallo, ich bin Anna." | text:<div.flashcard-container> → "Hallo!" | text:<div> → "Hallo, ich bin Anna." | text:<div> → "Hallo!" | text:<div.shared-card-block> → "Hallo, ich bin Anna." | text:<div.shared-card-block> → "Hallo!" | text:<div.verb-flashcard> → "Hallo, ich bin Anna." | text:<div.verb-flashcard> → "Hallo!" | text:<div.verb-card-back> → "Hallo, ich bin Anna." | text:<div.verb-card-back> → "Hallo!" | text:<div.verb-center-content> → "Hallo, ich bin Anna." | text:<div.verb-center-content> → "Hallo!" | text:<div.fc-card-term> → "Hallo!" | text:<div.back-example-box> → "Hallo, ich bin Anna." | text:<div.ex-text> → "Hallo, ich bin Anna." | text:<button.ex-sentence-span> → "Hallo, ich bin Anna." | attr:<button.ex-sentence-span>[data-text] → "Hallo, ich bin Anna."
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 21
+
+    - Array []
+    + Array [
+    +   "text:<root #view-flashcard> → \"Hallo, ich bin Anna.\"",
+    +   "text:<root #view-flashcard> → \"Hallo!\"",
+    +   "text:<div.flashcard-container> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.flashcard-container> → \"Hallo!\"",
+    +   "text:<div> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div> → \"Hallo!\"",
+    +   "text:<div.shared-card-block> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.shared-card-block> → \"Hallo!\"",
+    +   "text:<div.verb-flashcard> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.verb-flashcard> → \"Hallo!\"",
+    +   "text:<div.verb-card-back> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.verb-card-back> → \"Hallo!\"",
+    +   "text:<div.verb-center-content> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.verb-center-content> → \"Hallo!\"",
+    +   "text:<div.fc-card-term> → \"Hallo!\"",
+    +   "text:<div.back-example-box> → \"Hallo, ich bin Anna.\"",
+    +   "text:<div.ex-text> → \"Hallo, ich bin Anna.\"",
+    +   "text:<button.ex-sentence-span> → \"Hallo, ich bin Anna.\"",
+    +   "attr:<button.ex-sentence-span>[data-text] → \"Hallo, ich bin Anna.\"",
+    + ]
+
+      565 |         // and the German example before reveal.
+      566 |         const sweep = await sweepFlashcardView(page, ['Hallo, ich bin Anna.', 'Hallo!']);
+    > 567 |         expect(sweep.unique, `pre-reveal leaks (${sweep.uniqueCount} unique carriers): ${sweep.unique.join(' | ')}`).toEqual([]);
+          |                                                                                                                      ^
+      568 |
+      569 |         // The real accessibility tree exposes no German answer either.
+      570 |         const names = await axTreeNames(page);
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:567:118
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-6fd6c-tadata-before-reveal-AC-06--chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:554:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06)

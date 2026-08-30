@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+(node:23283) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:995:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English (6.2s)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:995:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('#fc-card-mount #fc-en')
+    Expected: "rtl"
+    Received: "ltr"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('#fc-card-mount #fc-en')
+        14 × locator resolved to <div dir="ltr" lang="en" id="fc-en" class="fc-card-term fc-card-answer">الكلمة</div>
+           - unexpected value "ltr"
+
+
+      1005 |         const answer = page.locator('#fc-card-mount #fc-en');
+      1006 |         await expect(answer).toHaveText('الكلمة');
+    > 1007 |         await expect(answer).toHaveAttribute('dir', 'rtl');
+           |                              ^
+      1008 |         await expect(answer).toHaveAttribute('lang', 'ar');
+      1009 |         expect(await answer.getAttribute('lang')).not.toBe('en');
+      1010 |
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:1007:30
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-97545-nd-is-never-labeled-English-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:995:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English

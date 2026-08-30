@@ -1,0 +1,20 @@
+
+Running 12 tests using 1 worker
+
+(node:20598) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/e2e/phrases-conversations.spec.js:86:7 › Phrases and Conversations E2E Suite › Load App, default tabs, and existing words behavior (979ms)
+  ✓   2 [chromium] › tests/e2e/phrases-conversations.spec.js:109:7 › Phrases and Conversations E2E Suite › Phrases Tab Rendering and Flashcards (2.8s)
+  ✓   3 [chromium] › tests/e2e/phrases-conversations.spec.js:146:7 › Phrases and Conversations E2E Suite › SpeechQueue Play All, Stop, and Navigation Cleanup (2.7s)
+  ✓   4 [chromium] › tests/e2e/phrases-conversations.spec.js:199:7 › Phrases and Conversations E2E Suite › Conversation clean text and Missing Content Graceful State (667ms)
+  ✓   5 [chromium] › tests/e2e/phrases-conversations.spec.js:234:7 › Phrases and Conversations E2E Suite › Phrases Hide and Guess Practice Controls (1.7s)
+  ✓   6 [chromium] › tests/e2e/phrases-conversations.spec.js:326:7 › Phrases and Conversations E2E Suite › Mobile viewport layout verification (52ms)
+  ✓   7 [chromium] › tests/e2e/phrases-conversations.spec.js:339:7 › Phrases and Conversations E2E Suite › Dashboard and Phrases tab progress stats model (1.0s)
+  -   8 [chromium] › tests/e2e/phrases-conversations.spec.js:407:7 › Phrases and Conversations E2E Suite › Mobile sidebar navigation works with real UI clicks
+  ✓   9 [chromium] › tests/e2e/phrases-conversations.spec.js:479:7 › Phrases and Conversations E2E Suite › SpeechQueue advances through multiple items correctly (2.0s)
+  ✓  10 [chromium] › tests/e2e/phrases-conversations.spec.js:513:7 › Phrases and Conversations E2E Suite › SpeechQueue stop during 250ms delay cancels correctly (1.4s)
+  ✓  11 [chromium] › tests/e2e/phrases-conversations.spec.js:545:7 › Phrases and Conversations E2E Suite › SpeechQueue rapid stop-and-restart works correctly (1.5s)
+  ✓  12 [chromium] › tests/e2e/phrases-conversations.spec.js:582:7 › Phrases and Conversations E2E Suite › SpeechQueue completes all items and fires onFinished (13.3s)
+
+  1 skipped
+  11 passed (29.3s)

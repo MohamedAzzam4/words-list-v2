@@ -1,0 +1,47 @@
+=== A1: 24 units, 711 cards ===
+translationLanguage: {"en":711,"ar":0,"mixed":0,"null":0,"other":0}
+exampleTranslationLanguage: {"en":711,"ar":0,"mixed":0,"null":0,"other":0}
+no exampleDe: 0, with exampleDe: 711, example w/o translation: 0, empty translation: 0
+  sample 1-0 [1] de="Hallo!" en="Hello!" tl=en exDe="Hallo, ich bin Anna." exTr="Hello, I am Anna." exTl=en
+  sample 1-1 [1] de="Guten Morgen!" en="Good morning!" tl=en exDe="Guten Morgen, Frau Müller!" exTr="Good morning, Mrs. Müller!" exTl=en
+  sample 1-2 [1] de="Guten Tag!" en="Good day!" tl=en exDe="Guten Tag, wie geht es Ihnen?" exTr="Good day, how are you?" exTl=en
+  [translationLanguage=en] 4 shown:
+    1-0 unit=1 de="Hallo!" en="Hello!" tl=en exDe="Hallo, ich bin Anna." exTr="Hello, I am Anna." exTl=en
+    1-1 unit=1 de="Guten Morgen!" en="Good morning!" tl=en exDe="Guten Morgen, Frau Müller!" exTr="Good morning, Mrs. Müller!" exTl=en
+    1-2 unit=1 de="Guten Tag!" en="Good day!" tl=en exDe="Guten Tag, wie geht es Ihnen?" exTr="Good day, how are you?" exTl=en
+    1-3 unit=1 de="Guten Abend!" en="Good evening!" tl=en exDe="Guten Abend, Herr Schmidt." exTr="Good evening, Mr. Schmidt." exTl=en
+  [translationLanguage=ar] 0 shown:
+  [translationLanguage=mixed] 0 shown:
+  [no exampleDe] 0 shown:
+  [ar translation with example] 0 shown:
+  [mixed with mixed example] 0 shown:
+  [example translation ar] 0 shown:
+=== B2: 70 units, 3031 cards ===
+translationLanguage: {"en":3,"ar":0,"mixed":3028,"null":0,"other":0}
+exampleTranslationLanguage: {"en":0,"ar":0,"mixed":2427,"null":604,"other":0}
+no exampleDe: 481, with exampleDe: 2550, example w/o translation: 123, empty translation: 0
+  sample 1-0 [1] de="die Vorstellung, -en" en="presentation,impression,idea / التصور / (فكرتي عن شي معين)" tl=mixed exDe="Meine Vorstellung von Heimat ist ein Ort, an dem ich geliebt und akzeptiert werde." exTr="My idea of home is a place where I am loved and accepted. / فكرتي/ تصوري عن المنزل هي المكان الذي أحبه وأقبله." exTl=mixed
+  sample 1-1 [1] de="das Zitat, -e" en="quote / الاقتباس" tl=mixed exDe="Dieses Zitat von Einstein ist sehr inspirierend." exTr="This quote from Einstein is very inspiring. / هذا الاقتباس من أينشتاين ملهم للغاية." exTl=mixed
+  sample 1-2 [1] de="das Fernweh (Sg.)" en="the wanderlust, / حب السفر والتجوال" tl=mixed exDe="Ich habe ein starkes Fernweh und möchte die Welt bereisen." exTr="I have a strong wanderlust and want to travel the world. / لدي شغف قوي بالتجول وأريد السفر حول العالم." exTl=mixed
+  [translationLanguage=en] 3 shown:
+    19-74 unit=19 de="die EDV (Sg.)" en="IT / edv" tl=en exDe="Ich bin für die EDV in unserer Firma zuständig." exTr="I am responsible for the IT in our company. / أنا مسؤول عن ت" exTl=mixed
+    45-18 unit=45 de="der Roboter, -" en="robot / robot" tl=en exDe="Der Roboter kann Aufgaben ausführen, die für Menschen zu gef" exTr="The robot can perform tasks that are too dangerous for human" exTl=mixed
+    47-11 unit=47 de="der Entdecker/in/die, -/-nen" en="the explorer / Explorer" tl=en exDe="Christopher Kolumbus ist ein bekannter Entdecker." exTr="Christopher Columbus is a famous explorer. / كريستوفر كولومب" exTl=mixed
+  [translationLanguage=ar] 0 shown:
+  [translationLanguage=mixed] 4 shown:
+    1-0 unit=1 de="die Vorstellung, -en" en="presentation,impression,idea / التصور / (فكرتي عن شي معين)" tl=mixed exDe="Meine Vorstellung von Heimat ist ein Ort, an dem ich geliebt" exTr="My idea of home is a place where I am loved and accepted. / " exTl=mixed
+    1-1 unit=1 de="das Zitat, -e" en="quote / الاقتباس" tl=mixed exDe="Dieses Zitat von Einstein ist sehr inspirierend." exTr="This quote from Einstein is very inspiring. / هذا الاقتباس م" exTl=mixed
+    1-2 unit=1 de="das Fernweh (Sg.)" en="the wanderlust, / حب السفر والتجوال" tl=mixed exDe="Ich habe ein starkes Fernweh und möchte die Welt bereisen." exTr="I have a strong wanderlust and want to travel the world. / ل" exTl=mixed
+    2-0 unit=2 de="der Grafiker/in/die, -/-nen" en="graphic artist / مصمم الجرافيك" tl=mixed exDe="Meine Schwester arbeitet als freiberufliche Grafikerin" exTr="My sister works as a freelance graphic designer / تعمل أختي " exTl=mixed
+  [no exampleDe] 4 shown:
+    69-0 unit=69 de="selbstständiger" en="independent / مستقل" tl=mixed exDe="" exTr="" exTl=null
+    69-1 unit=69 de="der Bach" en="stream / جدول مائي / تيار" tl=mixed exDe="" exTr="" exTl=null
+    69-2 unit=69 de="Schwindelgefühle" en="dizziness / دوار / دوخة" tl=mixed exDe="" exTr="" exTl=null
+    69-3 unit=69 de="die Bremse" en="brakes / فرامل" tl=mixed exDe="" exTr="" exTl=null
+  [ar translation with example] 0 shown:
+  [mixed with mixed example] 4 shown:
+    1-0 unit=1 de="die Vorstellung, -en" en="presentation,impression,idea / التصور / (فكرتي عن شي معين)" tl=mixed exDe="Meine Vorstellung von Heimat ist ein Ort, an dem ich geliebt" exTr="My idea of home is a place where I am loved and accepted. / " exTl=mixed
+    1-1 unit=1 de="das Zitat, -e" en="quote / الاقتباس" tl=mixed exDe="Dieses Zitat von Einstein ist sehr inspirierend." exTr="This quote from Einstein is very inspiring. / هذا الاقتباس م" exTl=mixed
+    1-2 unit=1 de="das Fernweh (Sg.)" en="the wanderlust, / حب السفر والتجوال" tl=mixed exDe="Ich habe ein starkes Fernweh und möchte die Welt bereisen." exTr="I have a strong wanderlust and want to travel the world. / ل" exTl=mixed
+    2-0 unit=2 de="der Grafiker/in/die, -/-nen" en="graphic artist / مصمم الجرافيك" tl=mixed exDe="Meine Schwester arbeitet als freiberufliche Grafikerin" exTr="My sister works as a freelance graphic designer / تعمل أختي " exTl=mixed
+  [example translation ar] 0 shown:

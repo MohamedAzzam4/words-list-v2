@@ -1,0 +1,459 @@
+
+Running 288 tests using 1 worker
+
+(node:12138) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓    1 [chromium] › tests/e2e/activity-streak.spec.js:76:7 › Learning Activity / Streak Tracker E2E Suite › marking a brand-new flashcard as Known records activity for today (1.1s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓    2 [chromium] › tests/e2e/activity-streak.spec.js:117:7 › Learning Activity / Streak Tracker E2E Suite › re-marking an already-known card does not double-count activity (957ms)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓    3 [chromium] › tests/e2e/activity-streak.spec.js:145:7 › Learning Activity / Streak Tracker E2E Suite › listening to 15+ words via TTS counts as a learning day without flashcards (793ms)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓    4 [chromium] › tests/e2e/activity-streak.spec.js:187:7 › Learning Activity / Streak Tracker E2E Suite › streak is preserved when today has no activity but yesterday does (541ms)
+  ✓    5 [chromium] › tests/e2e/cefr-card-reference.spec.js:548:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-01: ordinary card shell, front/back faces and below-card controls (448ms)
+  ✓    6 [chromium] › tests/e2e/cefr-card-reference.spec.js:582:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front (1.5s)
+  ✓    7 [chromium] › tests/e2e/cefr-card-reference.spec.js:605:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-03 (TARGET, SC-02 resolved): back shows ONLY the first example with its translation always visible (649ms)
+  ✓    8 [chromium] › tests/e2e/cefr-card-reference.spec.js:630:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-04: single-example verb shows exactly that example and translation (4.6s)
+  ✓    9 [chromium] › tests/e2e/cefr-card-reference.spec.js:647:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state) (4.8s)
+  ✓   10 [chromium] › tests/e2e/cefr-card-reference.spec.js:669:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-06: German-only example verb shows the example but no EN chip (5.1s)
+  ✓   11 [chromium] › tests/e2e/cefr-card-reference.spec.js:686:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-07 (TARGET, SC-02 resolved): example-direction backs show the first example with its always-visible translation (1.5s)
+  ✓   12 [chromium] › tests/e2e/cefr-card-reference.spec.js:712:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction renders no example box and no stale content (4.8s)
+  ✓   13 [chromium] › tests/e2e/cefr-card-reference.spec.js:732:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09 (TARGET, SC-01 resolved): en-to-de front carries no German answer in the DOM, metadata, or audio (453ms)
+  ✓   14 [chromium] › tests/e2e/cefr-card-reference.spec.js:769:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09b (TARGET, AC-06): after reveal the en-to-de back shows the German answer and the first example (598ms)
+  ✓   15 [chromium] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance (535ms)
+  ✓   16 [chromium] › tests/e2e/cefr-card-reference.spec.js:815:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite (1.4s)
+  ✓   17 [chromium] › tests/e2e/cefr-card-reference.spec.js:835:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-12 (TARGET, AC-08): revealed-back controls never flip, grade, or advance the card (1.5s)
+  ✓   18 [chromium] › tests/e2e/cefr-card-reference.spec.js:875:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-13: grade controls are the only card actions that grade and advance (by design) (1.0s)
+  ✓   19 [chromium] › tests/e2e/cefr-card-reference.spec.js:898:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14 (TARGET, SC-06 resolved): full keyboard traversal reaches every card control INCLUDING the flip surface (924ms)
+  ✓   20 [chromium] › tests/e2e/cefr-card-reference.spec.js:927:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14a (finding SC-06, Enter): with keyboard focus on a card control, Enter runs only that control — zero reveal transitions (816ms)
+  ✓   21 [chromium] › tests/e2e/cefr-card-reference.spec.js:972:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14b (finding SC-06, Space): with keyboard focus on a card control, Space runs only that control — zero reveal transitions (455ms)
+  ✓   22 [chromium] › tests/e2e/cefr-card-reference.spec.js:1009:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-15 (TARGET, SC-03 resolved): primary card touch targets are at least 44x44 CSS pixels (715ms)
+  ✓   23 [chromium] › tests/e2e/cefr-card-reference.spec.js:1034:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (TARGET, SC-04 resolved): keyboard-focused card controls match :focus-visible and paint a visible indicator (1.1s)
+  ✓   24 [chromium] › tests/e2e/cefr-card-reference.spec.js:1090:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-17 (TARGET, SC-05 resolved): reduced-motion preference disables the flip transition (529ms)
+  ✓   25 [chromium] › tests/e2e/cefr-card-reference.spec.js:1130:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-18 (TARGET, AC-09): no horizontal overflow at the current viewport with a content-heavy back (1.4s)
+  ✓   26 [chromium] › tests/e2e/cefr-card-reference.spec.js:1160:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-19 (TARGET): real modules boot with a clean console and a live engine export (594ms)
+  ✓   27 [chromium] › tests/e2e/cefr-card-reference.spec.js:1180:9 › SHARED-CARD-001 ordinary card reference — real published dataset › CHAR-20: real deck 1 renders the reference shell and the first example with its translation on the back (531ms)
+  ✓   28 [chromium] › tests/e2e/cefr-card-reference.spec.js:1201:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (TARGET, SC-07 resolved): guided intro uses the shared card shell with adapter-owned controls (718ms)
+  ✓   29 [chromium] › tests/e2e/cefr-card-reference.spec.js:1227:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-22 (TARGET, SC-07 resolved): guided recall uses the shared shell with tap-to-flip reveal (1.1s)
+  ✓   30 [chromium] › tests/e2e/cefr-card-reference.spec.js:1260:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-23 (TARGET, GC-UI-005 analog): German-front recall keeps the English answer out of the DOM until reveal (1.0s)
+  ✓   31 [chromium] › tests/e2e/cefr-card-reference.spec.js:1289:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree (9.7s)
+  ✓   32 [chromium] › tests/e2e/cefr-card-reference.spec.js:1364:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-25 (TARGET, AC-08 analog): guided Listen speaks the served verb without grading or advancing (1.2s)
+  ✓   33 [chromium] › tests/e2e/cefr-card-reference.spec.js:1389:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26a (TARGET, GC-UI-009): guided Enter — keyboard-navigated Reveal Answer reveals exactly once; duplicate Enter neither grades nor advances (1.2s)
+  ✓   34 [chromium] › tests/e2e/cefr-card-reference.spec.js:1426:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26b (TARGET, GC-UI-009): guided Space — keyboard-navigated Reveal Answer reveals exactly once; duplicate Space neither grades nor advances (1.0s)
+  ✓   35 [chromium] › tests/e2e/cefr-card-reference.spec.js:1457:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence (5.3s)
+  ✓   36 [chromium] › tests/e2e/cefr-card-reference.spec.js:1490:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-28 (TARGET, AC-09): guided view has no horizontal overflow at the current viewport (1.5s)
+  ✓   37 [chromium] › tests/e2e/cefr-card-reference.spec.js:1524:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere (460ms)
+  ✓   38 [chromium] › tests/e2e/cefr-card-reference.spec.js:1544:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-01 TARGET (audio secrecy): pre-reveal German-answer audio is unavailable in en-to-de mode (615ms)
+  ✓   39 [chromium] › tests/e2e/cefr-card-reference.spec.js:1574:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-02 TARGET: revealed back shows only the first example with its translation always visible (539ms)
+  ✓   40 [chromium] › tests/e2e/cefr-card-reference.spec.js:1589:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels (460ms)
+  ✓   41 [chromium] › tests/e2e/cefr-card-reference.spec.js:1607:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator (821ms)
+  ✓   42 [chromium] › tests/e2e/cefr-card-reference.spec.js:1642:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-05 TARGET: reduced-motion preference disables the flip animation (408ms)
+  ✓   43 [chromium] › tests/e2e/cefr-card-reference.spec.js:1656:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once (462ms)
+  ✓   44 [chromium] › tests/e2e/cefr-card-reference.spec.js:1695:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once (430ms)
+  ✓   45 [chromium] › tests/e2e/cefr-card-reference.spec.js:1730:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002) (1.2s)
+  ✓   46 [chromium] › tests/e2e/cefr-card-reference.spec.js:1750:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-SHELL: ordinary and Guided modes render the SAME core card shell (GC-TEST-009) (1.3s)
+  ✓   47 [chromium] › tests/e2e/cefr-card-reference.spec.js:1802:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-KEY-ENTER: guided card is keyboard-reachable; Enter reveals exactly once; duplicate Enter never grades or advances (1.1s)
+  ✓   48 [chromium] › tests/e2e/cefr-card-reference.spec.js:1836:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-KEY-SPACE: guided card Space reveals exactly once; duplicate Space never grades or advances (1.2s)
+  ✓   49 [chromium] › tests/e2e/cefr-card-reference.spec.js:1896:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names (518ms)
+  ✓   50 [chromium] › tests/e2e/cefr-card-reference.spec.js:1924:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-002 (SC2-C1-A11Y-002, ordinary): the inactive face is inert — unreachable by Tab, absent from the accessibility tree, restored on flip-back (1.2s)
+  ✓   51 [chromium] › tests/e2e/cefr-card-reference.spec.js:1987:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-002 (SC2-C1-A11Y-002, guided): the revealed guided back exposes its controls while the hidden front stays inert (1.2s)
+  ✓   52 [chromium] › tests/e2e/cefr-card-reference.spec.js:2005:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-003 (SC2-C1-A11Y-003): guided card semantics stay truthful — keyboard-reachable reveal, then no stale actionable reveal affordance (1.1s)
+  ✓   53 [chromium] › tests/e2e/cefr-card-reference.spec.js:2051:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-DESIGN-001 (SC2-C1-DESIGN-001): example translations render through the language-neutral line with direction metadata (1.4s)
+  ✓   54 [chromium] › tests/e2e/cefr-cards.spec.js:450:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SHELL: words flashcards render through the shared card shell with level-owned controls and no verbs deck (707ms)
+  ✓   55 [chromium] › tests/e2e/cefr-cards.spec.js:497:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05) (882ms)
+  ✓   56 [chromium] › tests/e2e/cefr-cards.spec.js:523:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FACES: German-front and translation-front behavior with safe language metadata (915ms)
+  ✓   57 [chromium] › tests/e2e/cefr-cards.spec.js:554:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06) (745ms)
+  ✓   58 [chromium] › tests/e2e/cefr-cards.spec.js:575:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-AUDIO: front speak never speaks the hidden German answer before reveal (1.7s)
+  ✓   59 [chromium] › tests/e2e/cefr-cards.spec.js:602:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FAV: favorite affordance — descriptive name, truthful aria-pressed, immediate and refreshed persistence, no flip or grade (1.6s)
+  ✓   60 [chromium] › tests/e2e/cefr-cards.spec.js:637:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog) (856ms)
+  ✓   61 [chromium] › tests/e2e/cefr-cards.spec.js:672:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-NAV: filters, shuffle toggle, previous/next navigation and the card counter (5.0s)
+  ✓   62 [chromium] › tests/e2e/cefr-cards.spec.js:707:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SESSION: session completion shows the finished state, records the session, and restart works (979ms)
+  ✓   63 [chromium] › tests/e2e/cefr-cards.spec.js:748:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-NOEX: no-example card renders no example box and no stale content from the previous card (4.9s)
+  ✓   64 [chromium] › tests/e2e/cefr-cards.spec.js:773:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-MULTI: multiple-example card shows exactly the first example (5.1s)
+  ✓   65 [chromium] › tests/e2e/cefr-cards.spec.js:788:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-EX-WO-TR: example without a translation shows the sentence only, never an empty line (4.9s)
+  ✓   66 [chromium] › tests/e2e/cefr-cards.spec.js:809:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05) (767ms)
+  ✓   67 [chromium] › tests/e2e/cefr-cards.spec.js:842:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label (788ms)
+  ✓   68 [chromium] › tests/e2e/cefr-cards.spec.js:875:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block (807ms)
+  ✓   69 [chromium] › tests/e2e/cefr-cards.spec.js:890:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only (1.1s)
+  ✓   70 [chromium] › tests/e2e/cefr-cards.spec.js:911:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06) (851ms)
+  ✓   71 [chromium] › tests/e2e/cefr-cards.spec.js:940:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only (874ms)
+  ✓   72 [chromium] › tests/e2e/cefr-cards.spec.js:964:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles (878ms)
+  ✓   73 [chromium] › tests/e2e/cefr-cards.spec.js:995:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English (797ms)
+  ✓   74 [chromium] › tests/e2e/cefr-cards.spec.js:1026:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only (4.8s)
+  ✓   75 [chromium] › tests/e2e/cefr-cards.spec.js:1051:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely (5.1s)
+  ✓   76 [chromium] › tests/e2e/cefr-cards.spec.js:1065:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language (5.2s)
+  ✓   77 [chromium] › tests/e2e/cefr-cards.spec.js:1097:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice (5.7s)
+  ✓   78 [chromium] › tests/e2e/cefr-cards.spec.js:1145:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-POINTER: pointer click flips front to back and back to front (AC-07) (1.7s)
+  ✓   79 [chromium] › tests/e2e/cefr-cards.spec.js:1159:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-ENTER: the card is keyboard-reachable and Enter flips it exactly once (796ms)
+  ✓   80 [chromium] › tests/e2e/cefr-cards.spec.js:1180:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-SPACE: Space flips the card exactly once and never scrolls the page (754ms)
+  ✓   81 [chromium] › tests/e2e/cefr-cards.spec.js:1194:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions (862ms)
+  ✓   82 [chromium] › tests/e2e/cefr-cards.spec.js:1214:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-GRADE-DOUBLE: keyboard Enter on Known grades exactly once — no duplicate write or double advance (978ms)
+  ✓   83 [chromium] › tests/e2e/cefr-cards.spec.js:1236:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-BACK-CONTROLS: revealed-back controls never flip, grade, or advance the card (AC-08) (1.9s)
+  ✓   84 [chromium] › tests/e2e/cefr-cards.spec.js:1274:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-INERT: only the displayed face is focusable and exposed — inert faces, AX-tree exclusion, flip-back restore (AC-09/SC2-C1 analog) (1.5s)
+  ✓   85 [chromium] › tests/e2e/cefr-cards.spec.js:1332:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-NAMES: icon-only card controls expose descriptive accessible names and truthful aria-pressed (870ms)
+  ✓   86 [chromium] › tests/e2e/cefr-cards.spec.js:1357:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09) (1.2s)
+  ✓   87 [chromium] › tests/e2e/cefr-cards.spec.js:1383:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09) (851ms)
+  ✓   88 [chromium] › tests/e2e/cefr-cards.spec.js:1401:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-REDUCED-MOTION: reduced-motion preference disables the flip transition but not the flip (544ms)
+  ✓   89 [chromium] › tests/e2e/cefr-cards.spec.js:1438:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-THEME: light and dark themes both render the card and keep the flip behavior (870ms)
+  ✓   90 [chromium] › tests/e2e/cefr-cards.spec.js:1460:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-OVERFLOW: no horizontal overflow on the front or the revealed mixed-content back (AC-09) (827ms)
+  ✓   91 [chromium] › tests/e2e/cefr-cards.spec.js:1483:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-CONSOLE: both level pages boot the shared card with a clean console (1.1s)
+  ✓   92 [chromium] › tests/e2e/cefr-cards.spec.js:1503:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASES-TAB: the Phrases tab still renders phrase cards (LF-NAV / AC-10) (489ms)
+  ✓   93 [chromium] › tests/e2e/cefr-cards.spec.js:1513:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASE-FLASHCARDS: phrase flashcards keep the legacy card behavior, grading and phrase counters (781ms)
+  ✓   94 [chromium] › tests/e2e/cefr-cards.spec.js:1543:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-CONVERSATION: the Conversation tab still renders scenes (523ms)
+  ✓   95 [chromium] › tests/e2e/cefr-cards.spec.js:1551:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-B2-MISSING: B2 phrases and conversation tabs show their configured empty states (689ms)
+  ✓   96 [chromium] › tests/e2e/cefr-cards.spec.js:1561:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10) (610ms)
+  ✓   97 [chromium] › tests/e2e/cefr-cards.spec.js:1588:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-MODE-SWAP: words and phrases flashcard modes swap their card DOM with no duplicate ids (1.1s)
+  ✓   98 [chromium] › tests/e2e/cefr-cards.spec.js:1627:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-A1-UNIT-SWITCH: A1 unit switching updates the card scope and grades the exact unit-2 ID (805ms)
+  ✓   99 [chromium] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites (1.0s)
+  ✓  100 [chromium] › tests/e2e/phrases-conversations.spec.js:86:7 › Phrases and Conversations E2E Suite › Load App, default tabs, and existing words behavior (1.1s)
+  ✓  101 [chromium] › tests/e2e/phrases-conversations.spec.js:109:7 › Phrases and Conversations E2E Suite › Phrases Tab Rendering and Flashcards (5.0s)
+  ✓  102 [chromium] › tests/e2e/phrases-conversations.spec.js:146:7 › Phrases and Conversations E2E Suite › SpeechQueue Play All, Stop, and Navigation Cleanup (2.8s)
+  ✓  103 [chromium] › tests/e2e/phrases-conversations.spec.js:199:7 › Phrases and Conversations E2E Suite › Conversation clean text and Missing Content Graceful State (725ms)
+  ✓  104 [chromium] › tests/e2e/phrases-conversations.spec.js:234:7 › Phrases and Conversations E2E Suite › Phrases Hide and Guess Practice Controls (1.6s)
+  ✓  105 [chromium] › tests/e2e/phrases-conversations.spec.js:326:7 › Phrases and Conversations E2E Suite › Mobile viewport layout verification (66ms)
+  ✓  106 [chromium] › tests/e2e/phrases-conversations.spec.js:339:7 › Phrases and Conversations E2E Suite › Dashboard and Phrases tab progress stats model (1.0s)
+  -  107 [chromium] › tests/e2e/phrases-conversations.spec.js:407:7 › Phrases and Conversations E2E Suite › Mobile sidebar navigation works with real UI clicks
+  ✓  108 [chromium] › tests/e2e/phrases-conversations.spec.js:479:7 › Phrases and Conversations E2E Suite › SpeechQueue advances through multiple items correctly (1.9s)
+  ✓  109 [chromium] › tests/e2e/phrases-conversations.spec.js:513:7 › Phrases and Conversations E2E Suite › SpeechQueue stop during 250ms delay cancels correctly (1.3s)
+  ✓  110 [chromium] › tests/e2e/phrases-conversations.spec.js:545:7 › Phrases and Conversations E2E Suite › SpeechQueue rapid stop-and-restart works correctly (1.2s)
+  ✓  111 [chromium] › tests/e2e/phrases-conversations.spec.js:582:7 › Phrases and Conversations E2E Suite › SpeechQueue completes all items and fires onFinished (13.3s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  112 [chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification (1.4s)
+  ✓  113 [chromium] › tests/e2e/verb-guided-challenge.spec.js:137:9 › Guided Challenge E2E Suite › starts guided challenge and shows the acquisition phase with intro cards (581ms)
+  ✓  114 [chromium] › tests/e2e/verb-guided-challenge.spec.js:146:9 › Guided Challenge E2E Suite › keeps the hidden acquisition pool at eight or fewer verbs (4.8s)
+  ✓  115 [chromium] › tests/e2e/verb-guided-challenge.spec.js:186:9 › Guided Challenge E2E Suite › forgot during acquisition never repeats immediately (2.6s)
+  ✓  116 [chromium] › tests/e2e/verb-guided-challenge.spec.js:212:9 › Guided Challenge E2E Suite › recognition phase prompts German → English and ends with the First Win (8.2s)
+  ✓  117 [chromium] › tests/e2e/verb-guided-challenge.spec.js:266:9 › Guided Challenge E2E Suite › production phase prompts English → German and ends with the Second Win (11.9s)
+  ✓  118 [chromium] › tests/e2e/verb-guided-challenge.spec.js:315:9 › Guided Challenge E2E Suite › restart challenge explicitly resets the session (1.2s)
+  ✓  119 [chromium] › tests/e2e/verb-guided-challenge.spec.js:331:9 › Guided Challenge E2E Suite › resumes the session after a refresh (1.4s)
+  ✓  120 [chromium] › tests/e2e/verb-guided-challenge.spec.js:348:9 › Guided Challenge E2E Suite › legacy knownVerbIds aliases are migrated to canonical ids with a backup (700ms)
+  ✓  121 [chromium] › tests/e2e/verb-guided-challenge.spec.js:375:9 › Guided Challenge E2E Suite › daily review with no due verbs shows a toast instead of opening (567ms)
+  ✓  122 [chromium] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks (1.4s)
+  ✓  123 [chromium] › tests/e2e/verb-guided-challenge.spec.js:428:9 › Guided Challenge E2E Suite › no browser console errors during the guided flow (1.5s)
+  ✓  124 [chromium] › tests/e2e/verb-guided-challenge.spec.js:445:9 › Guided Challenge E2E Suite › verbLearning mastery is committed only when a whole phase wins (8.5s)
+  ✓  125 [chromium] › tests/e2e/verb-guided-challenge.spec.js:517:9 › Guided Challenge E2E Suite › GC-01: independent review track ordering and no skipped production when track lengths match (2.4s)
+  ✓  126 [chromium] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle (1.2s)
+  ✓  127 [chromium] › tests/e2e/verb-guided-challenge.spec.js:712:9 › Guided Challenge E2E Suite › GC-06: double reveal does not wipe or replace frozen recall latency (1.4s)
+  ✓  128 [chromium] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion (1.5s)
+  ✓  129 [chromium] › tests/e2e/verb-guided-challenge.spec.js:771:9 › Guided Challenge E2E Suite › GC-08: one terminal review outcome applies to exactly one SRS track, once, and completion needs every due card (1.9s)
+  ✓  130 [chromium] › tests/e2e/verb-guided-challenge.spec.js:837:9 › Guided Challenge E2E Suite › GC-09: two click attempts on the same grade button apply exactly one grade (1.2s)
+  ✓  131 [chromium] › tests/e2e/verb-guided-challenge.spec.js:942:9 › Guided Challenge E2E Suite › GC-11: two click attempts on the same Intro button introduce exactly one card (608ms)
+  ✘  132 [chromium] › tests/e2e/verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state (5.5s)
+(node:16577) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  133 [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state (2.6s)
+  ✓  134 [chromium] › tests/e2e/verb-guided-challenge.spec.js:1265:9 › Guided Challenge E2E Suite › R3: Guided Challenge (learning) still keeps Restart and works end-to-end (1.6s)
+  ✓  135 [chromium] › tests/e2e/verbs-dashboard-trophies.spec.js:87:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › marking a brand-new flashcard as Known records activity for today on the verbs page (881ms)
+  ✓  136 [chromium] › tests/e2e/verbs-dashboard-trophies.spec.js:122:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › listening to 15+ verbs via TTS counts as a learning day on the verbs page (827ms)
+  ✓  137 [chromium] › tests/e2e/verbs-dashboard-trophies.spec.js:152:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › trophy shelf renders cards and shows earned deck trophies from seeded progress (501ms)
+  ✓  138 [chromium] › tests/e2e/verbs-dashboard-trophies.spec.js:172:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › leaderboard view renders the shared table and is reachable via nav and switchView (1.4s)
+  ✓  139 [chromium] › tests/e2e/verbs.spec.js:9:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should recycle Still Learning card to the end of queue and advance to next card (461ms)
+  ✓  140 [chromium] › tests/e2e/verbs.spec.js:24:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should pronounce example sentence when clicking on German sentence text in List View (462ms)
+  ✓  141 [chromium] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location) (897ms)
+  ✓  142 [chromium] › tests/e2e/verbs.spec.js:69:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should start Auto-Play from a specific row when clicking play button ▶ (466ms)
+  ✓  143 [chromium] › tests/e2e/verbs.spec.js:86:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should toggle Favorites Only mode in Flashcards view (546ms)
+  ✘  144 [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters (756ms)
+(node:17034) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  145 [Mobile Chrome] › tests/e2e/activity-streak.spec.js:76:7 › Learning Activity / Streak Tracker E2E Suite › marking a brand-new flashcard as Known records activity for today (2.4s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  146 [Mobile Chrome] › tests/e2e/activity-streak.spec.js:117:7 › Learning Activity / Streak Tracker E2E Suite › re-marking an already-known card does not double-count activity (1.5s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  147 [Mobile Chrome] › tests/e2e/activity-streak.spec.js:145:7 › Learning Activity / Streak Tracker E2E Suite › listening to 15+ words via TTS counts as a learning day without flashcards (707ms)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+  ✓  148 [Mobile Chrome] › tests/e2e/activity-streak.spec.js:187:7 › Learning Activity / Streak Tracker E2E Suite › streak is preserved when today has no activity but yesterday does (502ms)
+  ✓  149 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:548:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-01: ordinary card shell, front/back faces and below-card controls (513ms)
+  ✓  150 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:582:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-02: pointer click flips front to back and back to front (1.4s)
+  ✓  151 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:605:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-03 (TARGET, SC-02 resolved): back shows ONLY the first example with its translation always visible (446ms)
+  ✓  152 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:630:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-04: single-example verb shows exactly that example and translation (4.5s)
+  ✓  153 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:647:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state) (4.6s)
+  ✓  154 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:669:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-06: German-only example verb shows the example but no EN chip (4.6s)
+  ✓  155 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:686:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-07 (TARGET, SC-02 resolved): example-direction backs show the first example with its always-visible translation (1.3s)
+  ✓  156 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:712:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-08: zero-example verb in example direction renders no example box and no stale content (4.5s)
+  ✓  157 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:732:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09 (TARGET, SC-01 resolved): en-to-de front carries no German answer in the DOM, metadata, or audio (381ms)
+  ✓  158 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:769:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-09b (TARGET, AC-06): after reveal the en-to-de back shows the German answer and the first example (387ms)
+  ✓  159 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:787:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance (430ms)
+  ✓  160 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:815:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-11: back favorite keeps the card revealed and changes only the favorite (1.3s)
+  ✓  161 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:835:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-12 (TARGET, AC-08): revealed-back controls never flip, grade, or advance the card (1.5s)
+  ✓  162 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:875:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-13: grade controls are the only card actions that grade and advance (by design) (609ms)
+  ✓  163 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:898:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14 (TARGET, SC-06 resolved): full keyboard traversal reaches every card control INCLUDING the flip surface (707ms)
+  ✓  164 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:927:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14a (finding SC-06, Enter): with keyboard focus on a card control, Enter runs only that control — zero reveal transitions (453ms)
+  ✓  165 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:972:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-14b (finding SC-06, Space): with keyboard focus on a card control, Space runs only that control — zero reveal transitions (461ms)
+  ✓  166 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1009:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-15 (TARGET, SC-03 resolved): primary card touch targets are at least 44x44 CSS pixels (563ms)
+  ✓  167 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1034:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-16 (TARGET, SC-04 resolved): keyboard-focused card controls match :focus-visible and paint a visible indicator (1.2s)
+  ✓  168 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1090:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-17 (TARGET, SC-05 resolved): reduced-motion preference disables the flip transition (426ms)
+  ✓  169 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1130:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-18 (TARGET, AC-09): no horizontal overflow at the current viewport with a content-heavy back (1.9s)
+  ✓  170 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1160:9 › SHARED-CARD-001 ordinary card reference — synthetic edge-case deck › CHAR-19 (TARGET): real modules boot with a clean console and a live engine export (406ms)
+  ✓  171 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1180:9 › SHARED-CARD-001 ordinary card reference — real published dataset › CHAR-20: real deck 1 renders the reference shell and the first example with its translation on the back (511ms)
+  ✓  172 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1201:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-21 (TARGET, SC-07 resolved): guided intro uses the shared card shell with adapter-owned controls (447ms)
+  ✓  173 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1227:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-22 (TARGET, SC-07 resolved): guided recall uses the shared shell with tap-to-flip reveal (994ms)
+  ✓  174 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1260:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-23 (TARGET, GC-UI-005 analog): German-front recall keeps the English answer out of the DOM until reveal (797ms)
+  ✓  175 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1289:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-24 (TARGET, AC-06): production front leaks no German answer anywhere in the guided subtree (9.2s)
+  ✓  176 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1364:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-25 (TARGET, AC-08 analog): guided Listen speaks the served verb without grading or advancing (829ms)
+  ✓  177 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1389:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26a (TARGET, GC-UI-009): guided Enter — keyboard-navigated Reveal Answer reveals exactly once; duplicate Enter neither grades nor advances (758ms)
+  ✓  178 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1426:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-26b (TARGET, GC-UI-009): guided Space — keyboard-navigated Reveal Answer reveals exactly once; duplicate Space neither grades nor advances (840ms)
+  ✓  179 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1457:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-27: guided intro example boundaries — every fixture verb is introduced with correct example presence (5.3s)
+  ✓  180 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1490:9 › SHARED-CARD-001 guided card reference — synthetic deck › CHAR-28 (TARGET, AC-09): guided view has no horizontal overflow at the current viewport (983ms)
+  ✓  181 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1524:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-01 TARGET (DOM secrecy): the pre-reveal en-to-de card subtree carries no German answer text or metadata anywhere (371ms)
+  ✓  182 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1544:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-01 TARGET (audio secrecy): pre-reveal German-answer audio is unavailable in en-to-de mode (428ms)
+  ✓  183 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1574:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-02 TARGET: revealed back shows only the first example with its translation always visible (401ms)
+  ✓  184 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1589:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-03 TARGET: primary card touch targets are at least 44x44 CSS pixels (353ms)
+  ✓  185 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1607:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-04 TARGET: keyboard-focused card controls paint a visible focus indicator (642ms)
+  ✓  186 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1642:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-05 TARGET: reduced-motion preference disables the flip animation (398ms)
+  ✓  187 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1656:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-06 TARGET (Enter): the card is keyboard-reachable and Enter reveals it exactly once (483ms)
+  ✓  188 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1695:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-06 TARGET (Space): the card is keyboard-reachable and Space reveals it exactly once (388ms)
+  ✓  189 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1730:9 › SHARED-CARD-001/002 reference vs approved LF/GC targets — findings resolved by the shared card › SC-07 TARGET: guided card uses the ordinary card shell with tap-to-flip reveal (GC-UI-001/002) (733ms)
+  ✓  190 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1750:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-SHELL: ordinary and Guided modes render the SAME core card shell (GC-TEST-009) (900ms)
+  ✓  191 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1802:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-KEY-ENTER: guided card is keyboard-reachable; Enter reveals exactly once; duplicate Enter never grades or advances (718ms)
+  ✓  192 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1836:9 › SHARED-CARD-002 shared presentation — shell sharing and card-level keyboard activation › SC2-KEY-SPACE: guided card Space reveals exactly once; duplicate Space never grades or advances (741ms)
+  ✓  193 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1896:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names (455ms)
+  ✓  194 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1924:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-002 (SC2-C1-A11Y-002, ordinary): the inactive face is inert — unreachable by Tab, absent from the accessibility tree, restored on flip-back (1.1s)
+  ✓  195 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:1987:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-002 (SC2-C1-A11Y-002, guided): the revealed guided back exposes its controls while the hidden front stays inert (843ms)
+  ✓  196 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:2005:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-003 (SC2-C1-A11Y-003): guided card semantics stay truthful — keyboard-reachable reveal, then no stale actionable reveal affordance (909ms)
+  ✓  197 [Mobile Chrome] › tests/e2e/cefr-card-reference.spec.js:2051:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-DESIGN-001 (SC2-C1-DESIGN-001): example translations render through the language-neutral line with direction metadata (1.4s)
+  ✓  198 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:450:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SHELL: words flashcards render through the shared card shell with level-owned controls and no verbs deck (608ms)
+  ✓  199 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:497:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05) (554ms)
+  ✓  200 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:523:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FACES: German-front and translation-front behavior with safe language metadata (740ms)
+  ✓  201 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:554:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06) (545ms)
+  ✓  202 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:575:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-AUDIO: front speak never speaks the hidden German answer before reveal (1.6s)
+  ✓  203 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:602:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FAV: favorite affordance — descriptive name, truthful aria-pressed, immediate and refreshed persistence, no flip or grade (872ms)
+  ✓  204 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:637:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog) (516ms)
+  ✓  205 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:672:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-NAV: filters, shuffle toggle, previous/next navigation and the card counter (5.3s)
+  ✓  206 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:707:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SESSION: session completion shows the finished state, records the session, and restart works (674ms)
+  ✓  207 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:748:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-NOEX: no-example card renders no example box and no stale content from the previous card (4.6s)
+  ✓  208 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:773:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-MULTI: multiple-example card shows exactly the first example (4.8s)
+  ✓  209 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:788:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-EX-WO-TR: example without a translation shows the sentence only, never an empty line (4.8s)
+  ✓  210 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:809:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05) (565ms)
+  ✓  211 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:842:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label (683ms)
+  ✓  212 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:875:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block (551ms)
+  ✓  213 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:890:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only (654ms)
+  ✓  214 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:911:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06) (662ms)
+  ✓  215 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:940:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only (594ms)
+  ✓  216 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:964:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles (622ms)
+  ✓  217 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:995:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English (585ms)
+  ✓  218 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1026:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only (4.5s)
+  ✓  219 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1051:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely (4.8s)
+  ✓  220 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1065:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language (5.0s)
+  ✓  221 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1097:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice (5.5s)
+  ✓  222 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1145:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-POINTER: pointer click flips front to back and back to front (AC-07) (1.5s)
+  ✓  223 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1159:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-ENTER: the card is keyboard-reachable and Enter flips it exactly once (521ms)
+  ✓  224 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1180:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-SPACE: Space flips the card exactly once and never scrolls the page (545ms)
+  ✓  225 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1194:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions (477ms)
+  ✓  226 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1214:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-GRADE-DOUBLE: keyboard Enter on Known grades exactly once — no duplicate write or double advance (475ms)
+  ✓  227 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1236:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-BACK-CONTROLS: revealed-back controls never flip, grade, or advance the card (AC-08) (1.7s)
+  ✓  228 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1274:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-INERT: only the displayed face is focusable and exposed — inert faces, AX-tree exclusion, flip-back restore (AC-09/SC2-C1 analog) (1.2s)
+  ✓  229 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1332:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-NAMES: icon-only card controls expose descriptive accessible names and truthful aria-pressed (589ms)
+  ✓  230 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1357:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09) (927ms)
+  ✓  231 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1383:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09) (488ms)
+  ✓  232 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1401:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-REDUCED-MOTION: reduced-motion preference disables the flip transition but not the flip (465ms)
+  ✓  233 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1438:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-THEME: light and dark themes both render the card and keep the flip behavior (619ms)
+  ✓  234 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1460:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-OVERFLOW: no horizontal overflow on the front or the revealed mixed-content back (AC-09) (508ms)
+  ✓  235 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1483:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-CONSOLE: both level pages boot the shared card with a clean console (764ms)
+  ✓  236 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1503:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASES-TAB: the Phrases tab still renders phrase cards (LF-NAV / AC-10) (381ms)
+  ✓  237 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1513:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASE-FLASHCARDS: phrase flashcards keep the legacy card behavior, grading and phrase counters (537ms)
+  ✓  238 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1543:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-CONVERSATION: the Conversation tab still renders scenes (382ms)
+  ✓  239 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1551:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-B2-MISSING: B2 phrases and conversation tabs show their configured empty states (451ms)
+  ✓  240 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1561:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10) (519ms)
+  ✓  241 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1588:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-MODE-SWAP: words and phrases flashcard modes swap their card DOM with no duplicate ids (925ms)
+  ✓  242 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1627:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-A1-UNIT-SWITCH: A1 unit switching updates the card scope and grades the exact unit-2 ID (564ms)
+  ✓  243 [Mobile Chrome] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites (978ms)
+  ✓  244 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:86:7 › Phrases and Conversations E2E Suite › Load App, default tabs, and existing words behavior (991ms)
+  ✓  245 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:109:7 › Phrases and Conversations E2E Suite › Phrases Tab Rendering and Flashcards (4.7s)
+  ✓  246 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:146:7 › Phrases and Conversations E2E Suite › SpeechQueue Play All, Stop, and Navigation Cleanup (2.9s)
+  ✓  247 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:199:7 › Phrases and Conversations E2E Suite › Conversation clean text and Missing Content Graceful State (1.9s)
+  ✓  248 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:234:7 › Phrases and Conversations E2E Suite › Phrases Hide and Guess Practice Controls (3.2s)
+  ✓  249 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:326:7 › Phrases and Conversations E2E Suite › Mobile viewport layout verification (580ms)
+  ✓  250 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:339:7 › Phrases and Conversations E2E Suite › Dashboard and Phrases tab progress stats model (801ms)
+  ✓  251 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:407:7 › Phrases and Conversations E2E Suite › Mobile sidebar navigation works with real UI clicks (3.0s)
+  ✓  252 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:479:7 › Phrases and Conversations E2E Suite › SpeechQueue advances through multiple items correctly (2.5s)
+  ✓  253 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:513:7 › Phrases and Conversations E2E Suite › SpeechQueue stop during 250ms delay cancels correctly (2.7s)
+  ✓  254 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:545:7 › Phrases and Conversations E2E Suite › SpeechQueue rapid stop-and-restart works correctly (1.5s)
+  ✓  255 [Mobile Chrome] › tests/e2e/phrases-conversations.spec.js:582:7 › Phrases and Conversations E2E Suite › SpeechQueue completes all items and fires onFinished (13.4s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  256 [Mobile Chrome] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification (1.5s)
+  ✓  257 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:137:9 › Guided Challenge E2E Suite › starts guided challenge and shows the acquisition phase with intro cards (651ms)
+  ✓  258 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:146:9 › Guided Challenge E2E Suite › keeps the hidden acquisition pool at eight or fewer verbs (5.2s)
+  ✓  259 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:186:9 › Guided Challenge E2E Suite › forgot during acquisition never repeats immediately (2.8s)
+  ✓  260 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:212:9 › Guided Challenge E2E Suite › recognition phase prompts German → English and ends with the First Win (8.5s)
+  ✓  261 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:266:9 › Guided Challenge E2E Suite › production phase prompts English → German and ends with the Second Win (12.0s)
+  ✓  262 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:315:9 › Guided Challenge E2E Suite › restart challenge explicitly resets the session (1.4s)
+  ✓  263 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:331:9 › Guided Challenge E2E Suite › resumes the session after a refresh (1.6s)
+  ✓  264 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:348:9 › Guided Challenge E2E Suite › legacy knownVerbIds aliases are migrated to canonical ids with a backup (740ms)
+  ✓  265 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:375:9 › Guided Challenge E2E Suite › daily review with no due verbs shows a toast instead of opening (797ms)
+  ✓  266 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:382:9 › Guided Challenge E2E Suite › daily review with due verbs serves recognition then production tracks (1.4s)
+  ✓  267 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:428:9 › Guided Challenge E2E Suite › no browser console errors during the guided flow (2.6s)
+  ✓  268 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:445:9 › Guided Challenge E2E Suite › verbLearning mastery is committed only when a whole phase wins (8.6s)
+  ✓  269 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:517:9 › Guided Challenge E2E Suite › GC-01: independent review track ordering and no skipped production when track lengths match (2.4s)
+  ✓  270 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:563:9 › Guided Challenge E2E Suite › T3: canonical-ID migration through real loading lifecycle (1.2s)
+  ✓  271 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:712:9 › Guided Challenge E2E Suite › GC-06: double reveal does not wipe or replace frozen recall latency (1.8s)
+  ✓  272 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion (1.8s)
+  ✓  273 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:771:9 › Guided Challenge E2E Suite › GC-08: one terminal review outcome applies to exactly one SRS track, once, and completion needs every due card (1.9s)
+  ✓  274 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:837:9 › Guided Challenge E2E Suite › GC-09: two click attempts on the same grade button apply exactly one grade (1.5s)
+  ✓  275 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:942:9 › Guided Challenge E2E Suite › GC-11: two click attempts on the same Intro button introduce exactly one card (1.0s)
+  ✓  276 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state (2.4s)
+  ✓  277 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state (2.4s)
+  ✓  278 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:1265:9 › Guided Challenge E2E Suite › R3: Guided Challenge (learning) still keeps Restart and works end-to-end (1.8s)
+  ✓  279 [Mobile Chrome] › tests/e2e/verbs-dashboard-trophies.spec.js:87:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › marking a brand-new flashcard as Known records activity for today on the verbs page (812ms)
+  ✓  280 [Mobile Chrome] › tests/e2e/verbs-dashboard-trophies.spec.js:122:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › listening to 15+ verbs via TTS counts as a learning day on the verbs page (576ms)
+  ✓  281 [Mobile Chrome] › tests/e2e/verbs-dashboard-trophies.spec.js:152:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › trophy shelf renders cards and shows earned deck trophies from seeded progress (539ms)
+  ✓  282 [Mobile Chrome] › tests/e2e/verbs-dashboard-trophies.spec.js:172:7 › Verbs Dashboard & Trophy Shelf E2E Suite (WP-041) › leaderboard view renders the shared table and is reachable via nav and switchView (1.3s)
+  ✓  283 [Mobile Chrome] › tests/e2e/verbs.spec.js:9:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should recycle Still Learning card to the end of queue and advance to next card (674ms)
+  ✓  284 [Mobile Chrome] › tests/e2e/verbs.spec.js:24:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should pronounce example sentence when clicking on German sentence text in List View (1.7s)
+  ✓  285 [Mobile Chrome] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location) (1.2s)
+  ✓  286 [Mobile Chrome] › tests/e2e/verbs.spec.js:69:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should start Auto-Play from a specific row when clicking play button ▶ (723ms)
+  ✓  287 [Mobile Chrome] › tests/e2e/verbs.spec.js:86:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should toggle Favorites Only mode in Flashcards view (859ms)
+  ✘  288 [Mobile Chrome] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters (1.2s)
+
+
+  1) [chromium] › tests/e2e/verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('#view-guided')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('#view-guided')
+        13 × locator resolved to <div class="hidden" id="view-guided">…</div>
+           - unexpected value "hidden"
+
+
+      1053 |         await page.reload();
+      1054 |         await page.locator('button:has-text("Daily Review")').click();
+    > 1055 |         await expect(page.locator('#view-guided')).toBeVisible();
+           |                                                    ^
+      1056 |
+      1057 |         // 1. Transition state (intro to recognition)
+      1058 |         await expect(page.locator('.guided-milestone-title')).toContainText(/Continuing to/);
+        at /home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:1055:52
+
+    Error Context: test-results/verb-guided-challenge-Guid-beaa2-Restart-action-in-any-state-chromium/error-context.md
+
+  2) [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 | });
+      80 |
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-chromium/error-context.md
+
+  3) [Mobile Chrome] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 | });
+      80 |
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-Mobile-Chrome/error-context.md
+
+  3 failed
+    [chromium] › tests/e2e/verb-guided-challenge.spec.js:1036:9 › Guided Challenge E2E Suite › R1: Daily Review does not render a Restart button or Restart action in any state
+    [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+    [Mobile Chrome] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+  1 skipped
+  284 passed (8.5m)

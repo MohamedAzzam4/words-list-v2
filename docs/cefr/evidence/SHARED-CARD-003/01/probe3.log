@@ -1,0 +1,33 @@
+
+Running 1 test using 1 worker
+
+(node:22603) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:637:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog) (982ms)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:637:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog)
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "1-0",
+    +   "9-99",
+      ]
+
+      647 |         }, A1_KEY);
+      648 |         let progress = await readProgress(page, A1_KEY);
+    > 649 |         expect(Object.keys(progress.srsData)).toEqual(['1-0']);
+          |                                               ^
+      650 |         expect(progress.srsData['1-0'].level).toBe(1);
+      651 |         expect(progress.known).toEqual(['1-0']);
+      652 |         await expect(page.locator('#fc-counter')).toHaveText('2 / 30');
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:649:47
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-0ef35-g-unit-writes-AC-17-analog--chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:637:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog)

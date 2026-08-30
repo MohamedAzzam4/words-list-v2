@@ -1,0 +1,37 @@
+
+Running 1 test using 1 worker
+
+(node:22276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:497:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05) (6.0s)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:497:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05)
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('#fc-card-mount .back-example-box .ex-sentence-span')
+    Expected: "💬 Hallo, ich bin Anna."
+    Received: "💬 Hallo!"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#fc-card-mount .back-example-box .ex-sentence-span')
+        14 × locator resolved to <button lang="de" type="button" data-text="Hallo!" data-action="speak-text" title="Click sentence to pronounce" class="ex-sentence-span card-affordance">💬 Hallo!</button>
+           - unexpected value "💬 Hallo!"
+
+
+      507 |         // The real example — not the vocabulary term repeated as a fake
+      508 |         // example (the legacy presentation filled this slot with w.de).
+    > 509 |         await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveText('💬 Hallo, ich bin Anna.');
+          |                                                                                          ^
+      510 |         await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveAttribute('lang', 'de');
+      511 |         // The example's real translation, permanently visible, with English
+      512 |         // direction + language metadata.
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:509:90
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-42860-its-real-translation-AC-05--chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:497:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05)

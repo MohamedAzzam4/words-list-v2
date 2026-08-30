@@ -1,0 +1,51 @@
+✔ LEVEL-DATA-012: normalized mixed translations speak only the English field (8.858491ms)
+✔ LEVEL-DATA-013: normalized Arabic-only translations are never sent to an English voice (1.617218ms)
+✔ LEVEL-DATA-014: legacy cards without normalized speech fields keep English playback (1.484747ms)
+✖ SHARED-CARD-003 unit: translationDisplayAttrs derives direction and language metadata (SC3/LF-CARD) (2.468066ms)
+✖ SHARED-CARD-003 unit: firstExample returns exactly the first structured example or null (1.533864ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 3
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.242873
+
+✖ failing tests:
+
+test at tests/unit/flashcards.test.mjs:89:1
+✖ SHARED-CARD-003 unit: translationDisplayAttrs derives direction and language metadata (SC3/LF-CARD) (2.468066ms)
+  js/core/flashcards.js:332
+  ;globalThis.__HELPERS = { firstExample, translationDisplayAttrs };
+                            ^
+
+  ReferenceError: firstExample is not defined
+      at js/core/flashcards.js:332:27
+      at Script.runInContext (node:vm:149:12)
+      at Object.runInContext (node:vm:301:6)
+      at loadHelpers (file:///home/z/my-project/words-list-v2/tests/unit/flashcards.test.mjs:81:8)
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/flashcards.test.mjs:90:41)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tests/unit/flashcards.test.mjs:102:1
+✖ SHARED-CARD-003 unit: firstExample returns exactly the first structured example or null (1.533864ms)
+  js/core/flashcards.js:332
+  ;globalThis.__HELPERS = { firstExample, translationDisplayAttrs };
+                            ^
+
+  ReferenceError: firstExample is not defined
+      at js/core/flashcards.js:332:27
+      at Script.runInContext (node:vm:149:12)
+      at Object.runInContext (node:vm:301:6)
+      at loadHelpers (file:///home/z/my-project/words-list-v2/tests/unit/flashcards.test.mjs:81:8)
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/flashcards.test.mjs:103:30)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)

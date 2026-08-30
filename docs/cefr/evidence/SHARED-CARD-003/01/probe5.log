@@ -1,0 +1,27 @@
+
+Running 1 test using 1 worker
+
+(node:23086) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:1561:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10) (30.1s)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:1561:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10)
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 30000ms exceeded.
+
+      1574 |
+      1575 |         await page.locator('.fc-btn.btn-known').click();
+    > 1576 |         await page.waitForFunction((key) => {
+           |                    ^
+      1577 |             const data = JSON.parse(localStorage.getItem(key) || '{}');
+      1578 |             return data.known && data.known.length === 1;
+      1579 |         }, A1_KEY);
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:1576:20
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-cc71b-o-word-storage-AC-17-AC-10--chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:1561:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10)

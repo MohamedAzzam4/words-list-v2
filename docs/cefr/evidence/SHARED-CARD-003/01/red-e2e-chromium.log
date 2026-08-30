@@ -1,0 +1,1248 @@
+
+Running 45 tests using 1 worker
+
+(node:21453) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [chromium] › tests/e2e/cefr-cards.spec.js:448:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SHELL: words flashcards render through the shared card shell with level-owned controls and no verbs deck (8.6s)
+(node:21552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 [chromium] › tests/e2e/cefr-cards.spec.js:495:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05) (8.5s)
+(node:21651) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 [chromium] › tests/e2e/cefr-cards.spec.js:521:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FACES: German-front and translation-front behavior with safe language metadata (8.5s)
+(node:21757) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [chromium] › tests/e2e/cefr-cards.spec.js:552:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06) (8.5s)
+(node:21857) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [chromium] › tests/e2e/cefr-cards.spec.js:573:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-AUDIO: front speak never speaks the hidden German answer before reveal (8.7s)
+(node:21958) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [chromium] › tests/e2e/cefr-cards.spec.js:600:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FAV: favorite affordance — descriptive name, truthful aria-pressed, immediate and refreshed persistence, no flip or grade (8.6s)
+(node:22060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 [chromium] › tests/e2e/cefr-cards.spec.js:635:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog) (8.7s)
+(node:22158) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   8 [chromium] › tests/e2e/cefr-cards.spec.js:670:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-NAV: filters, shuffle toggle, previous/next navigation and the card counter (8.6s)
+(node:22263) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [chromium] › tests/e2e/cefr-cards.spec.js:705:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SESSION: session completion shows the finished state, records the session, and restart works (8.6s)
+(node:22367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  10 [chromium] › tests/e2e/cefr-cards.spec.js:746:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-NOEX: no-example card renders no example box and no stale content from the previous card (8.5s)
+(node:22459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  11 [chromium] › tests/e2e/cefr-cards.spec.js:771:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-MULTI: multiple-example card shows exactly the first example (8.6s)
+(node:22556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 [chromium] › tests/e2e/cefr-cards.spec.js:786:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-EX-WO-TR: example without a translation shows the sentence only, never an empty line (8.7s)
+(node:22652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 [chromium] › tests/e2e/cefr-cards.spec.js:807:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05) (8.5s)
+(node:22754) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 [chromium] › tests/e2e/cefr-cards.spec.js:840:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label (8.6s)
+(node:22858) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 [chromium] › tests/e2e/cefr-cards.spec.js:873:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block (8.5s)
+(node:22955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 [chromium] › tests/e2e/cefr-cards.spec.js:888:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only (8.6s)
+(node:23060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  17 [chromium] › tests/e2e/cefr-cards.spec.js:909:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06) (8.6s)
+(node:23165) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  18 [chromium] › tests/e2e/cefr-cards.spec.js:938:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only (8.7s)
+(node:23266) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  19 [chromium] › tests/e2e/cefr-cards.spec.js:962:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles (8.6s)
+(node:23364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  20 [chromium] › tests/e2e/cefr-cards.spec.js:993:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English (8.7s)
+(node:23459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  21 [chromium] › tests/e2e/cefr-cards.spec.js:1024:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only (8.6s)
+(node:23557) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  22 [chromium] › tests/e2e/cefr-cards.spec.js:1049:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely (8.6s)
+(node:23657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  23 [chromium] › tests/e2e/cefr-cards.spec.js:1063:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language (8.6s)
+(node:23760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  24 [chromium] › tests/e2e/cefr-cards.spec.js:1086:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice (8.7s)
+(node:23864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  25 [chromium] › tests/e2e/cefr-cards.spec.js:1134:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-POINTER: pointer click flips front to back and back to front (AC-07) (8.6s)
+(node:23963) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  26 [chromium] › tests/e2e/cefr-cards.spec.js:1148:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-ENTER: the card is keyboard-reachable and Enter flips it exactly once (8.7s)
+(node:24060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  27 [chromium] › tests/e2e/cefr-cards.spec.js:1169:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-SPACE: Space flips the card exactly once and never scrolls the page (8.6s)
+(node:24161) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  28 [chromium] › tests/e2e/cefr-cards.spec.js:1183:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions (8.5s)
+(node:24260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  29 [chromium] › tests/e2e/cefr-cards.spec.js:1203:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-GRADE-DOUBLE: keyboard Enter on Known grades exactly once — no duplicate write or double advance (8.6s)
+(node:24359) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  30 [chromium] › tests/e2e/cefr-cards.spec.js:1225:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-BACK-CONTROLS: revealed-back controls never flip, grade, or advance the card (AC-08) (8.7s)
+(node:24459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  31 [chromium] › tests/e2e/cefr-cards.spec.js:1263:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-INERT: only the displayed face is focusable and exposed — inert faces, AX-tree exclusion, flip-back restore (AC-09/SC2-C1 analog) (8.6s)
+(node:24560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  32 [chromium] › tests/e2e/cefr-cards.spec.js:1321:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-NAMES: icon-only card controls expose descriptive accessible names and truthful aria-pressed (8.7s)
+(node:24659) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  33 [chromium] › tests/e2e/cefr-cards.spec.js:1346:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09) (8.5s)
+(node:24764) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  34 [chromium] › tests/e2e/cefr-cards.spec.js:1372:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09) (8.6s)
+(node:24866) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  35 [chromium] › tests/e2e/cefr-cards.spec.js:1390:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-REDUCED-MOTION: reduced-motion preference disables the flip transition but not the flip (8.6s)
+(node:24968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  36 [chromium] › tests/e2e/cefr-cards.spec.js:1427:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-THEME: light and dark themes both render the card and keep the flip behavior (8.8s)
+(node:25061) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  37 [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-OVERFLOW: no horizontal overflow on the front or the revealed mixed-content back (AC-09) (8.7s)
+(node:25157) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  38 [chromium] › tests/e2e/cefr-cards.spec.js:1472:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-CONSOLE: both level pages boot the shared card with a clean console (8.5s)
+(node:25259) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  39 [chromium] › tests/e2e/cefr-cards.spec.js:1492:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASES-TAB: the Phrases tab still renders phrase cards (LF-NAV / AC-10) (660ms)
+  ✓  40 [chromium] › tests/e2e/cefr-cards.spec.js:1502:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-PHRASE-FLASHCARDS: phrase flashcards keep the legacy card behavior, grading and phrase counters (677ms)
+  ✓  41 [chromium] › tests/e2e/cefr-cards.spec.js:1532:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-CONVERSATION: the Conversation tab still renders scenes (654ms)
+  ✓  42 [chromium] › tests/e2e/cefr-cards.spec.js:1540:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-B2-MISSING: B2 phrases and conversation tabs show their configured empty states (573ms)
+  ✘  43 [chromium] › tests/e2e/cefr-cards.spec.js:1550:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10) (8.5s)
+(node:25493) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  44 [chromium] › tests/e2e/cefr-cards.spec.js:1577:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-MODE-SWAP: words and phrases flashcard modes swap their card DOM with no duplicate ids (8.6s)
+(node:25594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  45 [chromium] › tests/e2e/cefr-cards.spec.js:1611:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-A1-UNIT-SWITCH: A1 unit switching updates the card scope and grades the exact unit-2 ID (8.8s)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:448:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SHELL: words flashcards render through the shared card shell with level-owned controls and no verbs deck
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:450:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-9e350--controls-and-no-verbs-deck-chromium/error-context.md
+
+  2) [chromium] › tests/e2e/cefr-cards.spec.js:495:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:497:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-42860-its-real-translation-AC-05--chromium/error-context.md
+
+  3) [chromium] › tests/e2e/cefr-cards.spec.js:521:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FACES: German-front and translation-front behavior with safe language metadata
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:523:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-f2f3a-with-safe-language-metadata-chromium/error-context.md
+
+  4) [chromium] › tests/e2e/cefr-cards.spec.js:552:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:554:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-6fd6c-tadata-before-reveal-AC-06--chromium/error-context.md
+
+  5) [chromium] › tests/e2e/cefr-cards.spec.js:573:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-AUDIO: front speak never speaks the hidden German answer before reveal
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:575:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-b2edb-German-answer-before-reveal-chromium/error-context.md
+
+  6) [chromium] › tests/e2e/cefr-cards.spec.js:600:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FAV: favorite affordance — descriptive name, truthful aria-pressed, immediate and refreshed persistence, no flip or grade
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:602:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-ae004-ersistence-no-flip-or-grade-chromium/error-context.md
+
+  7) [chromium] › tests/e2e/cefr-cards.spec.js:635:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:637:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-0ef35-g-unit-writes-AC-17-analog--chromium/error-context.md
+
+  8) [chromium] › tests/e2e/cefr-cards.spec.js:670:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-NAV: filters, shuffle toggle, previous/next navigation and the card counter
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:672:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-04b37-gation-and-the-card-counter-chromium/error-context.md
+
+  9) [chromium] › tests/e2e/cefr-cards.spec.js:705:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SESSION: session completion shows the finished state, records the session, and restart works
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:707:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-43c20-e-session-and-restart-works-chromium/error-context.md
+
+  10) [chromium] › tests/e2e/cefr-cards.spec.js:746:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-NOEX: no-example card renders no example box and no stale content from the previous card
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticA1 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:742:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:747:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-1b9c2-tent-from-the-previous-card-chromium/error-context.md
+
+  11) [chromium] › tests/e2e/cefr-cards.spec.js:771:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-MULTI: multiple-example card shows exactly the first example
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticA1 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:742:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:772:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-de8fe-s-exactly-the-first-example-chromium/error-context.md
+
+  12) [chromium] › tests/e2e/cefr-cards.spec.js:786:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-EX-WO-TR: example without a translation shows the sentence only, never an empty line
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticA1 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:742:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:787:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-01170-ce-only-never-an-empty-line-chromium/error-context.md
+
+  13) [chromium] › tests/e2e/cefr-cards.spec.js:807:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:809:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-08674-al-mixed-translation-AC-05--chromium/error-context.md
+
+  14) [chromium] › tests/e2e/cefr-cards.spec.js:840:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:842:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-79e04--never-a-false-Arabic-label-chromium/error-context.md
+
+  15) [chromium] › tests/e2e/cefr-cards.spec.js:873:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:875:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-101f1-nswer-with-no-example-block-chromium/error-context.md
+
+  16) [chromium] › tests/e2e/cefr-cards.spec.js:888:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:890:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-ca7d3-ion-shows-the-sentence-only-chromium/error-context.md
+
+  17) [chromium] › tests/e2e/cefr-cards.spec.js:909:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:911:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-dae2e-xample-before-reveal-AC-06--chromium/error-context.md
+
+  18) [chromium] › tests/e2e/cefr-cards.spec.js:938:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:940:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-4cd5c-der-the-B2-storage-key-only-chromium/error-context.md
+
+  19) [chromium] › tests/e2e/cefr-cards.spec.js:962:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:964:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-a25ec-s-the-card-scope-and-titles-chromium/error-context.md
+
+  20) [chromium] › tests/e2e/cefr-cards.spec.js:993:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticB2 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:989:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:994:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-97545-nd-is-never-labeled-English-chromium/error-context.md
+
+  21) [chromium] › tests/e2e/cefr-cards.spec.js:1024:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticB2 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:989:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1025:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-a45d6--no-lang-first-example-only-chromium/error-context.md
+
+  22) [chromium] › tests/e2e/cefr-cards.spec.js:1049:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticB2 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:989:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1050:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-e9f05-example-card-renders-safely-chromium/error-context.md
+
+  23) [chromium] › tests/e2e/cefr-cards.spec.js:1063:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticB2 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:989:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1064:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-91e05--and-never-a-false-language-chromium/error-context.md
+
+  24) [chromium] › tests/e2e/cefr-cards.spec.js:1086:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at openSyntheticB2 (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:989:9)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1087:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-83543-er-spoken-through-any-voice-chromium/error-context.md
+
+  25) [chromium] › tests/e2e/cefr-cards.spec.js:1134:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-POINTER: pointer click flips front to back and back to front (AC-07)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1136:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-7b3dc-ck-and-back-to-front-AC-07--chromium/error-context.md
+
+  26) [chromium] › tests/e2e/cefr-cards.spec.js:1148:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-ENTER: the card is keyboard-reachable and Enter flips it exactly once
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1150:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-1aa62-Enter-flips-it-exactly-once-chromium/error-context.md
+
+  27) [chromium] › tests/e2e/cefr-cards.spec.js:1169:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-SPACE: Space flips the card exactly once and never scrolls the page
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1171:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-aa42c--and-never-scrolls-the-page-chromium/error-context.md
+
+  28) [chromium] › tests/e2e/cefr-cards.spec.js:1183:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1185:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-ba99b-rol-—-zero-flip-transitions-chromium/error-context.md
+
+  29) [chromium] › tests/e2e/cefr-cards.spec.js:1203:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-GRADE-DOUBLE: keyboard Enter on Known grades exactly once — no duplicate write or double advance
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1205:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-847fe-ate-write-or-double-advance-chromium/error-context.md
+
+  30) [chromium] › tests/e2e/cefr-cards.spec.js:1225:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-BACK-CONTROLS: revealed-back controls never flip, grade, or advance the card (AC-08)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1227:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-57dfa--or-advance-the-card-AC-08--chromium/error-context.md
+
+  31) [chromium] › tests/e2e/cefr-cards.spec.js:1263:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-INERT: only the displayed face is focusable and exposed — inert faces, AX-tree exclusion, flip-back restore (AC-09/SC2-C1 analog)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1265:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-684a3-estore-AC-09-SC2-C1-analog--chromium/error-context.md
+
+  32) [chromium] › tests/e2e/cefr-cards.spec.js:1321:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-NAMES: icon-only card controls expose descriptive accessible names and truthful aria-pressed
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1323:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-3b05c-s-and-truthful-aria-pressed-chromium/error-context.md
+
+  33) [chromium] › tests/e2e/cefr-cards.spec.js:1346:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1348:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-39f20--a-visible-indicator-AC-09--chromium/error-context.md
+
+  34) [chromium] › tests/e2e/cefr-cards.spec.js:1372:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1374:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-f216d-ast-44x44-CSS-pixels-AC-09--chromium/error-context.md
+
+  35) [chromium] › tests/e2e/cefr-cards.spec.js:1390:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-REDUCED-MOTION: reduced-motion preference disables the flip transition but not the flip
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1393:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-488a6-transition-but-not-the-flip-chromium/error-context.md
+
+  36) [chromium] › tests/e2e/cefr-cards.spec.js:1427:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-THEME: light and dark themes both render the card and keep the flip behavior
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1429:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-b820a--and-keep-the-flip-behavior-chromium/error-context.md
+
+  37) [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-OVERFLOW: no horizontal overflow on the front or the revealed mixed-content back (AC-09)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1451:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-5855d-d-mixed-content-back-AC-09--chromium/error-context.md
+
+  38) [chromium] › tests/e2e/cefr-cards.spec.js:1472:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-CONSOLE: both level pages boot the shared card with a clean console
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1475:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-b525b-d-card-with-a-clean-console-chromium/error-context.md
+
+  39) [chromium] › tests/e2e/cefr-cards.spec.js:1550:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10)
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      1559 |         // fields — never into knownPhrases (the legacy desync corrupted data).
+      1560 |         await page.evaluate((i) => window.app.switchUnit(i), 1);
+    > 1561 |         await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+           |                                                                      ^
+      1562 |         await expect(page.locator('.flashcard-inner')).toHaveCount(0);
+      1563 |
+      1564 |         await page.locator('.fc-btn.btn-known').click();
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1561:70
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-cc71b-o-word-storage-AC-17-AC-10--chromium/error-context.md
+
+  40) [chromium] › tests/e2e/cefr-cards.spec.js:1577:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-MODE-SWAP: words and phrases flashcard modes swap their card DOM with no duplicate ids
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1581:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-6b306-d-DOM-with-no-duplicate-ids-chromium/error-context.md
+
+  41) [chromium] › tests/e2e/cefr-cards.spec.js:1611:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-A1-UNIT-SWITCH: A1 unit switching updates the card scope and grades the exact unit-2 ID
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('#fc-card-mount .verb-flashcard')
+    Expected: visible
+    Timeout: 8000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 8000ms
+      - waiting for locator('#fc-card-mount .verb-flashcard')
+
+
+      234 |     await page.locator('button', { hasText: 'Flashcards' }).click();
+      235 |     await expect(page.locator('.flashcard-container')).toBeVisible();
+    > 236 |     await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible({ timeout: 8000 });
+          |                                                                  ^
+      237 | }
+      238 |
+      239 | // The engine shuffles by default; deterministic card order requires OFF.
+        at openWordsFlashcards (/home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:236:66)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-cards.spec.js:1613:9
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-48598--grades-the-exact-unit-2-ID-chromium/error-context.md
+
+  41 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:448:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SHELL: words flashcards render through the shared card shell with level-owned controls and no verbs deck
+    [chromium] › tests/e2e/cefr-cards.spec.js:495:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-EXAMPLE: revealed back shows the real first German example with its real translation (AC-05)
+    [chromium] › tests/e2e/cefr-cards.spec.js:521:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FACES: German-front and translation-front behavior with safe language metadata
+    [chromium] › tests/e2e/cefr-cards.spec.js:552:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-DOM: translation-front card subtree carries no German answer, example, or audio metadata before reveal (AC-06)
+    [chromium] › tests/e2e/cefr-cards.spec.js:573:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SECRECY-AUDIO: front speak never speaks the hidden German answer before reveal
+    [chromium] › tests/e2e/cefr-cards.spec.js:600:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-FAV: favorite affordance — descriptive name, truthful aria-pressed, immediate and refreshed persistence, no flip or grade
+    [chromium] › tests/e2e/cefr-cards.spec.js:635:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SRS-WRITE: Known and Still Learning write the exact original unit IDs with no wrong-unit writes (AC-17 analog)
+    [chromium] › tests/e2e/cefr-cards.spec.js:670:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-NAV: filters, shuffle toggle, previous/next navigation and the card counter
+    [chromium] › tests/e2e/cefr-cards.spec.js:705:9 › SHARED-CARD-003 A1 ordinary card — real dataset › SC3-A1-SESSION: session completion shows the finished state, records the session, and restart works
+    [chromium] › tests/e2e/cefr-cards.spec.js:746:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-NOEX: no-example card renders no example box and no stale content from the previous card
+    [chromium] › tests/e2e/cefr-cards.spec.js:771:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-MULTI: multiple-example card shows exactly the first example
+    [chromium] › tests/e2e/cefr-cards.spec.js:786:9 › SHARED-CARD-003 A1 ordinary card — synthetic edge cases › SC3-A1-SYNTH-EX-WO-TR: example without a translation shows the sentence only, never an empty line
+    [chromium] › tests/e2e/cefr-cards.spec.js:807:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05)
+    [chromium] › tests/e2e/cefr-cards.spec.js:840:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label
+    [chromium] › tests/e2e/cefr-cards.spec.js:873:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block
+    [chromium] › tests/e2e/cefr-cards.spec.js:888:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only
+    [chromium] › tests/e2e/cefr-cards.spec.js:909:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06)
+    [chromium] › tests/e2e/cefr-cards.spec.js:938:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only
+    [chromium] › tests/e2e/cefr-cards.spec.js:962:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles
+    [chromium] › tests/e2e/cefr-cards.spec.js:993:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English
+    [chromium] › tests/e2e/cefr-cards.spec.js:1024:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only
+    [chromium] › tests/e2e/cefr-cards.spec.js:1049:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely
+    [chromium] › tests/e2e/cefr-cards.spec.js:1063:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language
+    [chromium] › tests/e2e/cefr-cards.spec.js:1086:9 › SHARED-CARD-003 B2 ordinary card — synthetic language edges › SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice
+    [chromium] › tests/e2e/cefr-cards.spec.js:1134:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-POINTER: pointer click flips front to back and back to front (AC-07)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1148:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-ENTER: the card is keyboard-reachable and Enter flips it exactly once
+    [chromium] › tests/e2e/cefr-cards.spec.js:1169:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-SPACE: Space flips the card exactly once and never scrolls the page
+    [chromium] › tests/e2e/cefr-cards.spec.js:1183:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions
+    [chromium] › tests/e2e/cefr-cards.spec.js:1203:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-GRADE-DOUBLE: keyboard Enter on Known grades exactly once — no duplicate write or double advance
+    [chromium] › tests/e2e/cefr-cards.spec.js:1225:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-BACK-CONTROLS: revealed-back controls never flip, grade, or advance the card (AC-08)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1263:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-INERT: only the displayed face is focusable and exposed — inert faces, AX-tree exclusion, flip-back restore (AC-09/SC2-C1 analog)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1321:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-NAMES: icon-only card controls expose descriptive accessible names and truthful aria-pressed
+    [chromium] › tests/e2e/cefr-cards.spec.js:1346:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1372:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1390:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-REDUCED-MOTION: reduced-motion preference disables the flip transition but not the flip
+    [chromium] › tests/e2e/cefr-cards.spec.js:1427:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-THEME: light and dark themes both render the card and keep the flip behavior
+    [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-OVERFLOW: no horizontal overflow on the front or the revealed mixed-content back (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1472:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-CONSOLE: both level pages boot the shared card with a clean console
+    [chromium] › tests/e2e/cefr-cards.spec.js:1550:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-SOURCE-BOUNDARY: a unit switch from phrase flashcards re-routes word grades to word storage (AC-17/AC-10)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1577:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-MODE-SWAP: words and phrases flashcard modes swap their card DOM with no duplicate ids
+    [chromium] › tests/e2e/cefr-cards.spec.js:1611:9 › SHARED-CARD-003 regression — phrases, conversation, source boundary › SC3-REG-A1-UNIT-SWITCH: A1 unit switching updates the card scope and grades the exact unit-2 ID
+  4 passed (6.4m)

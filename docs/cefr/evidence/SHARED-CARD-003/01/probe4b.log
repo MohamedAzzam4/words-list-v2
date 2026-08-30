@@ -1,0 +1,29 @@
+
+Running 1 test using 1 worker
+
+(node:22932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:1194:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions (940ms)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:1194:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions
+
+    Error: expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      1206 |         await page.keyboard.press('Enter');
+      1207 |         const calls = await page.evaluate(() => window.__ttsCalls);
+    > 1208 |         expect(calls).toHaveLength(1);
+           |                       ^
+      1209 |         expect(calls[0].text).toBe('Hallo!');
+      1210 |         expect(await page.evaluate(() => window.__flipMutations)).toBe(0);
+      1211 |         await expect(page.locator('#fc-card-mount .verb-flashcard')).not.toHaveClass(/flipped/);
+        at /tmp/sc003-probe-wt/tests/e2e/cefr-cards.spec.js:1208:23
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-ba99b-rol-—-zero-flip-transitions-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:1194:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-INT-CONTROLS: Enter on a focused card control runs only that control — zero flip transitions

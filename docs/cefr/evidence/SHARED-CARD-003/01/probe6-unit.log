@@ -1,0 +1,42 @@
+✔ LEVEL-DATA-012: normalized mixed translations speak only the English field (4.560711ms)
+✔ LEVEL-DATA-013: normalized Arabic-only translations are never sent to an English voice (1.226161ms)
+✔ LEVEL-DATA-014: legacy cards without normalized speech fields keep English playback (2.224216ms)
+✖ SHARED-CARD-003 unit: translationDisplayAttrs derives direction and language metadata (SC3/LF-CARD) (2.913285ms)
+✔ SHARED-CARD-003 unit: firstExample returns exactly the first structured example or null (1.24949ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.770333
+
+✖ failing tests:
+
+test at tests/unit/flashcards.test.mjs:89:1
+✖ SHARED-CARD-003 unit: translationDisplayAttrs derives direction and language metadata (SC3/LF-CARD) (2.913285ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    {
+  +   dir: 'ltr',
+  +   lang: 'en'
+  -   dir: 'rtl',
+  -   lang: 'ar'
+    }
+
+      at TestContext.<anonymous> (file:///tmp/sc003-probe-wt/tests/unit/flashcards.test.mjs:99:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { dir: 'ltr', lang: 'en' },
+    expected: { dir: 'rtl', lang: 'ar' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
