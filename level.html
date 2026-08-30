@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>German Mastery</title>
     <link rel="stylesheet" href="css/core.css">
+    <link rel="stylesheet" href="css/shared-card.css">
     <link rel="icon" type="image/x-icon" href="favicon.png">
     <script>
         // WP-031: Read level from URL parameter and set data-level + dynamic page info
@@ -192,39 +193,45 @@
                 </div>
 
                 <div class="flashcard-container" id="fc-working-area">
-                    <div class="flashcard" id="active-flashcard" onclick="window.app.flipCard()">
-                        <div class="flashcard-inner">
-                            <div class="flashcard-front">
-                                <span class="type-badge" id="fc-type"
-                                    style="position:absolute; top: 15px; left: 15px;"></span>
-                                <span id="fc-fav-badge"
-                                    onclick="event.stopPropagation(); window.app.toggleCurrentCardFavorite()"
-                                    style="position:absolute; top: 12px; left: 80px; font-size: 1.25rem; cursor: pointer; transition: 0.2s; z-index: 10;"
-                                    title="Toggle Favorite">⭐</span>
-                                <div id="fc-srs-dots" class="srs-dots-container"
-                                    style="position:absolute; top: 18px; left: 130px; display: flex; gap: 4px; z-index: 10;"></div>
-                                <button class="speak-btn" id="fc-speak"
-                                    onclick="event.stopPropagation(); window.app.speakCurrentCard()"
-                                    style="position:absolute; top: 10px; right: 10px; font-size: 1.5rem;">🔊</button>
-                                <div class="fc-german" id="fc-de"></div>
-                                <div style="color: var(--text-muted); font-size: 0.9rem;">Tap to flip</div>
-                            </div>
-                            <div class="flashcard-back">
-                                <span class="type-badge" id="fc-type-back"
-                                    style="position:absolute; top: 15px; left: 15px;"></span>
-                                <span id="fc-fav-badge-back"
-                                    onclick="event.stopPropagation(); window.app.toggleCurrentCardFavorite()"
-                                    style="position:absolute; top: 12px; left: 80px; font-size: 1.25rem; cursor: pointer; transition: 0.2s; z-index: 10;"
-                                    title="Toggle Favorite">⭐</span>
-                                <div id="fc-srs-dots-back" class="srs-dots-container"
-                                    style="position:absolute; top: 18px; left: 130px; display: flex; gap: 4px; z-index: 10;"></div>
-                                <button class="speak-btn" id="fc-speak-back"
-                                    onclick="event.stopPropagation(); window.app.speakCurrentCard()"
-                                    style="position:absolute; top: 10px; right: 10px; font-size: 1.5rem;">🔊</button>
-                                <div class="fc-english" id="fc-en"></div>
-                                <div class="fc-example">
-                                    <div id="fc-ex-de" style="font-weight: bold; margin-bottom: 5px;"></div>
-                                    <div id="fc-ex-en"></div>
+                    <!-- SHARED-CARD-003: the single card slot. The words source
+                         renders the shared card here; the phrases source keeps
+                         the legacy flip card below (restored verbatim by
+                         FlashcardEngine when words mode replaced it). -->
+                    <div id="fc-card-mount">
+                        <div class="flashcard" id="active-flashcard" onclick="window.app.flipCard()">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">
+                                    <span class="type-badge" id="fc-type"
+                                        style="position:absolute; top: 15px; left: 15px;"></span>
+                                    <span id="fc-fav-badge"
+                                        onclick="event.stopPropagation(); window.app.toggleCurrentCardFavorite()"
+                                        style="position:absolute; top: 12px; left: 80px; font-size: 1.25rem; cursor: pointer; transition: 0.2s; z-index: 10;"
+                                        title="Toggle Favorite">⭐</span>
+                                    <div id="fc-srs-dots" class="srs-dots-container"
+                                        style="position:absolute; top: 18px; left: 130px; display: flex; gap: 4px; z-index: 10;"></div>
+                                    <button class="speak-btn" id="fc-speak"
+                                        onclick="event.stopPropagation(); window.app.speakCurrentCard()"
+                                        style="position:absolute; top: 10px; right: 10px; font-size: 1.5rem;">🔊</button>
+                                    <div class="fc-german" id="fc-de"></div>
+                                    <div style="color: var(--text-muted); font-size: 0.9rem;">Tap to flip</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <span class="type-badge" id="fc-type-back"
+                                        style="position:absolute; top: 15px; left: 15px;"></span>
+                                    <span id="fc-fav-badge-back"
+                                        onclick="event.stopPropagation(); window.app.toggleCurrentCardFavorite()"
+                                        style="position:absolute; top: 12px; left: 80px; font-size: 1.25rem; cursor: pointer; transition: 0.2s; z-index: 10;"
+                                        title="Toggle Favorite">⭐</span>
+                                    <div id="fc-srs-dots-back" class="srs-dots-container"
+                                        style="position:absolute; top: 18px; left: 130px; display: flex; gap: 4px; z-index: 10;"></div>
+                                    <button class="speak-btn" id="fc-speak-back"
+                                        onclick="event.stopPropagation(); window.app.speakCurrentCard()"
+                                        style="position:absolute; top: 10px; right: 10px; font-size: 1.5rem;">🔊</button>
+                                    <div class="fc-english" id="fc-en"></div>
+                                    <div class="fc-example">
+                                        <div id="fc-ex-de" style="font-weight: bold; margin-bottom: 5px;"></div>
+                                        <div id="fc-ex-en"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -35,14 +35,17 @@ export class NavigationService {
                 const knownPhrases = new Set(this.state.data?.knownPhrases || []);
                 const favoritePhrases = new Set(this.state.data?.favoritePhrases || []);
                 const phraseErrors = this.state.data?.phraseErrors || {};
-                this.engines.flashcard?.loadUnit(phrases, knownPhrases, favoritePhrases, phraseErrors);
+                // SHARED-CARD-003: the card source is passed explicitly so the
+                // engine renders the right presentation and persistence routes
+                // to the phrase fields.
+                this.engines.flashcard?.loadUnit(phrases, knownPhrases, favoritePhrases, phraseErrors, null, 'phrases');
             } else {
                 this.state.flashcardSource = 'words';
                 const words = this.levelConfig?.vocabulary?.[this.state.unit] || [];
                 const known = new Set(this.state.data?.known || []);
                 const favorites = new Set(this.state.data?.favorites || []);
                 const errors = this.state.data?.flashcardErrors || {};
-                this.engines.flashcard?.loadUnit(words, known, favorites, errors);
+                this.engines.flashcard?.loadUnit(words, known, favorites, errors, null, 'words');
             }
             this.switchView('flashcard');
         } else {
@@ -86,6 +89,11 @@ export class NavigationService {
         if (window.app && typeof window.app.switchUnitTab === 'function') {
             window.app.switchUnitTab('words');
         }
+        // A unit switch always loads ordinary vocabulary. Keeping the flashcard
+        // source in sync here is the explicit source boundary: a grade after a
+        // unit switch must route to the word fields even when the switch
+        // happened from the phrase-flashcard view (SHARED-CARD-003).
+        this.state.flashcardSource = 'words';
         const words = this.levelConfig?.vocabulary?.[i] || [];
 
         this._updateTitles(i);
@@ -101,7 +109,7 @@ export class NavigationService {
                 this.engines.glossary?.loadUnit(words);
                 this.engines.glossary?.render();
             } else if (this.state.view === 'flashcard') {
-                this.engines.flashcard?.loadUnit(words);
+                this.engines.flashcard?.loadUnit(words, null, null, null, null, 'words');
             } else if (this.state.view === 'article-quiz') {
                 this.engines.quiz?.loadUnit(words);
             }

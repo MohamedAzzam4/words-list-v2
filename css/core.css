@@ -617,6 +617,188 @@ th {
     font-weight: bold;
 }
 
+/* SHARED-CARD-003 — ordinary level flashcard through the shared card shell.
+   Scoped under #fc-card-mount (the level page's single card slot) so the
+   Verbs page's own inline card styles are untouched. Generic affordance
+   sizing, focus, reduced-motion and example-line styling live in
+   css/shared-card.css and apply through .shared-card-block. */
+#fc-card-mount {
+    width: 100%;
+}
+
+#fc-card-mount .verb-flashcard {
+    width: 100%;
+    min-height: 360px;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#fc-card-mount .verb-flashcard.flipped {
+    transform: rotateY(180deg);
+}
+
+#fc-card-mount .verb-card-front,
+#fc-card-mount .verb-card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 360px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#fc-card-mount .verb-card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+    border-top: 4px solid var(--primary);
+}
+
+#fc-card-mount .verb-card-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+    border-top: 4px solid var(--success);
+}
+
+#fc-card-mount .verb-flashcard.flipped .verb-card-front {
+    pointer-events: none;
+}
+
+#fc-card-mount .verb-flashcard.flipped .verb-card-back {
+    pointer-events: auto;
+}
+
+#fc-card-mount .verb-card-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#fc-card-mount .verb-center-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 16px 0;
+    width: 100%;
+}
+
+#fc-card-mount .verb-tap-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+#fc-card-mount .type-badge {
+    align-self: center;
+}
+
+#fc-card-mount .fc-srs-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+#fc-card-mount .fc-card-label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+#fc-card-mount .fc-card-term {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--text-main);
+    word-break: break-word;
+    margin-bottom: 8px;
+}
+
+#fc-card-mount .fc-card-context {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+#fc-card-mount .fc-card-muted {
+    color: var(--text-muted);
+}
+
+#fc-card-mount .fav-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: var(--text-main);
+}
+
+#fc-card-mount .back-example-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: left;
+}
+
+#fc-card-mount .ex-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+#fc-card-mount .ex-text {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--text-main);
+}
+
+/* LF-CARD / AC-09: visible keyboard focus + minimum 44x44 primary touch
+   targets for the shared flashcard controls (the card affordances already
+   receive both through css/shared-card.css; these cover the level-owned
+   grade and navigation buttons below the card). */
+#view-flashcard .fc-btn:focus-visible,
+#view-flashcard .fc-nav .btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+#view-flashcard .fc-nav .btn {
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    #fc-card-mount .verb-flashcard,
+    #fc-card-mount .verb-card-front,
+    #fc-card-mount .verb-card-back {
+        min-height: 300px;
+    }
+
+    #fc-card-mount .fc-card-term {
+        font-size: 1.7rem;
+    }
+}
+
 /* Dashboard & Trophies */
 .grid-cards {
     display: grid;
