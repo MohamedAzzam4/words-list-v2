@@ -801,6 +801,342 @@ test.describe('SHARED-CARD-003 A1 ordinary card — synthetic edge cases', () =>
 });
 
 // ---------------------------------------------------------------------------
+// B2 — real dataset
+// ---------------------------------------------------------------------------
+
+test.describe('SHARED-CARD-003 B2 ordinary card — real dataset', () => {
+
+    test('SC3-B2-MIXED: unit-1 card back shows the German answer, the first real example and its actual mixed translation (AC-05)', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Setup proof: card 1-0 German front with its stripped context note.
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('die Vorstellung, -en');
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveAttribute('lang', 'de');
+        await expect(page.locator('#fc-card-mount .fc-card-context')).toContainText('Meine Vorstellung von Heimat');
+
+        await flipToBack(page);
+
+        // The answer is the real display translation — mixed English/Arabic —
+        // with automatic direction and NO single-language label.
+        const answer = page.locator('#fc-card-mount #fc-en');
+        await expect(answer).toContainText('presentation,impression,idea');
+        const answerText = await answer.textContent();
+        expect(answerText).toMatch(ARABIC);
+        await expect(answer).toHaveAttribute('dir', 'auto');
+        await expect(answer).not.toHaveAttribute('lang');
+
+        // The real first example and its actual (mixed) translation.
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span'))
+            .toHaveText('💬 Meine Vorstellung von Heimat ist ein Ort, an dem ich geliebt und akzeptiert werde.');
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveAttribute('lang', 'de');
+        const exLine = page.locator('#fc-card-mount .back-example-box .ex-translation-line');
+        await expect(exLine).toContainText('My idea of home is a place where I am loved and accepted.');
+        const exLineText = await exLine.textContent();
+        expect(exLineText).toMatch(ARABIC);
+        await expect(exLine).toHaveAttribute('dir', 'auto');
+        await expect(exLine).not.toHaveAttribute('lang');
+    });
+
+    test('SC3-B2-EN-ONLY: real English-only translation card carries ltr + lang=en and never a false Arabic label', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Unit 45 (index 44), card 45-18 "der Roboter, -" is the earliest real
+        // English-only translation card. The queue cursor is advanced through
+        // the app's own navigation API (shuffle off keeps unit order).
+        await page.evaluate((i) => window.app.switchUnit(i), 44);
+        await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible();
+        await page.evaluate(() => { for (let i = 0; i < 18; i++) window.app.nextCard(); });
+        await expect(page.locator('#fc-counter')).toHaveText('19 / 33');
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('der Roboter, -');
+
+        await flipToBack(page);
+
+        // English-only translation: explicit ltr + en metadata.
+        const answer = page.locator('#fc-card-mount #fc-en');
+        await expect(answer).toHaveText('robot / robot');
+        await expect(answer).toHaveAttribute('dir', 'ltr');
+        await expect(answer).toHaveAttribute('lang', 'en');
+        const answerText = await answer.textContent();
+        expect(answerText).not.toMatch(ARABIC);
+
+        // The real example with its real mixed translation (dir=auto).
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span'))
+            .toHaveText('💬 Der Roboter kann Aufgaben ausführen, die für Menschen zu gefährlich sind.');
+        const exLine = page.locator('#fc-card-mount .back-example-box .ex-translation-line');
+        await expect(exLine).toContainText('The robot can perform tasks that are too dangerous for human');
+        await expect(exLine).toHaveAttribute('dir', 'auto');
+        await expect(exLine).not.toHaveAttribute('lang');
+    });
+
+    test('SC3-B2-NOEX: real no-example card (unit 69) renders the answer with no example block', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Unit 69 (index 68) starts with no-example cards.
+        await page.evaluate((i) => window.app.switchUnit(i), 68);
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('selbstständiger');
+
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount #fc-en')).toContainText('independent');
+        await expect(page.locator('#fc-card-mount .back-example-box')).toHaveCount(0);
+        await expect(page.locator('#fc-card-mount .ex-sentence-span')).toHaveCount(0);
+    });
+
+    test('SC3-B2-EX-NO-TR: real sentence example without a translation shows the sentence only', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Card 69-80 "sich verstecken" — a real German sentence example with
+        // no translation in the source data. Advanced through the app's own
+        // navigation API (shuffle off keeps unit order).
+        await page.evaluate((i) => window.app.switchUnit(i), 68);
+        await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible();
+        await page.evaluate(() => { for (let i = 0; i < 80; i++) window.app.nextCard(); });
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('sich verstecken');
+
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span'))
+            .toHaveText('💬 Das Kind versteckt sich vor seiner Mutter.');
+        await expect(page.locator('#fc-card-mount .ex-translation-line')).toHaveCount(0);
+        // The mixed translation answer still renders.
+        await expect(page.locator('#fc-card-mount #fc-en')).toContainText('hide (physical absence)');
+    });
+
+    test('SC3-B2-SECRECY: translation-front B2 card hides the German answer and example before reveal (AC-06)', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // B2's translation-front control is language-truthful: the mixed EN/AR
+        // display text is never labeled "English".
+        const faceEn = page.locator('#face-en-btn');
+        await expect(faceEn).not.toHaveText(/English/);
+        await faceEn.click();
+
+        // Setup proof: the mixed prompt is on the front.
+        await expect(page.locator('#fc-card-mount #fc-de')).toContainText('presentation,impression,idea');
+
+        // Complete subtree sweep: no German answer, no German example.
+        const sweep = await sweepFlashcardView(page, ['die Vorstellung', 'Meine Vorstellung von Heimat ist ein Ort']);
+        expect(sweep.unique, `pre-reveal leaks (${sweep.uniqueCount} unique carriers): ${sweep.unique.join(' | ')}`).toEqual([]);
+
+        // The real accessibility tree exposes no German answer either.
+        const names = await axTreeNames(page);
+        const leaked = names.filter((n) => n.includes('die Vorstellung') || n.includes('Meine Vorstellung von Heimat'));
+        expect(leaked).toEqual([]);
+
+        // After reveal the German answer appears with the example block.
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveText('die Vorstellung, -en');
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toBeVisible();
+    });
+
+    test('SC3-B2-ID-PERSISTENCE: grading writes the exact B2 unit ID under the B2 storage key only', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Unit 45 card 45-18 graded Known — the exact original ID, nothing
+        // from another unit and nothing in the A1 storage key.
+        await page.evaluate((i) => window.app.switchUnit(i), 44);
+        await expect(page.locator('#fc-card-mount .verb-flashcard')).toBeVisible();
+        await page.evaluate(() => { for (let i = 0; i < 18; i++) window.app.nextCard(); });
+        await page.locator('.fc-btn.btn-known').click();
+        await page.waitForFunction((key) => {
+            const data = JSON.parse(localStorage.getItem(key) || '{}');
+            return data.srsData && Object.keys(data.srsData).length === 1;
+        }, B2_KEY);
+
+        const b2 = await readProgress(page, B2_KEY);
+        expect(Object.keys(b2.srsData)).toEqual(['45-18']);
+        expect(b2.known).toEqual(['45-18']);
+        const a1 = await readProgress(page, A1_KEY);
+        expect(a1.srsData || {}).toEqual({});
+        expect(a1.known || []).toEqual([]);
+    });
+
+    test('SC3-B2-UNIT-SWITCH: B2 unit switching updates the card scope and titles', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // Unit 2 (index 1) first card.
+        await page.evaluate((i) => window.app.switchUnit(i), 1);
+        await expect(page.locator('#fc-card-mount #fc-de')).toContainText('der Grafiker');
+        await expect(page.locator('#fc-counter')).toHaveText(/1 \/ \d+/);
+
+        // Unit 1 (index 0) restores unit-1 scope.
+        await page.evaluate((i) => window.app.switchUnit(i), 0);
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('die Vorstellung, -en');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// B2 — synthetic language edges
+// ---------------------------------------------------------------------------
+
+test.describe('SHARED-CARD-003 B2 ordinary card — synthetic language edges', () => {
+
+    async function openSyntheticB2(page) {
+        await prepareLevelPage(page, {
+            level: 'b2',
+            syntheticConfig: syntheticConfigSource('b2', 'german-b2-app', SYNTHETIC_B2_CARDS)
+        });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+    }
+
+    test('SC3-B2-SYNTH-AR: Arabic-only translation renders rtl + lang=ar and is never labeled English', async ({ page }) => {
+        await openSyntheticB2(page);
+
+        // German front for the Arabic-only card.
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('das Wort');
+
+        await flipToBack(page);
+
+        // The Arabic answer: RTL direction + Arabic language metadata, and
+        // no English label anywhere on it.
+        const answer = page.locator('#fc-card-mount #fc-en');
+        await expect(answer).toHaveText('الكلمة');
+        await expect(answer).toHaveAttribute('dir', 'rtl');
+        await expect(answer).toHaveAttribute('lang', 'ar');
+        expect(await answer.getAttribute('lang')).not.toBe('en');
+
+        // The Arabic-only example translation is RTL + ar as well.
+        const exLine = page.locator('#fc-card-mount .back-example-box .ex-translation-line');
+        await expect(exLine).toHaveText('(الكلمة جديدة)');
+        await expect(exLine).toHaveAttribute('dir', 'rtl');
+        await expect(exLine).toHaveAttribute('lang', 'ar');
+
+        // Translation-front mode shows the Arabic prompt with the same
+        // truthful metadata.
+        await page.locator('#face-en-btn').click();
+        const frontTerm = page.locator('#fc-card-mount #fc-de');
+        await expect(frontTerm).toHaveText('الكلمة');
+        await expect(frontTerm).toHaveAttribute('dir', 'rtl');
+        await expect(frontTerm).toHaveAttribute('lang', 'ar');
+    });
+
+    test('SC3-B2-SYNTH-MIXED: mixed translation and multiple examples — dir=auto, no lang, first example only', async ({ page }) => {
+        await openSyntheticB2(page);
+
+        await page.locator('.fc-nav button', { hasText: 'Next' }).click();
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('der Tisch');
+
+        await flipToBack(page);
+
+        // Mixed answer: automatic direction, no single-language label.
+        const answer = page.locator('#fc-card-mount #fc-en');
+        await expect(answer).toHaveText('table / الطاولة');
+        await expect(answer).toHaveAttribute('dir', 'auto');
+        await expect(answer).not.toHaveAttribute('lang');
+
+        // Exactly the first example (mixed translation); the second example
+        // never reaches the card.
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveText('💬 Der Tisch ist groß.');
+        const exLine = page.locator('#fc-card-mount .back-example-box .ex-translation-line');
+        await expect(exLine).toContainText('The table is big.');
+        expect(await exLine.textContent()).toMatch(ARABIC);
+        await expect(exLine).toHaveAttribute('dir', 'auto');
+        await expect(exLine).not.toHaveAttribute('lang');
+        await expect(page.locator('#fc-card-mount .verb-card-back')).not.toContainText('Ich kaufe den Tisch.');
+    });
+
+    test('SC3-B2-SYNTH-NOEX-EN: English-only no-example card renders safely', async ({ page }) => {
+        await openSyntheticB2(page);
+
+        for (let i = 0; i < 2; i++) {
+            await page.locator('.fc-nav button', { hasText: 'Next' }).click();
+        }
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('die Forschung');
+
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveText('research');
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveAttribute('lang', 'en');
+        await expect(page.locator('#fc-card-mount .back-example-box')).toHaveCount(0);
+    });
+
+    test('SC3-B2-SYNTH-MISSING-TR: missing translation renders a truthful placeholder and never a false language', async ({ page }) => {
+        await openSyntheticB2(page);
+
+        for (let i = 0; i < 3; i++) {
+            await page.locator('.fc-nav button', { hasText: 'Next' }).click();
+        }
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('das Nichts');
+
+        // Translation-front for a card with no translation: the front shows a
+        // truthful muted placeholder — never the German answer (secrecy).
+        await page.locator('#face-en-btn').click();
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('—');
+        const sweep = await sweepFlashcardView(page, ['das Nichts', 'Das Nichts ist leer.']);
+        expect(sweep.unique, `missing-translation front leak: ${sweep.unique.join(' | ')}`).toEqual([]);
+
+        // Revealing a translation-front card shows the German answer with the
+        // example sentence (no translation line exists for this example).
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveText('das Nichts');
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveAttribute('lang', 'de');
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveText('💬 Das Nichts ist leer.');
+        await expect(page.locator('#fc-card-mount .ex-translation-line')).toHaveCount(0);
+
+        // German-front: the missing translation renders the truthful muted
+        // placeholder on the answer side — with no language label at all.
+        await page.locator('#face-de-btn').click();
+        await flipToBack(page);
+        await expect(page.locator('#fc-card-mount #fc-en')).toHaveText('—');
+        await expect(page.locator('#fc-card-mount #fc-en')).not.toHaveAttribute('lang');
+        await expect(page.locator('#fc-card-mount .back-example-box .ex-sentence-span')).toHaveText('💬 Das Nichts ist leer.');
+    });
+
+    test('SC3-B2-SYNTH-VOICE: Arabic and mixed display text are never spoken through any voice', async ({ page }) => {
+        await openSyntheticB2(page);
+
+        // Card 1-0 (Arabic-only translation): the German prompt is speakable…
+        await page.locator('#fc-card-mount .verb-card-front [data-action="speak"]').click();
+        let calls = await page.evaluate(() => window.__ttsCalls);
+        expect(calls).toHaveLength(1);
+        expect(calls[0].text).toBe('das Wort');
+
+        // …but the Arabic answer is never spoken after reveal (no English
+        // text exists — there is no safe utterance, so nothing is spoken).
+        await flipToBack(page);
+        await page.locator('#fc-card-mount .verb-card-back [data-action="speak"]').click();
+        calls = await page.evaluate(() => window.__ttsCalls);
+        expect(calls).toHaveLength(1);
+
+        // Card 1-1 (mixed translation): the back speak uses the English part
+        // only — never the mixed display text.
+        await flipBackToFront(page);
+        await page.locator('.fc-nav button', { hasText: 'Next' }).click();
+        await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('der Tisch');
+        await flipToBack(page);
+        await page.locator('#fc-card-mount .verb-card-back [data-action="speak"]').click();
+        calls = await page.evaluate(() => window.__ttsCalls);
+        expect(calls).toHaveLength(2);
+        expect(calls[1].text).toBe('table');
+        expect(calls[1].text).not.toMatch(ARABIC);
+
+        // The example sentence speaks German through the real adapter.
+        await page.locator('#fc-card-mount .back-example-box .ex-sentence-span').click();
+        calls = await page.evaluate(() => window.__ttsCalls);
+        expect(calls).toHaveLength(3);
+        expect(calls[2].text).toBe('Der Tisch ist groß.');
+        expect(calls[2].lang).toBe('de-DE');
+
+        // No captured utterance ever contained Arabic display text.
+        for (const call of calls) {
+            expect(call.text, `utterance must not contain Arabic display text: ${call.text}`).not.toMatch(ARABIC);
+        }
+    });
+});
+
+// ---------------------------------------------------------------------------
 // Interaction and accessibility (A1 real dataset)
 // ---------------------------------------------------------------------------
 

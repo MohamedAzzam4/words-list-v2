@@ -445,6 +445,15 @@
                     typeFilter.appendChild(opt);
                 }
             }
+
+            // SHARED-CARD-003 (LF-CARD): B2 translations are mixed
+            // English/Arabic or Arabic-only — the translation-front control
+            // must not label that content "English". A1 translations are
+            // English, so its label stays truthful as-is.
+            if (level === 'b2') {
+                const faceEnBtn = document.getElementById('face-en-btn');
+                if (faceEnBtn) faceEnBtn.textContent = '🌐 Translation';
+            }
         })();
     </script>
 
