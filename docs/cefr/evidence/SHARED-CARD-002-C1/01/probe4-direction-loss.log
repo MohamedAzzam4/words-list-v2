@@ -1,0 +1,53 @@
+✔ SHARED-CARD-002 unit: unrevealed front renders the shell with an empty lazy back face (1.127483ms)
+✔ SHARED-CARD-002 unit: lazy revealed back carries the answer content and the flipped state (0.182891ms)
+✔ SHARED-CARD-002 unit: example block renders ONLY the first example with its translation always visible (SC-02) (0.283466ms)
+✔ SHARED-CARD-002 unit: example block without a translation shows the sentence and no translation line (0.152522ms)
+✔ SHARED-CARD-002 unit: no-example state renders nothing — no stale or placeholder content (0.122391ms)
+✔ SHARED-CARD-002 unit: adapter-specific actions are placed below the card, verbatim (0.186284ms)
+✔ SHARED-CARD-002 unit: the renderer has no storage/scheduler/persistence/DOM dependency (FP-DESIGN-009) (0.424694ms)
+✔ SHARED-CARD-002 unit: safe escaping — example data is sanitized in text and attributes (0.181884ms)
+✔ SHARED-CARD-002 unit: hidden metadata — the favorite button carries no card id and a hidden hint carries no text (SC-01b/d) (0.429466ms)
+✔ SHARED-CARD-002 unit: non-flippable presentation card exposes no flip affordance (0.282733ms)
+✔ SHARED-CARD-002-C1 unit: icon-only Speak and Favorite affordances expose stable descriptive accessible names (SC2-C1-A11Y-001) (0.162144ms)
+✔ SHARED-CARD-002-C1 unit: only the displayed face is exposed — the hidden back renders inert until flipped, and an inert front is supported (SC2-C1-A11Y-002) (0.125226ms)
+✔ SHARED-CARD-002-C1 unit: a non-activatable card keeps both faces but exposes no activation affordance (SC2-C1-A11Y-003) (0.127537ms)
+✖ SHARED-CARD-002-C1 unit: example translations are language-neutral — English, Arabic, mixed and missing metadata render safely (SC2-C1-DESIGN-001) (2.031014ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 13
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.433027
+
+✖ failing tests:
+
+test at tests/unit/shared-card.test.mjs:243:1
+✖ SHARED-CARD-002-C1 unit: example translations are language-neutral — English, Arabic, mixed and missing metadata render safely (SC2-C1-DESIGN-001) (2.031014ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<div class="ex-translation-line" dir="rtl" lang="ar">\(أفعل واجبي المنزلي\.\)<\/div>/. Input:
+
+  '\n' +
+    '        <div class="back-example-box">\n' +
+    '            <div class="ex-label">Example:</div>\n' +
+    '            <div class="ex-text">\n' +
+    '                <button type="button" class="ex-sentence-span card-affordance" data-action="speak-text" data-text="Ich mache die Hausaufgaben." lang="de" title="Click sentence to pronounce">💬 Ich mache die Hausaufgaben.</button>\n' +
+    '            </div>\n' +
+    '            <div class="ex-translation-line" dir="ltr" lang="ar">(أفعل واجبي المنزلي.)</div>\n' +
+    '        </div>\n' +
+    '    '
+
+      at TestContext.<anonymous> (file:///home/z/my-project/wt-c1-probes/tests/unit/shared-card.test.mjs:250:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '\n        <div class="back-example-box">\n            <div class="ex-label">Example:</div>\n            <div class="ex-text">\n                <button type="button" class="ex-sentence-span card-affordance" data-action="speak-text" data-text="Ich mache die Hausaufgaben." lang="de" title="Click sentence to pronounce">💬 Ich mache die Hausaufgaben.</button>\n            </div>\n            <div class="ex-translation-line" dir="ltr" lang="ar">(أفعل واجبي المنزلي.)</div>\n        </div>\n    ',
+    expected: /<div class="ex-translation-line" dir="rtl" lang="ar">\(أفعل واجبي المنزلي\.\)<\/div>/,
+    operator: 'match',
+    diff: 'simple'
+  }

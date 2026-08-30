@@ -1,0 +1,52 @@
+
+Running 1 test using 1 worker
+
+(node:18278) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /verbs.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/tts.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:44:57] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+  ✘  1 [chromium] › tests/e2e/cefr-card-reference.spec.js:1896:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names (5.5s)
+
+
+  1) [chromium] › tests/e2e/cefr-card-reference.spec.js:1896:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator:  locator('.verb-card-front [data-action="fav"]')
+    Expected: "Toggle Favorite"
+    Received: ""
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveAttribute" with timeout 5000ms
+      - waiting for locator('.verb-card-front [data-action="fav"]')
+        14 × locator resolved to <button type="button" data-action="fav" aria-pressed="false" title="Toggle Favorite" class="fav-icon-btn card-affordance">☆</button>
+           - unexpected value "null"
+
+
+      1903 |         await expect(frontSpeak).toHaveAttribute('aria-label', 'Speak Verb');
+      1904 |         const frontFav = page.locator('.verb-card-front [data-action="fav"]');
+    > 1905 |         await expect(frontFav).toHaveAttribute('aria-label', 'Toggle Favorite');
+           |                                ^
+      1906 |
+      1907 |         // Role lookups resolve the controls by their descriptive names…
+      1908 |         await expect(page.getByRole('button', { name: 'Speak Verb' })).toHaveCount(1);
+        at /home/z/my-project/wt-c1-probes/tests/e2e/cefr-card-reference.spec.js:1905:32
+
+    Error Context: test-results/cefr-card-reference-SHARED-d1e5b-escriptive-accessible-names-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/cefr-card-reference.spec.js:1896:9 › SHARED-CARD-002-C1 corrections — owner-review findings › C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names

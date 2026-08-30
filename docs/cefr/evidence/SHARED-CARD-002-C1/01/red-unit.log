@@ -1,0 +1,122 @@
+✔ SHARED-CARD-002 unit: unrevealed front renders the shell with an empty lazy back face (1.237263ms)
+✔ SHARED-CARD-002 unit: lazy revealed back carries the answer content and the flipped state (0.171275ms)
+✔ SHARED-CARD-002 unit: example block renders ONLY the first example with its translation always visible (SC-02) (0.212006ms)
+✔ SHARED-CARD-002 unit: example block without a translation shows the sentence and no translation line (0.134742ms)
+✔ SHARED-CARD-002 unit: no-example state renders nothing — no stale or placeholder content (0.108125ms)
+✔ SHARED-CARD-002 unit: adapter-specific actions are placed below the card, verbatim (0.189648ms)
+✔ SHARED-CARD-002 unit: the renderer has no storage/scheduler/persistence/DOM dependency (FP-DESIGN-009) (0.367391ms)
+✔ SHARED-CARD-002 unit: safe escaping — example data is sanitized in text and attributes (0.171381ms)
+✔ SHARED-CARD-002 unit: hidden metadata — the favorite button carries no card id and a hidden hint carries no text (SC-01b/d) (0.411142ms)
+✔ SHARED-CARD-002 unit: non-flippable presentation card exposes no flip affordance (0.227141ms)
+✖ SHARED-CARD-002-C1 unit: icon-only Speak and Favorite affordances expose stable descriptive accessible names (SC2-C1-A11Y-001) (0.803595ms)
+✖ SHARED-CARD-002-C1 unit: only the displayed face is exposed — the hidden back renders inert until flipped, and an inert front is supported (SC2-C1-A11Y-002) (0.223486ms)
+✖ SHARED-CARD-002-C1 unit: a non-activatable card keeps both faces but exposes no activation affordance (SC2-C1-A11Y-003) (0.392609ms)
+✖ SHARED-CARD-002-C1 unit: example translations are language-neutral — English, Arabic, mixed and missing metadata render safely (SC2-C1-DESIGN-001) (0.217332ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 10
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 73.036935
+
+✖ failing tests:
+
+test at tests/unit/shared-card.test.mjs:177:1
+✖ SHARED-CARD-002-C1 unit: icon-only Speak and Favorite affordances expose stable descriptive accessible names (SC2-C1-A11Y-001) (0.803595ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /data-action="speak" title="Speak Verb" aria-label="Speak Verb"/. Input:
+
+  '<button type="button" class="hint-btn card-affordance" data-action="toggle-hint" title="Get a hint">💡 Get a hint</button><div class="topbar-right-btns"><button type="button" class="speak-btn card-affordance" data-action="speak" title="Speak Verb">🔊</button><button type="button" class="fav-icon-btn card-affordance" data-action="fav" title="Toggle Favorite" aria-pressed="false">☆</button></div>'
+
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/shared-card.test.mjs:186:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<button type="button" class="hint-btn card-affordance" data-action="toggle-hint" title="Get a hint">💡 Get a hint</button><div class="topbar-right-btns"><button type="button" class="speak-btn card-affordance" data-action="speak" title="Speak Verb">🔊</button><button type="button" class="fav-icon-btn card-affordance" data-action="fav" title="Toggle Favorite" aria-pressed="false">☆</button></div>',
+    expected: /data-action="speak" title="Speak Verb" aria-label="Speak Verb"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests/unit/shared-card.test.mjs:196:1
+✖ SHARED-CARD-002-C1 unit: only the displayed face is exposed — the hidden back renders inert until flipped, and an inert front is supported (SC2-C1-A11Y-002) (0.223486ms)
+  AssertionError [ERR_ASSERTION]: hidden back face must render inert
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/shared-card.test.mjs:207:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/unit/shared-card.test.mjs:222:1
+✖ SHARED-CARD-002-C1 unit: a non-activatable card keeps both faces but exposes no activation affordance (SC2-C1-A11Y-003) (0.392609ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /data-action="flip"/. Input:
+
+  '\n' +
+    '        <div class="shared-card-block shared-card-guided">\n' +
+    '            <div class="verb-flashcard flipped" data-action="flip" tabindex="0" role="button" aria-label="Flashcard: activate to flip">\n' +
+    '                \n' +
+    '        <div class="verb-card-front">\n' +
+    '            \n' +
+    '            <div class="verb-center-content">\n' +
+    '                PROMPT\n' +
+    '                \n' +
+    '            </div>\n' +
+    '            \n' +
+    '        </div>\n' +
+    '    \n' +
+    '                <div class="verb-card-back"><div class="guided-answer">ANTWORT</div></div>\n' +
+    '            </div>\n' +
+    '            \n' +
+    '        </div>\n' +
+    '    '
+
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/shared-card.test.mjs:237:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '\n        <div class="shared-card-block shared-card-guided">\n            <div class="verb-flashcard flipped" data-action="flip" tabindex="0" role="button" aria-label="Flashcard: activate to flip">\n                \n        <div class="verb-card-front">\n            \n            <div class="verb-center-content">\n                PROMPT\n                \n            </div>\n            \n        </div>\n    \n                <div class="verb-card-back"><div class="guided-answer">ANTWORT</div></div>\n            </div>\n            \n        </div>\n    ',
+    expected: /data-action="flip"/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }
+
+test at tests/unit/shared-card.test.mjs:243:1
+✖ SHARED-CARD-002-C1 unit: example translations are language-neutral — English, Arabic, mixed and missing metadata render safely (SC2-C1-DESIGN-001) (0.217332ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<div class="ex-translation-line" dir="ltr" lang="en">\(I do the homework\.\)<\/div>/. Input:
+
+  ''
+
+      at TestContext.<anonymous> (file:///home/z/my-project/words-list-v2/tests/unit/shared-card.test.mjs:246:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /<div class="ex-translation-line" dir="ltr" lang="en">\(I do the homework\.\)<\/div>/,
+    operator: 'match',
+    diff: 'simple'
+  }

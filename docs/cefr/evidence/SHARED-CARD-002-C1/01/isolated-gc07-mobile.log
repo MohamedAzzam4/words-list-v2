@@ -1,0 +1,26 @@
+
+Running 1 test using 1 worker
+
+(node:17910) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /verbs.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /css/verb-challenge.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/verbs-engine.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/tts.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/verb-challenge-engine.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /content/generated/verbs/top_verbs_2000.json HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [30/Aug/2026 01:43:31] "GET /verbs.html HTTP/1.1" 304 -
+  ✓  1 [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion (1.5s)
+
+  1 passed (2.3s)

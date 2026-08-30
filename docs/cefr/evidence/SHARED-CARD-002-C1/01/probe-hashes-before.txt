@@ -1,0 +1,2 @@
+17a515f8fc8385a4862d0a14ed3173bf780e9cecc3de77e251118d02629cf39a  js/core/shared-card.js
+c3b194c7cf5e1a0f955dbe32b5d3dc89d4e3c2bcd56376c74adf0d991eab2986  js/core/verbs-engine.js
