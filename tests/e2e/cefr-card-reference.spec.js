@@ -612,8 +612,8 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         const sentences = page.locator('.back-example-box .ex-sentence-span');
         await expect(sentences).toHaveCount(1);
         await expect(sentences.nth(0)).toHaveText('💬 Ich mache die Hausaufgaben.');
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText('(I do the homework.)');
         // The other examples never reach the flashcard (glossary/autoplay keep them)
         await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
         await expect(page.locator('.verb-card-back')).not.toContainText('Wir haben Kuchen gemacht.');
@@ -640,8 +640,8 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(sentences).toHaveCount(1);
         await expect(sentences.nth(0)).toHaveText('💬 Sie sagt die Wahrheit.');
         // Translation is visible without any extra click
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(She tells the truth.)');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText('(She tells the truth.)');
     });
 
     test('CHAR-05: zero-example verb renders no example box, chip, or stale content (safe no-example state)', async ({ page }) => {
@@ -680,7 +680,7 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(sentences).toHaveCount(1);
         await expect(sentences.nth(0)).toHaveText('💬 Ich grüble über die Frage.');
         await expect(page.locator('.ex-en-chip')).toHaveCount(0);
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveCount(0);
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveCount(0);
     });
 
     test('CHAR-07 (TARGET, SC-02 resolved): example-direction backs show the first example with its always-visible translation', async ({ page }) => {
@@ -697,8 +697,8 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.back-example-box')).toBeVisible();
         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);
         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveText('💬 Ich mache die Hausaufgaben.');
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText('(I do the homework.)');
         // No additional examples on the flashcard (owner decision 2)
         await expect(page.locator('.extra-card-examples')).toHaveCount(0);
         await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
@@ -780,8 +780,8 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         const first = page.locator('.back-example-box .ex-sentence-span').first();
         await expect(first).toBeVisible();
         await expect(first).toHaveText('💬 Ich mache die Hausaufgaben.');
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I do the homework.)');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText('(I do the homework.)');
     });
 
     test('CHAR-10: front favorite toggles the star, persists, and does not flip, grade, or advance', async ({ page }) => {
@@ -859,7 +859,7 @@ test.describe('SHARED-CARD-001 ordinary card reference — synthetic edge-case d
         await expect(page.locator('.verb-card-back')).toContainText('werde machen');
 
         // Translation visibility needs no interaction anymore (SC-02 resolved)
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
 
         const state = await readCardState(page);
         expect(state.flipped).toBe(true);
@@ -1190,8 +1190,8 @@ test.describe('SHARED-CARD-001 ordinary card reference — real published datase
         const sentences = page.locator('.back-example-box .ex-sentence-span');
         await expect(sentences).toHaveCount(1);
         await expect(sentences.nth(0)).toHaveText('💬 Ich werde Lehrer.');
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toHaveText('(I become a teacher.)');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText('(I become a teacher.)');
         await expect(page.locator('.verb-card-back')).not.toContainText('Er wurde letztes Jahr befördert.');
     });
 });
@@ -1242,8 +1242,11 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('.guided-answer')).toBeVisible();
         expect((await readGuidedState(page)).revealed).toBe(true);
 
-        // Clicking the card body after reveal neither hides the answer nor grades
-        await page.locator('.guided-prompt-main').click();
+        // Clicking the card body after reveal neither hides the answer nor grades.
+        // SHARED-CARD-002-C1 supersession: the hidden front face is inert now
+        // (SC2-C1-A11Y-002), so the displayed back is the only real click
+        // surface — a post-reveal no-op click must target it.
+        await page.locator('.guided-answer').click();
         await expect(page.locator('.guided-answer')).toBeVisible();
         const afterState = await readGuidedState(page);
         expect(afterState.revealed).toBe(true);
@@ -1350,10 +1353,10 @@ test.describe('SHARED-CARD-001 guided card reference — synthetic deck', () => 
         await expect(page.locator('.guided-answer-main')).toHaveText(served.infinitive);
         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveText(`💬 ${served.exampleDe}`);
         if (served.exampleEn) {
-            await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-            await expect(page.locator('.back-example-box .ex-en-line')).toHaveText(`(${served.exampleEn})`);
+            await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+            await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText(`(${served.exampleEn})`);
         } else {
-            await expect(page.locator('.back-example-box .ex-en-line')).toHaveCount(0);
+            await expect(page.locator('.back-example-box .ex-translation-line')).toHaveCount(0);
         }
         await expect(page.locator('button:has-text("🔊 Listen")')).toBeVisible();
     });
@@ -1577,8 +1580,8 @@ test.describe('SHARED-CARD-001/002 reference vs approved LF/GC targets — findi
 
         await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveCount(1);
         await expect(page.locator('.back-example-box .ex-sentence-span').first()).toHaveText('💬 Ich mache die Hausaufgaben.');
-        await expect(page.locator('.back-example-box .ex-en-line')).toBeVisible();
-        await expect(page.locator('.back-example-box .ex-en-line')).toContainText('I do the homework.');
+        await expect(page.locator('.back-example-box .ex-translation-line')).toBeVisible();
+        await expect(page.locator('.back-example-box .ex-translation-line')).toContainText('I do the homework.');
         // Additional examples never reach the flashcard (owner decision 2)
         await expect(page.locator('.verb-card-back')).not.toContainText('Er macht das Fenster auf.');
     });
@@ -1857,5 +1860,215 @@ test.describe('SHARED-CARD-002 shared presentation — shell sharing and card-le
         expect(afterDup.verbId).toBe(before.verbId);
         expect(afterDup.phase).toBe(before.phase);
         await expect(page.locator('.guided-answer')).toHaveCount(1);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// SHARED-CARD-002-C1 — owner-review corrections (findings SC2-C1-A11Y-001,
+// SC2-C1-A11Y-002, SC2-C1-A11Y-003, SC2-C1-DESIGN-001).
+// ---------------------------------------------------------------------------
+
+// Real accessibility-tree evidence for SC2-C1-A11Y-002: Chrome excludes inert
+// subtrees from its accessibility tree. This helper resolves which card face
+// each AX-tree button with `buttonName` lives in, proving the hidden face's
+// controls are absent from (not merely unfocusable in) the accessibility tree.
+async function axTreeButtonFaces(page, buttonName) {
+    const cdp = await page.context().newCDPSession(page);
+    const { nodes } = await cdp.send('Accessibility.getFullAXTree');
+    const faces = [];
+    for (const node of nodes) {
+        if (node.ignored || !node.role || node.role.value !== 'button') continue;
+        if (!node.name || node.name.value !== buttonName) continue;
+        if (!node.backendDOMNodeId) { faces.push('unresolvable'); continue; }
+        const { object } = await cdp.send('DOM.resolveNode', { backendNodeId: node.backendDOMNodeId });
+        const { result } = await cdp.send('Runtime.callFunctionOn', {
+            objectId: object.objectId,
+            functionDeclaration: 'function() { return this.closest(".verb-card-front") ? "front" : this.closest(".verb-card-back") ? "back" : "other"; }',
+            returnByValue: true
+        });
+        faces.push(result.value);
+    }
+    return faces;
+}
+
+test.describe('SHARED-CARD-002-C1 corrections — owner-review findings', () => {
+
+    test('C1-A11Y-001 (SC2-C1-A11Y-001): icon-only Speak and Favorite affordances expose stable descriptive accessible names', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await openFlashcardsView(page);
+
+        // The icon-only topbar affordances announce what they do: the
+        // accessible name comes from an explicit aria-label, not the emoji.
+        const frontSpeak = page.locator('.verb-card-front [data-action="speak"]');
+        await expect(frontSpeak).toHaveAttribute('aria-label', 'Speak Verb');
+        const frontFav = page.locator('.verb-card-front [data-action="fav"]');
+        await expect(frontFav).toHaveAttribute('aria-label', 'Toggle Favorite');
+
+        // Role lookups resolve the controls by their descriptive names…
+        await expect(page.getByRole('button', { name: 'Speak Verb' })).toHaveCount(1);
+        await expect(page.getByRole('button', { name: 'Toggle Favorite' })).toHaveCount(1);
+        // …and the bare glyphs are no longer the announced names.
+        await expect(page.getByRole('button', { name: '🔊', exact: true })).toHaveCount(0);
+        await expect(page.getByRole('button', { name: '☆', exact: true })).toHaveCount(0);
+
+        // aria-pressed carries the favorite state while the name stays stable.
+        await expect(frontFav).toHaveAttribute('aria-pressed', 'false');
+        await frontFav.click();
+        await expect(frontFav).toHaveAttribute('aria-pressed', 'true');
+        await expect(page.getByRole('button', { name: 'Toggle Favorite' })).toHaveCount(1);
+        await expect(page.getByRole('button', { name: '⭐', exact: true })).toHaveCount(0);
+        await frontFav.click();
+        await expect(frontFav).toHaveAttribute('aria-pressed', 'false');
+    });
+
+    test('C1-A11Y-002 (SC2-C1-A11Y-002, ordinary): the inactive face is inert — unreachable by Tab, absent from the accessibility tree, restored on flip-back', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await openFlashcardsView(page);
+
+        // BEFORE REVEAL: only the displayed front face is exposed; the hidden
+        // back face is deterministically isolated from keyboard and AT.
+        let faces = await page.evaluate(() => ({
+            front: document.querySelector('.verb-flashcard .verb-card-front').inert,
+            back: document.querySelector('.verb-flashcard .verb-card-back').inert
+        }));
+        expect(faces.front).toBe(false);
+        expect(faces.back).toBe(true);
+
+        // Front controls stay keyboard reachable (real Tab navigation).
+        const frontSpeakSel = '.verb-card-front [data-action="speak"]';
+        const preWalk = await tabWalk(page, { wantedSelectors: [frontSpeakSel], stopSelector: frontSpeakSel, maxTabs: 70 });
+        expect(preWalk.seen.has(frontSpeakSel), 'pre-reveal Tab must reach the front speak control').toBe(true);
+
+        // AFTER REVEAL: the hidden front face (with its controls) is inert…
+        await flipToBack(page);
+        faces = await page.evaluate(() => ({
+            front: document.querySelector('.verb-flashcard .verb-card-front').inert,
+            back: document.querySelector('.verb-flashcard .verb-card-back').inert
+        }));
+        expect(faces.front).toBe(true);
+        expect(faces.back).toBe(false);
+
+        // …absent from Chrome's accessibility tree — the one AX-tree button
+        // named "Speak Verb" lives on the displayed back, not the hidden front…
+        const axFaces = await axTreeButtonFaces(page, 'Speak Verb');
+        expect(axFaces).toEqual(['back']);
+
+        // …and unreachable by Tab: a full keyboard traversal reaches the back
+        // controls but never focuses a front-face control.
+        const walk = await tabWalk(page, {
+            wantedSelectors: [
+                '.verb-card-back [data-action="speak"]',
+                '.verb-card-front [data-action="speak"]',
+                '.verb-card-front [data-action="fav"]',
+                '.verb-card-front [data-action="toggle-hint"]'
+            ],
+            maxTabs: 70
+        });
+        expect(walk.seen.has('.verb-card-back [data-action="speak"]'), 'Tab must reach the back speak control').toBe(true);
+        expect(walk.seen.has('.verb-card-front [data-action="speak"]'), 'Tab must never focus the hidden front speak control').toBe(false);
+        expect(walk.seen.has('.verb-card-front [data-action="fav"]'), 'Tab must never focus the hidden front favorite control').toBe(false);
+        expect(walk.seen.has('.verb-card-front [data-action="toggle-hint"]'), 'Tab must never focus the hidden front hint control').toBe(false);
+
+        // FLIP BACK: front-face accessibility is fully restored (and the
+        // answer side is emptied again — secrecy preserved).
+        await page.locator('.verb-card-back .back-main-row').click();
+        await expect(page.locator('.verb-flashcard')).not.toHaveClass(/flipped/);
+        faces = await page.evaluate(() => ({
+            front: document.querySelector('.verb-flashcard .verb-card-front').inert,
+            back: document.querySelector('.verb-flashcard .verb-card-back').inert
+        }));
+        expect(faces.front).toBe(false);
+        expect(faces.back).toBe(true);
+        await expect(page.locator('.verb-card-back')).toBeEmpty();
+        const restoreWalk = await tabWalk(page, { wantedSelectors: [frontSpeakSel], stopSelector: frontSpeakSel, maxTabs: 70 });
+        expect(restoreWalk.seen.has(frontSpeakSel), 'flip-back must restore front-face keyboard accessibility').toBe(true);
+    });
+
+    test('C1-A11Y-002 (SC2-C1-A11Y-002, guided): the revealed guided back exposes its controls while the hidden front stays inert', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await startGuided(page);
+        await clickIntrosCollecting(page);
+        await page.locator('button:has-text("Reveal Answer")').click();
+        await expect(page.locator('.guided-answer')).toBeVisible();
+
+        const faces = await page.evaluate(() => {
+            const card = document.querySelector('#guided-challenge-root .verb-flashcard');
+            return {
+                front: card.querySelector('.verb-card-front').inert,
+                back: card.querySelector('.verb-card-back').inert
+            };
+        });
+        expect(faces.front).toBe(true);
+        expect(faces.back).toBe(false);
+    });
+
+    test('C1-A11Y-003 (SC2-C1-A11Y-003): guided card semantics stay truthful — keyboard-reachable reveal, then no stale actionable reveal affordance', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await startGuided(page);
+        await clickIntrosCollecting(page);
+
+        // BEFORE REVEAL: the card is keyboard reachable and advertises
+        // exactly one activation — reveal.
+        const guidedCard = page.locator('#guided-challenge-root .verb-flashcard');
+        await expect(guidedCard).toHaveAttribute('data-action', 'flip');
+        await expect(guidedCard).toHaveAttribute('role', 'button');
+        await expect(guidedCard).toHaveAttribute('tabindex', '0');
+        await expect(guidedCard).toHaveAttribute('aria-label', 'Guided challenge card: activate to reveal the answer');
+        const reached = await tabUntilFocused(page, '#guided-challenge-root .verb-flashcard', 40);
+        expect(reached, 'Tab navigation must reach the guided card').toBe(true);
+
+        const before = await readGuidedState(page);
+        expect(before.revealed).toBe(false);
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.guided-answer')).toBeVisible();
+        const after = await readGuidedState(page);
+        expect(after.revealed).toBe(true);
+        expect(after.verbId).toBe(before.verbId);
+        expect(after.phase).toBe(before.phase);
+
+        // AFTER REVEAL: the card no longer advertises an actionable reveal
+        // operation — no flip action, no button role, no keyboard target, no
+        // "activate to reveal" name, no pointer affordance.
+        await expect(guidedCard).not.toHaveAttribute('data-action');
+        await expect(guidedCard).not.toHaveAttribute('role');
+        await expect(guidedCard).not.toHaveAttribute('tabindex');
+        await expect(guidedCard).not.toHaveAttribute('aria-label');
+        await expect(page.locator('#guided-challenge-root [aria-label*="reveal" i]')).toHaveCount(0);
+        const cursor = await guidedCard.evaluate((el) => window.getComputedStyle(el).cursor);
+        expect(cursor).toBe('default');
+
+        // The revealed controls stay independently accessible: by role/name…
+        await expect(page.getByRole('button', { name: 'Listen' })).toHaveCount(1);
+        await expect(page.getByRole('button', { name: 'I knew it' })).toHaveCount(1);
+        await expect(page.getByRole('button', { name: 'I forgot' })).toHaveCount(1);
+        // …and through real keyboard navigation.
+        const listenReached = await tabUntilFocused(page, '#guided-challenge-root [data-action="challenge-listen"]', 40);
+        expect(listenReached, 'Tab must reach the revealed Listen control').toBe(true);
+        const knewReached = await tabUntilFocused(page, '#guided-challenge-root [data-action="challenge-grade"][data-remembered="true"]', 40);
+        expect(knewReached, 'Tab must reach the revealed grading controls').toBe(true);
+    });
+
+    test('C1-DESIGN-001 (SC2-C1-DESIGN-001): example translations render through the language-neutral line with direction metadata', async ({ page }) => {
+        await prepareSyntheticPage(page);
+        await openFlashcardsView(page);
+        await flipToBack(page);
+
+        // Language-neutral translation line with explicit English metadata.
+        const line = page.locator('.back-example-box .ex-translation-line');
+        await expect(line).toHaveCount(1);
+        await expect(line).toHaveAttribute('dir', 'ltr');
+        await expect(line).toHaveAttribute('lang', 'en');
+        await expect(line).toHaveText('(I do the homework.)');
+        // The German sentence carries its own language metadata.
+        await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveAttribute('lang', 'de');
+        // The retired English-specific selector is gone for good.
+        await expect(page.locator('.back-example-box .ex-en-line')).toHaveCount(0);
+        // Behavior compatibility: the sentence still speaks German through the
+        // real adapter.
+        await page.locator('.back-example-box .ex-sentence-span').click();
+        const calls = await page.evaluate(() => window.__ttsCalls);
+        expect(calls).toHaveLength(1);
+        expect(calls[0].text).toBe('Ich mache die Hausaufgaben.');
+        expect(calls[0].lang).toBe('de-DE');
     });
 });

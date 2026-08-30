@@ -1293,7 +1293,11 @@ class VerbsEngineClass {
                 ${frontMainHTML}
                 ${renderHintBox({ visible: this.showHint, html: `<span>Hint:</span> ${this._ordinaryHintText(verb)}` })}
             `,
-            flipHintText: 'Tap card to flip to back 🔄'
+            flipHintText: 'Tap card to flip to back 🔄',
+            // SC2-C1-A11Y-002: while the card displays its answer side, the
+            // front face (and its controls) is inert — unreachable by keyboard
+            // and absent from the accessibility tree.
+            inert: this.isFlipped
         });
     }
 
@@ -1376,8 +1380,16 @@ class VerbsEngineClass {
         // SHARED-CARD-002 / SC-02: only the FIRST example is shown on the
         // flashcard and its translation is always visible with it. Additional
         // examples stay available in the glossary and autoplay experiences.
+        // SC2-C1-DESIGN-001: the block is built from language-neutral fields —
+        // the Verbs dataset's translations are English, so the adapter
+        // declares that metadata explicitly instead of the renderer assuming it.
         const exampleHTML = firstPair
-            ? renderExampleBlock({ de: firstPair.de, en: firstPair.en, label: 'Example:' })
+            ? renderExampleBlock({
+                sourceText: firstPair.de,
+                translation: firstPair.en,
+                translationLang: 'en',
+                label: 'Example:'
+            })
             : '';
 
         const detailsToggleHTML = isExMode ? `
@@ -1438,11 +1450,16 @@ class VerbsEngineClass {
         const card = document.querySelector('.verb-flashcard');
         if (card) {
             card.classList.toggle('flipped', this.isFlipped);
+            // Inactive-face isolation (SC2-C1-A11Y-002): only the displayed
+            // face stays keyboard-focusable and exposed to assistive
+            // technology. The flip stays a surgical class toggle so keyboard
+            // focus on the card and per-flip transition counting survive.
+            const frontFace = card.querySelector('.verb-card-front');
+            const backFace = card.querySelector('.verb-card-back');
+            if (frontFace) frontFace.toggleAttribute('inert', this.isFlipped);
+            if (backFace) backFace.toggleAttribute('inert', !this.isFlipped);
             // Lazy revealed back (SC-01): the answer markup exists only while
             // the card is on its answer side; flipping back removes it again.
-            // The flip is a surgical class toggle so keyboard focus on the
-            // card and per-flip transition counting stay intact.
-            const backFace = card.querySelector('.verb-card-back');
             if (backFace) {
                 const verb = this._currentFlashcardVerb();
                 backFace.innerHTML = (this.isFlipped && verb) ? this._buildOrdinaryBackHtml(verb) : '';
@@ -2099,13 +2116,15 @@ class VerbsEngineClass {
         // SHARED-CARD-002 (GC-UI-001/002): the recall card IS the ordinary
         // flip shell — the shared front carries the prompt, and the shared
         // back with the answer is built only after reveal (GC-UI-005).
+        // SC2-C1-A11Y-002: the hidden front is inert once the answer shows.
         const frontHtml = renderCardFront({
             contentHtml: `
                 <div class="verb-label guided-label">${frontLabel}</div>
                 <div class="guided-prompt-main">${frontMain}</div>
                 ${noteHtml}
             `,
-            flipHintText: revealed ? '' : 'Tap card to reveal the answer 👁'
+            flipHintText: revealed ? '' : 'Tap card to reveal the answer 👁',
+            inert: revealed
         });
 
         const backHtml = revealed ? `
@@ -2115,7 +2134,7 @@ class VerbsEngineClass {
             <div class="guided-answer">
                 <div class="guided-answer-main">${backMain}</div>
             </div>
-            ${renderExampleBlock({ de: ex ? ex.de : '', en: ex ? ex.en : '' })}
+            ${renderExampleBlock({ sourceText: ex ? ex.de : '', translation: ex ? ex.en : '', translationLang: 'en' })}
         ` : '';
 
         // Guided controls stay adapter-owned (GC-UI-004): reveal, grading
@@ -2148,6 +2167,11 @@ class VerbsEngineClass {
             mode: 'guided',
             flippable: true,
             flipped: revealed,
+            // SC2-C1-A11Y-003: only an unrevealed recall card is activatable.
+            // After reveal the card keeps its shell but exposes no flip
+            // action, button role, focus target or reveal name — the answer
+            // stays until the scheduler advances the presentation.
+            activatable: !revealed,
             ariaLabel: 'Guided challenge card: activate to reveal the answer',
             frontHtml,
             backHtml,

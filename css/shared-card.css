@@ -57,10 +57,16 @@
     color: var(--primary);
 }
 
-.shared-card-block .ex-en-line {
+/* Translation line (SC2-C1-DESIGN-001): language-neutral — the renderer sets
+   dir (ltr/rtl/auto) and lang metadata per the translation's declared
+   language, so English reads LTR, Arabic reads RTL, and mixed/unknown
+   content follows the browser's automatic direction. text-align: start keeps
+   the alignment direction-aware. */
+.shared-card-block .ex-translation-line {
     margin-top: 4px;
     font-size: 0.88rem;
     color: var(--text-muted);
+    text-align: start;
 }
 
 /* Reduced motion (LF-CARD, finding SC-05): disable the flip and control
