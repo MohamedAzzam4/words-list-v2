@@ -21,10 +21,10 @@ Module sha256 at delivery: `1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722
 |---|---|---|---|---|
 | `02-syntax-module.log` | `node --check js/core/speech-plan.mjs` | 0 | parses cleanly (no output on success; TS-LOOP-001) | `01ba4719…` |
 | `03-syntax-test.log` | `node --check tests/unit/speech-plan.test.mjs` | 0 | parses cleanly (no output on success) | `01ba4719…` |
-| `04-green-focused.log` | `node --test tests/unit/speech-plan.test.mjs` | 0 | **40 passed / 0 failed / 0 skipped**, 124.7 ms | `258a4d3d…` |
-| `05-affected-level-data.log` | `node --test tests/unit/level-data.test.mjs` | 0 | **13 passed / 0 failed / 0 skipped**, 202.1 ms | `c3d9bc9c…` |
-| `06-full-units.log` | `npm run test:units` | 0 | **115 passed / 0 failed / 0 skipped**, 565 ms — 75 pre-existing + 40 corrected planner tests | `bfc372e7…` |
-| `07-diff-check.log` | `git diff --check && git diff --cached --check && git status --short` | 0 | clean (no whitespace errors; no uncommitted files) | `25e3cfe5…` |
+| `04-green-focused.log` | `node --test tests/unit/speech-plan.test.mjs` | 0 | **40 passed / 0 failed / 0 skipped**, 124.7 ms | `83f9bf70…` |
+| `05-affected-level-data.log` | `node --test tests/unit/level-data.test.mjs` | 0 | **13 passed / 0 failed / 0 skipped**, 202.1 ms | `0245aa82…` |
+| `06-full-units.log` | `npm run test:units` | 0 | **115 passed / 0 failed / 0 skipped**, 565 ms — 75 pre-existing + 40 corrected planner tests | `e238778c…` |
+| `07-diff-check.log` | `git diff --check && git diff --cached --check && git status --short` | 0 | clean (no whitespace errors; no uncommitted files) | `d061c588…` |
 
 ## Fault-probe evidence (disposable worktree at `2f51c07`, tests unmodified; script `audio001c1-probes.py` ran with baseline first)
 
@@ -43,3 +43,4 @@ The worktree's unmutated baseline (40/40 pass, exit 0) was captured before the f
 - Every log was scanned for credential patterns before publication: zero hits.
 - No browser, Playwright, DOM, network, storage, or timer was used by the planner or its tests (pure unit-level package per FP-DESIGN-010).
 - Redactions/missing evidence: none. `02-syntax-module.log` and `03-syntax-test.log` are legitimately empty because `node --check` produces no output on success; exit codes are recorded in the table above.
+- 2026-09-01 hygiene correction (AUDIO-001-C2, branch `codex/glm-audio-001-c2-01`, correction base `d5e129f…`): one redundant trailing blank line was removed from `01-red-tests-against-uncorrected-base.log`, `04-green-focused.log`, `05-affected-level-data.log`, `06-full-units.log`, `07-diff-check.log`, and `08-fault-probes.log`; a single normal final newline is preserved in each. Zero substantive bytes were altered (`git diff --ignore-blank-lines` against the C1 delivery is empty; every hunk removes exactly one blank EOF line), and the four recomputed sha256 cells above now match the corrected files. Full before/after hash ledger and verification: `docs/cefr/reports/AUDIO-001-C2-01.md` and `docs/cefr/evidence/AUDIO-001-C2/01/INDEX.md`.

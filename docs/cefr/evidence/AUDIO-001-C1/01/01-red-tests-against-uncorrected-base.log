@@ -925,4 +925,3 @@ test at tests/unit/speech-plan.test.mjs:687:1
     operator: 'strictEqual',
     diff: 'simple'
   }
-
