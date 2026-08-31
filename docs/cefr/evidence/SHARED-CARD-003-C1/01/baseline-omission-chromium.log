@@ -1,0 +1,9 @@
+
+Running 2 tests using 1 worker
+
+(node:2215) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › tests/e2e/cefr-cards.spec.js:1357:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09) (1.3s)
+  ✓  2 [chromium] › tests/e2e/cefr-cards.spec.js:1383:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09) (729ms)
+
+  2 passed (2.8s)

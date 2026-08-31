@@ -1,0 +1,12 @@
+✔ T5-unit: a replayed terminal event is a complete no-op (no turn, no retry, no scoring) (0.265271ms)
+✔ T5-unit: a replayed acquisition win is a complete no-op (0.152453ms)
+✔ T5-unit: completeIntro replay and wrong-phase calls are complete no-ops (0.181839ms)
+✔ T5-unit: grading a pending card inside a sealed session is a complete no-op (0.187152ms)
+ℹ tests 75
+ℹ suites 0
+ℹ pass 75
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 429.090741

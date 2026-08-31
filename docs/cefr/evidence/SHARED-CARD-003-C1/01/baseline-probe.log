@@ -1,0 +1,20 @@
+=== BASELINE DIMENSIONS (CSS px) at base e3d3c22 ===
+back-to-list     "⬅ Back to List"  w=126.1 h=37.0  (font 14.4px)
+shuffle          "🔀 Shuffle: OFF"  w=136.0 h=37.0  (font 14.4px)
+filter-all       "All Cards"  w=94.0 h=37.0  (font 13.6px)
+filter-learning  "🔄 Still Learning"  w=143.0 h=37.0  (font 13.6px)
+filter-favorites "⭐ Favourites"  w=124.0 h=37.0  (font 13.6px)
+face-de          "🇩🇪 German"  w=109.0 h=37.0  (font 13.6px)
+face-en          "🇬🇧 English"  w=104.0 h=37.0  (font 13.6px)
+
+=== TAB WALK (70 presses from shuffle focus) ===
+focus order: filter-all-btn > filter-learning-btn > filter-favorites-btn > face-de-btn > face-en-btn > active-flashcard > button > login-btn > login-email-btn > a > theme-btn > button > shuffle-btn > filter-all-btn > filter-learning-btn > filter-favorites-btn > face-de-btn > face-en-btn > active-flashcard > button > login-btn > login-email-btn > a > theme-btn > button > shuffle-btn > filter-all-btn > filter-learning-btn > filter-favorites-btn > face-de-btn > face-en-btn > active-flashcard > button > login-btn > login-email-btn > a > theme-btn > button > shuffle-btn > filter-all-btn > filter-learning-btn > filter-favorites-btn > face-de-btn > face-en-btn > active-flashcard > button
+back-to-list     reached@tab#18  focusVisible=true  paintedIndicator=false  styleChanges=[NONE]
+shuffle          reached@tab#19  focusVisible=true  paintedIndicator=true  styleChanges=[NONE]
+filter-all       reached@tab#1  focusVisible=true  paintedIndicator=true  styleChanges=[NONE]
+filter-learning  reached@tab#2  focusVisible=true  paintedIndicator=false  styleChanges=[NONE]
+filter-favorites reached@tab#3  focusVisible=true  paintedIndicator=false  styleChanges=[NONE]
+face-de          reached@tab#4  focusVisible=true  paintedIndicator=true  styleChanges=[NONE]
+face-en          reached@tab#5  focusVisible=true  paintedIndicator=false  styleChanges=[NONE]
+
+reached 7/7 controls

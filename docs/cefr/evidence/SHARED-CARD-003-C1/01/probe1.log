@@ -1,0 +1,57 @@
+841a642799c3ea9380c632fc6d20ee73251df31e606a5c2f8f330c845e879e11  css/core.css
+
+Running 3 tests using 1 worker
+
+(node:9697) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.4s)
+(node:9795) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium] › tests/e2e/cefr-cards.spec.js:1396:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card and toolbar controls match :focus-visible and paint a visible indicator (AC-09) (1.3s)
+  ✘  3 [chromium] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (846ms)
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+
+    Error: #view-flashcard .controls-row > .btn:first-child height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1012 |             expect(box, `${sel} must exist for sizing`).toBeTruthy();
+      1013 |             expect(box.width, `${sel} width`).toBeGreaterThanOrEqual(44);
+    > 1014 |             expect(box.height, `${sel} height`).toBeGreaterThanOrEqual(44);
+           |                                                 ^
+      1015 |         }
+      1016 |     });
+      1017 | });
+        at /home/z/my-project/sc003c1-probe-wt/tests/e2e/cefr-cards.spec.js:1014:49
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-8779a-or-and-44x44-targets-AC-09--chromium/error-context.md
+
+  2) [chromium] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)
+
+    Error: back-to-list height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1459 |             expect(box, `${label} button must exist`).toBeTruthy();
+      1460 |             expect(box.width, `${label} width`).toBeGreaterThanOrEqual(44);
+    > 1461 |             expect(box.height, `${label} height`).toBeGreaterThanOrEqual(44);
+           |                                                   ^
+      1462 |         }
+      1463 |     });
+      1464 |
+        at /home/z/my-project/sc003c1-probe-wt/tests/e2e/cefr-cards.spec.js:1461:51
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-a0e8d-ast-44x44-CSS-pixels-AC-09--chromium/error-context.md
+
+  2 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)
+  1 passed (5.0s)
+EXIT=1

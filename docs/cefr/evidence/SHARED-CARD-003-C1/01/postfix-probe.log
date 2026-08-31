@@ -1,0 +1,14 @@
+=== LEVEL PAGE (A1) AFTER FIX ===
+back-to-list     w=126.1 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+shuffle          w=136.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+filter-all       w=94.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+filter-learning  w=143.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+filter-favorites w=124.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+face-de          w=109.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+face-en          w=104.0 h=44.0  >=44=true  tabReached=true  focusVisible=true  outlinePainted=true
+
+=== VERBS PAGE #view-flashcard TOOLBAR (must be UNCHANGED by the fix) ===
+verbs back-to-list   "⬅ Back to List"  w=117.4 h=33.0  sizedTo44=false  tabReached=true  newOutline=false
+verbs shuffle        "🔀 Shuffle: OFF"  w=127.0 h=33.0  sizedTo44=false  tabReached=true  newOutline=false
+
+EXPECTED: sizedTo44=false and newOutline=false for both verbs toolbar buttons

@@ -1,0 +1,59 @@
+a01a1f71db81fdb25b877fc9421a6772a04b98fd69e9ef4e408a27521d029765  css/core.css
+
+Running 3 tests using 1 worker
+
+(node:10003) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.3s)
+(node:10102) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [chromium] › tests/e2e/cefr-cards.spec.js:1396:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card and toolbar controls match :focus-visible and paint a visible indicator (AC-09) (1.4s)
+(node:10206) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [chromium] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (1.0s)
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+
+    Error: #view-flashcard .controls-row > .btn:first-child must show a keyboard-focus indicator
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1008 |             expect(info.focusVisible, `keyboard focus on ${sel} must match :focus-visible`).toBe(true);
+      1009 |             const indicated = visibleFocusIndicator(baseline[sel].styles, info.styles);
+    > 1010 |             expect(indicated, `${sel} must show a keyboard-focus indicator`).toBe(true);
+           |                                                                              ^
+      1011 |             const box = await page.locator(sel).boundingBox();
+      1012 |             expect(box, `${sel} must exist for sizing`).toBeTruthy();
+      1013 |             expect(box.width, `${sel} width`).toBeGreaterThanOrEqual(44);
+        at /home/z/my-project/sc003c1-probe-wt/tests/e2e/cefr-cards.spec.js:1010:78
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-8779a-or-and-44x44-targets-AC-09--chromium/error-context.md
+
+  2) [chromium] › tests/e2e/cefr-cards.spec.js:1396:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card and toolbar controls match :focus-visible and paint a visible indicator (AC-09)
+
+    Error: #view-flashcard .controls-row > .btn:first-child must show a keyboard-focus indicator
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      1430 |             expect(info.focusVisible, `keyboard focus on ${sel} must match :focus-visible`).toBe(true);
+      1431 |             const indicated = visibleFocusIndicator(baseline[sel].styles, info.styles);
+    > 1432 |             expect(indicated, `${sel} must show a keyboard-focus indicator`).toBe(true);
+           |                                                                              ^
+      1433 |         }
+      1434 |     });
+      1435 |
+        at /home/z/my-project/sc003c1-probe-wt/tests/e2e/cefr-cards.spec.js:1432:78
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-68b29--a-visible-indicator-AC-09--chromium/error-context.md
+
+  2 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1396:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-FOCUS: keyboard-focused card and toolbar controls match :focus-visible and paint a visible indicator (AC-09)
+  1 passed (5.6s)
+EXIT=1

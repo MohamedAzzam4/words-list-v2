@@ -1,0 +1,75 @@
+
+Running 18 tests using 1 worker
+
+(node:6992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓   1 [chromium] › tests/e2e/activity-streak.spec.js:76:7 › Learning Activity / Streak Tracker E2E Suite › marking a brand-new flashcard as Known records activity for today (1.0s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓   2 [chromium] › tests/e2e/activity-streak.spec.js:117:7 › Learning Activity / Streak Tracker E2E Suite › re-marking an already-known card does not double-count activity (811ms)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓   3 [chromium] › tests/e2e/activity-streak.spec.js:145:7 › Learning Activity / Streak Tracker E2E Suite › listening to 15+ words via TTS counts as a learning day without flashcards (777ms)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console warning] The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio
+[Browser Console warning] The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓   4 [chromium] › tests/e2e/activity-streak.spec.js:187:7 › Learning Activity / Streak Tracker E2E Suite › streak is preserved when today has no activity but yesterday does (619ms)
+  ✓   5 [chromium] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites (1.0s)
+  ✓   6 [chromium] › tests/e2e/phrases-conversations.spec.js:86:7 › Phrases and Conversations E2E Suite › Load App, default tabs, and existing words behavior (852ms)
+  ✓   7 [chromium] › tests/e2e/phrases-conversations.spec.js:109:7 › Phrases and Conversations E2E Suite › Phrases Tab Rendering and Flashcards (5.0s)
+  ✓   8 [chromium] › tests/e2e/phrases-conversations.spec.js:146:7 › Phrases and Conversations E2E Suite › SpeechQueue Play All, Stop, and Navigation Cleanup (2.6s)
+  ✓   9 [chromium] › tests/e2e/phrases-conversations.spec.js:199:7 › Phrases and Conversations E2E Suite › Conversation clean text and Missing Content Graceful State (617ms)
+  ✓  10 [chromium] › tests/e2e/phrases-conversations.spec.js:234:7 › Phrases and Conversations E2E Suite › Phrases Hide and Guess Practice Controls (1.6s)
+  ✓  11 [chromium] › tests/e2e/phrases-conversations.spec.js:326:7 › Phrases and Conversations E2E Suite › Mobile viewport layout verification (37ms)
+  ✓  12 [chromium] › tests/e2e/phrases-conversations.spec.js:339:7 › Phrases and Conversations E2E Suite › Dashboard and Phrases tab progress stats model (868ms)
+  -  13 [chromium] › tests/e2e/phrases-conversations.spec.js:407:7 › Phrases and Conversations E2E Suite › Mobile sidebar navigation works with real UI clicks
+  ✓  14 [chromium] › tests/e2e/phrases-conversations.spec.js:479:7 › Phrases and Conversations E2E Suite › SpeechQueue advances through multiple items correctly (2.0s)
+  ✓  15 [chromium] › tests/e2e/phrases-conversations.spec.js:513:7 › Phrases and Conversations E2E Suite › SpeechQueue stop during 250ms delay cancels correctly (1.3s)
+  ✓  16 [chromium] › tests/e2e/phrases-conversations.spec.js:545:7 › Phrases and Conversations E2E Suite › SpeechQueue rapid stop-and-restart works correctly (1.3s)
+  ✓  17 [chromium] › tests/e2e/phrases-conversations.spec.js:582:7 › Phrases and Conversations E2E Suite › SpeechQueue completes all items and fires onFinished (13.3s)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+  ✓  18 [chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification (1.4s)
+
+  1 skipped
+  17 passed (37.0s)
