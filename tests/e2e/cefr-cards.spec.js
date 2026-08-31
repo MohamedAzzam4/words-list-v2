@@ -975,6 +975,45 @@ test.describe('SHARED-CARD-003 B2 ordinary card — real dataset', () => {
         await page.evaluate((i) => window.app.switchUnit(i), 0);
         await expect(page.locator('#fc-card-mount #fc-de')).toHaveText('die Vorstellung, -en');
     });
+
+    test('SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)', async ({ page }) => {
+        await prepareLevelPage(page, { level: 'b2' });
+        await openWordsFlashcards(page);
+        await turnShuffleOff(page);
+
+        // The B2 translation-front control keeps its truthful non-English
+        // label while meeting the same focus and target requirements.
+        await expect(page.locator('#face-en-btn')).toHaveText('🌐 Translation');
+
+        // SHARED-CARD-003-C1: the same seven #view-flashcard toolbar controls
+        // on the B2 page — real Tab navigation, :focus-visible match, a
+        // painted focus indicator, and 44x44 targets for each.
+        const wanted = [
+            '#view-flashcard .controls-row > .btn:first-child',
+            '#shuffle-btn',
+            '#filter-all-btn',
+            '#filter-learning-btn',
+            '#filter-favorites-btn',
+            '#face-de-btn',
+            '#face-en-btn'
+        ];
+        const baseline = await snapshotFocusStyles(page, wanted);
+        for (const sel of wanted) {
+            expect(baseline[sel].present, `${sel} must exist`).toBe(true);
+        }
+        const walk = await tabWalk(page, { wantedSelectors: wanted, maxTabs: 70 });
+        for (const sel of wanted) {
+            expect(walk.seen.has(sel), `Tab navigation must reach ${sel}`).toBe(true);
+            const info = walk.seen.get(sel);
+            expect(info.focusVisible, `keyboard focus on ${sel} must match :focus-visible`).toBe(true);
+            const indicated = visibleFocusIndicator(baseline[sel].styles, info.styles);
+            expect(indicated, `${sel} must show a keyboard-focus indicator`).toBe(true);
+            const box = await page.locator(sel).boundingBox();
+            expect(box, `${sel} must exist for sizing`).toBeTruthy();
+            expect(box.width, `${sel} width`).toBeGreaterThanOrEqual(44);
+            expect(box.height, `${sel} height`).toBeGreaterThanOrEqual(44);
+        }
+    });
 });
 
 // ---------------------------------------------------------------------------
@@ -1354,17 +1393,31 @@ test.describe('SHARED-CARD-003 interaction and accessibility (A1)', () => {
         await expect(page.getByRole('button', { name: '⭐', exact: true })).toHaveCount(0);
     });
 
-    test('SC3-A11Y-FOCUS: keyboard-focused card controls match :focus-visible and paint a visible indicator (AC-09)', async ({ page }) => {
+    test('SC3-A11Y-FOCUS: keyboard-focused card and toolbar controls match :focus-visible and paint a visible indicator (AC-09)', async ({ page }) => {
         await prepareLevelPage(page, { level: 'a1' });
         await openWordsFlashcards(page);
         await turnShuffleOff(page);
 
+        // SHARED-CARD-003-C1: every VISIBLE level-owned control in
+        // #view-flashcard is covered — the card affordances plus the grade
+        // and navigation buttons below the card, and the two .controls-row
+        // toolbars above it (Back to List, Shuffle, the All Cards / Still
+        // Learning / Favourites filters, and the German / English front-face
+        // switches). The owner finding: the toolbar buttons were reachable
+        // by Tab and matched :focus-visible but painted no indicator at all.
         const wanted = [
             '#fc-card-mount .verb-card-front [data-action="speak"]',
             '#fc-card-mount .verb-card-front [data-action="fav"]',
             '.fc-btn.btn-learning',
             '.fc-btn.btn-known',
-            '.fc-nav button:last-of-type'
+            '.fc-nav button:last-of-type',
+            '#view-flashcard .controls-row > .btn:first-child',
+            '#shuffle-btn',
+            '#filter-all-btn',
+            '#filter-learning-btn',
+            '#filter-favorites-btn',
+            '#face-de-btn',
+            '#face-en-btn'
         ];
         const baseline = await snapshotFocusStyles(page, wanted);
         for (const sel of wanted) {
@@ -1380,18 +1433,29 @@ test.describe('SHARED-CARD-003 interaction and accessibility (A1)', () => {
         }
     });
 
-    test('SC3-A11Y-TARGETS: primary card touch targets are at least 44x44 CSS pixels (AC-09)', async ({ page }) => {
+    test('SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)', async ({ page }) => {
         await prepareLevelPage(page, { level: 'a1' });
         await openWordsFlashcards(page);
         await turnShuffleOff(page);
 
-        const speakBox = await page.locator('#fc-card-mount .verb-card-front [data-action="speak"]').boundingBox();
-        const favBox = await page.locator('#fc-card-mount .verb-card-front [data-action="fav"]').boundingBox();
-        const knownBox = await page.locator('.fc-btn.btn-known').boundingBox();
-        const learningBox = await page.locator('.fc-btn.btn-learning').boundingBox();
-        const nextBox = await page.locator('.fc-nav button:last-of-type').boundingBox();
-
-        for (const [label, box] of [['speak', speakBox], ['favorite', favBox], ['known', knownBox], ['learning', learningBox], ['next', nextBox]]) {
+        // SHARED-CARD-003-C1: the visible toolbar controls are measured too
+        // (at the base revision every one of them was 37 CSS px tall).
+        const targets = [
+            ['speak', '#fc-card-mount .verb-card-front [data-action="speak"]'],
+            ['favorite', '#fc-card-mount .verb-card-front [data-action="fav"]'],
+            ['known', '.fc-btn.btn-known'],
+            ['learning', '.fc-btn.btn-learning'],
+            ['next', '.fc-nav button:last-of-type'],
+            ['back-to-list', '#view-flashcard .controls-row > .btn:first-child'],
+            ['shuffle', '#shuffle-btn'],
+            ['all-cards filter', '#filter-all-btn'],
+            ['still-learning filter', '#filter-learning-btn'],
+            ['favourites filter', '#filter-favorites-btn'],
+            ['german face', '#face-de-btn'],
+            ['english face', '#face-en-btn']
+        ];
+        for (const [label, sel] of targets) {
+            const box = await page.locator(sel).boundingBox();
             expect(box, `${label} button must exist`).toBeTruthy();
             expect(box.width, `${label} width`).toBeGreaterThanOrEqual(44);
             expect(box.height, `${label} height`).toBeGreaterThanOrEqual(44);
