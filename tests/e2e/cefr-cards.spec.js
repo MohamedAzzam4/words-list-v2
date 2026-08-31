@@ -396,6 +396,17 @@ function visibleFocusIndicator(base, focused) {
     return false;
 }
 
+// SHARED-CARD-003-C2: layout engines can report a CSS-enforced 44px target
+// with harmless sub-pixel floating-point noise — e.g. a Windows Chromium
+// combined run measured the A1 Shuffle control at 43.99998474121094 while
+// the isolated run measured 44. Rounding to two decimal places absorbs only
+// that noise before the >= 44 comparison. The product threshold itself is
+// NOT lowered: a genuinely undersized control such as the former 37px
+// toolbar buttons still fails by a decisive 7px margin.
+function roundCssPixels(value) {
+    return Math.round(value * 100) / 100;
+}
+
 // Counts class mutations on the flip surface: one activation must cause
 // exactly one transition (a double-firing handler cannot hide behind a
 // net-zero class state).
@@ -1010,8 +1021,10 @@ test.describe('SHARED-CARD-003 B2 ordinary card — real dataset', () => {
             expect(indicated, `${sel} must show a keyboard-focus indicator`).toBe(true);
             const box = await page.locator(sel).boundingBox();
             expect(box, `${sel} must exist for sizing`).toBeTruthy();
-            expect(box.width, `${sel} width`).toBeGreaterThanOrEqual(44);
-            expect(box.height, `${sel} height`).toBeGreaterThanOrEqual(44);
+            // SHARED-CARD-003-C2: normalize sub-pixel layout noise before the
+            // comparison; the 44px threshold is unchanged.
+            expect(roundCssPixels(box.width), `${sel} width`).toBeGreaterThanOrEqual(44);
+            expect(roundCssPixels(box.height), `${sel} height`).toBeGreaterThanOrEqual(44);
         }
     });
 });
@@ -1457,8 +1470,11 @@ test.describe('SHARED-CARD-003 interaction and accessibility (A1)', () => {
         for (const [label, sel] of targets) {
             const box = await page.locator(sel).boundingBox();
             expect(box, `${label} button must exist`).toBeTruthy();
-            expect(box.width, `${label} width`).toBeGreaterThanOrEqual(44);
-            expect(box.height, `${label} height`).toBeGreaterThanOrEqual(44);
+            // SHARED-CARD-003-C2: normalize sub-pixel layout noise (e.g.
+            // 43.99998… on a Windows combined run) before the comparison;
+            // the 44px threshold is unchanged and 37px still fails hard.
+            expect(roundCssPixels(box.width), `${label} width`).toBeGreaterThanOrEqual(44);
+            expect(roundCssPixels(box.height), `${label} height`).toBeGreaterThanOrEqual(44);
         }
     });
 
