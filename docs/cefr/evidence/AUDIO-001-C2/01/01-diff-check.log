@@ -1,0 +1,43 @@
+AUDIO-001-C2 / 01 — diff-check evidence (delivery-hygiene correction only; no application tests rerun)
+Sandbox: /home/z/my-project/words-list-v2 (Debian, Node v24.19.0, npm 11.17.0). Branch codex/glm-audio-001-c2-01, created exactly from correction base d5e129f177ba… (delivered AUDIO-001-C1 attempt 01). Correction commit 9dc3ee617512… (six evidence logs trimmed + AUDIO-001-C1 INDEX.md hashes recomputed); this log itself is added by the following docs commit.
+
+[1] Reproduction of the reported delivery defect at the correction base (why AUDIO-001-C2 exists):
+$ git diff --check 9c925aca406f1b7465959872f5545f7a30e177eb..d5e129f177ba2124fbeb80e96cd0455a0a026802
+docs/cefr/evidence/AUDIO-001-C1/01/01-red-tests-against-uncorrected-base.log:928: new blank line at EOF.
+docs/cefr/evidence/AUDIO-001-C1/01/04-green-focused.log:49: new blank line at EOF.
+docs/cefr/evidence/AUDIO-001-C1/01/05-affected-level-data.log:22: new blank line at EOF.
+docs/cefr/evidence/AUDIO-001-C1/01/06-full-units.log:128: new blank line at EOF.
+docs/cefr/evidence/AUDIO-001-C1/01/07-diff-check.log:2: new blank line at EOF.
+docs/cefr/evidence/AUDIO-001-C1/01/08-fault-probes.log:54: new blank line at EOF.
+exit code: 2
+
+[2] Mandated checks at the correction commit 9dc3ee617512… (HEAD at capture time; complete substantive correction present, tree clean):
+$ git diff --check 9c925aca406f1b7465959872f5545f7a30e177eb..9dc3ee617512e0f0d61ddc9ca1c88b221227e3d5
+(no output)
+exit code: 0
+$ git diff --check d5e129f177ba2124fbeb80e96cd0455a0a026802..9dc3ee617512e0f0d61ddc9ca1c88b221227e3d5
+(no output)
+exit code: 0
+$ git status --short
+?? docs/cefr/evidence/AUDIO-001-C2/
+exit code: 0
+
+[3] Whitespace-only proof for the six AUDIO-001-C1 evidence logs (pathspec = exactly those six .log files):
+$ git diff --ignore-blank-lines d5e129f177ba2124fbeb80e96cd0455a0a026802..9dc3ee617512e0f0d61ddc9ca1c88b221227e3d5 -- docs/cefr/evidence/AUDIO-001-C1/01/01-red-tests-against-uncorrected-base.log docs/cefr/evidence/AUDIO-001-C1/01/04-green-focused.log docs/cefr/evidence/AUDIO-001-C1/01/05-affected-level-data.log docs/cefr/evidence/AUDIO-001-C1/01/06-full-units.log docs/cefr/evidence/AUDIO-001-C1/01/07-diff-check.log docs/cefr/evidence/AUDIO-001-C1/01/08-fault-probes.log
+(no output)
+exit code: 0
+(truly empty diff above = zero substantive byte differences in the six logs; every change is one removed blank EOF line. The only other file in this correction is INDEX.md, whose 5/4-line diff is exactly the four recomputed sha256 cells plus the AUDIO-001-C2 provenance note shown in the numstat below.)
+$ git diff --numstat d5e129f177ba2124fbeb80e96cd0455a0a026802..9dc3ee617512e0f0d61ddc9ca1c88b221227e3d5
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/01-red-tests-against-uncorrected-base.log
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/04-green-focused.log
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/05-affected-level-data.log
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/06-full-units.log
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/07-diff-check.log
+0	1	docs/cefr/evidence/AUDIO-001-C1/01/08-fault-probes.log
+5	4	docs/cefr/evidence/AUDIO-001-C1/01/INDEX.md
+exit code: 0
+(each of the six log rows reads "0<TAB>1" = 0 insertions, 1 deletion — exactly the redundant blank line at EOF; the INDEX.md row 5<TAB>4 is the hash-cell + provenance-note update)
+
+[4] Self-reference constraint, disclosed: this log file is part of the docs commit that adds it, so it cannot embed the output of checks run against that final commit. The identical three commands from [2] were re-run at the final HEAD immediately after the docs commit was created; their exits (0 / 0 / empty status) are reported in the delivery handoff message and recorded in /home/z/my-project/worklog.md, and the commit content is byte-identical to the staged tree verified by "git diff --cached --check" before that commit.
+
+No application tests were rerun for this correction: AUDIO-001-C2 is an evidence-whitespace-only change. The approved AUDIO-001-C1 production code and tests are byte-identical to the correction base: js/core/speech-plan.mjs sha256 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850, tests/unit/speech-plan.test.mjs sha256 ff35dcf8daf28467a0e51846b28a1d4270077aec45d6c1b24205e846d956ec9c.
