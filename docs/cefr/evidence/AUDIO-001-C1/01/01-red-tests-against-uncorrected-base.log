@@ -1,0 +1,928 @@
+✔ AUDIO-001-C1: zero items produces an empty step list with no warnings (1.786266ms)
+✔ AUDIO-001-C1: one item without examples and defaults produces one German term step (0.429935ms)
+✔ AUDIO-001-C1: many items with default options produce one term step per item in source order (0.192495ms)
+✖ AUDIO-001-C1: normalized A1-shaped card with translationLanguage "en" emits term then English term-translation (1.41439ms)
+✖ AUDIO-001-C1: normalized B2 mixed card with translationLanguage "mixed" emits term, en, then ar term-translations (0.53622ms)
+✖ AUDIO-001-C1: Arabic-only normalized card with translationLanguage "ar" emits term then Arabic term-translation, never English (0.368059ms)
+✔ AUDIO-001-C1: null translationLanguage emits no term-translation step and no warning even when translation text exists (0.227026ms)
+✖ AUDIO-001-C1: a stale synthetic card.language property is ignored; term translation follows card.translationLanguage (0.300891ms)
+✖ AUDIO-001-C1: a card produced by the actual A1 parser plans term, en term-translation, example, and en example-translation steps (0.329976ms)
+✖ AUDIO-001-C1: a mixed card produced by the actual B2 parser plans term, en/ar term-translations, and en/ar example-translations (0.523064ms)
+✖ AUDIO-001-C1: an Arabic-only card produced by the actual B2 parser plans term, Arabic term-translation, example, and Arabic example-translation (0.319021ms)
+✖ AUDIO-001-C1: a real A1 dataset card plans term, en term-translation, example, and en example-translation steps (0.345852ms)
+✖ AUDIO-001-C1: a real B2 dataset card keeps slash alternatives in one en step and splits its mixed example into en and ar steps (0.366648ms)
+✔ AUDIO-001-C1: card.language is neither required nor introduced on normalized cards (0.334995ms)
+✖ AUDIO-001-C1: two items with repeatCount 2 emit item 1 both repeats then item 2 both repeats (Verbs autoplay order) (0.393743ms)
+✖ AUDIO-001-C1: each item repetition contains its term, requested translation, and requested examples before the next repetition or item (1.015362ms)
+✔ AUDIO-001-C1: repeatCount 3 on one item emits the term three times with ascending repeatIndex (0.191509ms)
+✔ AUDIO-001-C1: startIndex 0 plays the full sequence with original indices (0.120442ms)
+✖ AUDIO-001-C1: startIndex in the middle retains the original item indices 1 and 2 without re-basing (0.278242ms)
+✖ AUDIO-001-C1: startIndex at the last item plays exactly that item with its original index (0.235089ms)
+✔ AUDIO-001-C1: startIndex out of range produces an empty step list with an OUT_OF_RANGE_START_INDEX warning (0.140154ms)
+✖ AUDIO-001-C1: item ids and original indices stay stable across repeats after a startIndex (0.376678ms)
+✔ AUDIO-001-C1: exampleMode none omits all example steps (0.175345ms)
+✔ AUDIO-001-C1: exampleMode first emits only the first example (1.846959ms)
+✔ AUDIO-001-C1: exampleMode all emits every example in source order (0.213866ms)
+✔ AUDIO-001-C1: includeTranslation=false (default) omits term-translation steps even when text is available (0.084514ms)
+✖ AUDIO-001-C1: empty English term-translation is skipped with a SKIPPED_EMPTY_TEXT warning, no substitution (0.2359ms)
+✔ AUDIO-001-C1: empty German term text is skipped with a SKIPPED_EMPTY_TEXT warning (0.091935ms)
+✖ AUDIO-001-C1: English slash alternatives are kept intact in one English step and never split or reclassified (0.203374ms)
+✔ AUDIO-001-C1: mixed-language example translation emits example, en-translation, ar-translation as separate steps (0.155992ms)
+✔ AUDIO-001-C1: invalid exampleMode throws InvalidSpeechPlanOptionError (0.426347ms)
+✔ AUDIO-001-C1: repeatCount 0 throws InvalidSpeechPlanOptionError (0.105161ms)
+✔ AUDIO-001-C1: negative repeatCount throws InvalidSpeechPlanOptionError (0.09002ms)
+✔ AUDIO-001-C1: non-boolean includeTranslation throws InvalidSpeechPlanOptionError (0.087597ms)
+✔ AUDIO-001-C1: negative startIndex throws InvalidSpeechPlanOptionError (0.090074ms)
+✔ AUDIO-001-C1: non-integer startIndex throws InvalidSpeechPlanOptionError (0.137979ms)
+✔ AUDIO-001-C1: items not an array throws InvalidSpeechPlanOptionError (0.070485ms)
+✔ AUDIO-001-C1: planSpeechSequence never mutates items, cards, examples, or options (0.212499ms)
+✔ AUDIO-001-C1: two calls with the same inputs produce deep-equal results (fresh arrays each call) (0.093846ms)
+✖ AUDIO-001-C1: deterministic item-major ordering holds for many items with repeats and translations (0.192044ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 23
+ℹ fail 17
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 200.329268
+
+✖ failing tests:
+
+test at tests/unit/speech-plan.test.mjs:166:1
+✖ AUDIO-001-C1: normalized A1-shaped card with translationLanguage "en" emits term then English term-translation (1.41439ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '7-0',
+        itemIndex: 0,
+  ...
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '7-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'table'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:169:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' } ],
+    expected: [ { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'table' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:176:1
+✖ AUDIO-001-C1: normalized B2 mixed card with translationLanguage "mixed" emits term, en, then ar term-translations (0.53622ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '4-0',
+        itemIndex: 0,
+  ...
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'delay'
+  -   },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'ar',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'التأخير'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:179:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Verspätung, -en' } ],
+    expected: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Verspätung, -en' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'delay' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'ar', text: 'التأخير' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:187:1
+✖ AUDIO-001-C1: Arabic-only normalized card with translationLanguage "ar" emits term then Arabic term-translation, never English (0.368059ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '4-0',
+        itemIndex: 0,
+  ...
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'ar',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'الروبوت'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:190:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Roboter' } ],
+    expected: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Roboter' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'ar', text: 'الروبوت' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:206:1
+✖ AUDIO-001-C1: a stale synthetic card.language property is ignored; term translation follows card.translationLanguage (0.300891ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-0',
+        itemIndex: 0,
+  ...
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'the word'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:215:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' } ],
+    expected: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the word' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:226:1
+✖ AUDIO-001-C1: a card produced by the actual A1 parser plans term, en term-translation, example, and en example-translation steps (0.329976ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '7-0',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '7-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'table'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '7-0',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:228:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' } ],
+    expected: [ { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'table' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '7-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:237:1
+✖ AUDIO-001-C1: a mixed card produced by the actual B2 parser plans term, en/ar term-translations, and en/ar example-translations (0.523064ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '4-0',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'delay'
+  -   },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'ar',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'التأخير'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '4-0',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:239:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Verspätung, -en' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Zug hat Verspätung.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The train is delayed.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'القطار متأخر.' } ],
+    expected: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Verspätung, -en' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'delay' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'ar', text: 'التأخير' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Zug hat Verspätung.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The train is delayed.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'القطار متأخر.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:250:1
+✖ AUDIO-001-C1: an Arabic-only card produced by the actual B2 parser plans term, Arabic term-translation, example, and Arabic example-translation (0.319021ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '4-0',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '4-0',
+  -     itemIndex: 0,
+  -     language: 'ar',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'الروبوت'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '4-0',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:252:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Roboter' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Roboter arbeitet.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'الروبوت يعمل.' } ],
+    expected: [ { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Roboter' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'ar', text: 'الروبوت' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Roboter arbeitet.' }, { itemId: '4-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'الروبوت يعمل.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:261:1
+✖ AUDIO-001-C1: a real A1 dataset card plans term, en term-translation, example, and en example-translation steps (0.345852ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-0',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'Hello!'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '1-0',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:263:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'Hallo!' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Hallo, ich bin Anna.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'Hello, I am Anna.' } ],
+    expected: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'Hallo!' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'Hello!' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Hallo, ich bin Anna.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'Hello, I am Anna.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:272:1
+✖ AUDIO-001-C1: a real B2 dataset card keeps slash alternatives in one en step and splits its mixed example into en and ar steps (0.366648ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '19-74',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '19-74',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'IT / edv'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '19-74',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:274:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die EDV (Sg.)' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich bin für die EDV in unserer Firma zuständig.' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I am responsible for the IT in our company.' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'أنا مسؤول عن تكنولوجيا المعلومات في شركتنا.' } ],
+    expected: [ { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die EDV (Sg.)' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'IT / edv' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich bin für die EDV in unserer Firma zuständig.' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I am responsible for the IT in our company.' }, { itemId: '19-74', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'ar', text: 'أنا مسؤول عن تكنولوجيا المعلومات في شركتنا.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:314:1
+✖ AUDIO-001-C1: two items with repeatCount 2 emit item 1 both repeats then item 2 both repeats (Verbs autoplay order) (0.393743ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-0',
+        itemIndex: 0,
+  ...
+        exampleIndex: null,
+  +     itemId: '1-1',
+  +     itemIndex: 1,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+        language: 'de',
+  +     repeatIndex: 0,
+  -     repeatIndex: 1,
+        segment: 'term',
+  +     text: 'die Birne'
+  -     text: 'der Apfel'
+      },
+      {
+        exampleIndex: null,
+  +     itemId: '1-0',
+  +     itemIndex: 0,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+        language: 'de',
+  +     repeatIndex: 1,
+  -     repeatIndex: 0,
+        segment: 'term',
+  +     text: 'der Apfel'
+  -     text: 'die Birne'
+      },
+      {
+        exampleIndex: null,
+        itemId: '1-1',
+        itemIndex: 1,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:320:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Apfel' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'der Apfel' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' } ],
+    expected: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Apfel' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'der Apfel' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:329:1
+✖ AUDIO-001-C1: each item repetition contains its term, requested translation, and requested examples before the next repetition or item (1.015362ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-0',
+        itemIndex: 0,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'the word'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '1-0',
+        itemIndex: 0,
+        language: 'de',
+        repeatIndex: 0,
+  ...
+        exampleIndex: null,
+  +     itemId: '1-1',
+  +     itemIndex: 1,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+        language: 'de',
+  +     repeatIndex: 0,
+  -     repeatIndex: 1,
+        segment: 'term',
+  +     text: 'der Tisch'
+  -     text: 'das Wort'
+      },
+      {
+  -     exampleIndex: null,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 1,
+  -     segment: 'term-translation',
+  -     text: 'the word'
+  -   },
+  -   {
+        exampleIndex: 0,
+  +     itemId: '1-1',
+  +     itemIndex: 1,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+        language: 'de',
+  +     repeatIndex: 0,
+  -     repeatIndex: 1,
+        segment: 'example',
+  +     text: 'Der Tisch ist groß.'
+  -     text: 'Ich sehe das Wort.'
+      },
+      {
+        exampleIndex: 0,
+  +     itemId: '1-1',
+  +     itemIndex: 1,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+        language: 'en',
+  +     repeatIndex: 0,
+  -     repeatIndex: 1,
+        segment: 'example-translation',
+  +     text: 'The table is big.'
+  -     text: 'I see the word.'
+      },
+      {
+        exampleIndex: null,
+  +     itemId: '1-0',
+  +     itemIndex: 0,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+        language: 'de',
+  +     repeatIndex: 1,
+  -     repeatIndex: 0,
+        segment: 'term',
+  +     text: 'das Wort'
+  -     text: 'der Tisch'
+      },
+      {
+  -     exampleIndex: null,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'the table'
+  -   },
+  -   {
+        exampleIndex: 0,
+  +     itemId: '1-0',
+  +     itemIndex: 0,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+        language: 'de',
+  +     repeatIndex: 1,
+  -     repeatIndex: 0,
+        segment: 'example',
+  +     text: 'Ich sehe das Wort.'
+  -     text: 'Der Tisch ist groß.'
+      },
+      {
+        exampleIndex: 0,
+  +     itemId: '1-0',
+  +     itemIndex: 0,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+        language: 'en',
+  +     repeatIndex: 1,
+  -     repeatIndex: 0,
+        segment: 'example-translation',
+  +     text: 'I see the word.'
+  -     text: 'The table is big.'
+      },
+      {
+        exampleIndex: null,
+        itemId: '1-1',
+        itemIndex: 1,
+  ...
+      {
+  -     exampleIndex: null,
+  -     itemId: '1-1',
+  -     itemIndex: 1,
+  -     language: 'en',
+  -     repeatIndex: 1,
+  -     segment: 'term-translation',
+  -     text: 'the table'
+  -   },
+  -   {
+        exampleIndex: 0,
+        itemId: '1-1',
+        itemIndex: 1,
+        language: 'de',
+        repeatIndex: 1,
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:341:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich sehe das Wort.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I see the word.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich sehe das Wort.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I see the word.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' } ],
+    expected: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the word' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich sehe das Wort.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I see the word.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'das Wort' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the word' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'example', exampleIndex: 0, language: 'de', text: 'Ich sehe das Wort.' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 1, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'I see the word.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the table' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'der Tisch' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the table' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'example', exampleIndex: 0, language: 'de', text: 'Der Tisch ist groß.' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'example-translation', exampleIndex: 0, language: 'en', text: 'The table is big.' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:396:1
+✖ AUDIO-001-C1: startIndex in the middle retains the original item indices 1 and 2 without re-basing (0.278242ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-1',
+  +     itemIndex: 0,
+  -     itemIndex: 1,
+        language: 'de',
+        repeatIndex: 0,
+        segment: 'term',
+        text: 'die Birne'
+      },
+  ...
+        itemId: '1-2',
+  +     itemIndex: 1,
+  -     itemIndex: 2,
+        language: 'de',
+        repeatIndex: 0,
+        segment: 'term',
+        text: 'die Traube'
+      }
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:403:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-1', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-2', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' } ],
+    expected: [ { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-2', itemIndex: 2, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:410:1
+✖ AUDIO-001-C1: startIndex at the last item plays exactly that item with its original index (0.235089ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-2',
+  +     itemIndex: 0,
+  -     itemIndex: 2,
+        language: 'de',
+        repeatIndex: 0,
+        segment: 'term',
+        text: 'die Traube'
+      }
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:417:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-2', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' } ],
+    expected: [ { itemId: '1-2', itemIndex: 2, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:442:1
+✖ AUDIO-001-C1: item ids and original indices stay stable across repeats after a startIndex (0.376678ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-1',
+  +     itemIndex: 0,
+  -     itemIndex: 1,
+        language: 'de',
+        repeatIndex: 0,
+        segment: 'term',
+        text: 'die Birne'
+      },
+      {
+        exampleIndex: null,
+  +     itemId: '1-2',
+  -     itemId: '1-1',
+        itemIndex: 1,
+  +     language: 'de',
+  -     language: 'en',
+        repeatIndex: 0,
+  +     segment: 'term',
+  +     text: 'die Traube'
+  -     segment: 'term-translation',
+  -     text: 'the pear'
+      },
+      {
+        exampleIndex: null,
+        itemId: '1-1',
+  +     itemIndex: 0,
+  -     itemIndex: 1,
+        language: 'de',
+        repeatIndex: 1,
+        segment: 'term',
+        text: 'die Birne'
+      },
+      {
+        exampleIndex: null,
+  +     itemId: '1-2',
+  -     itemId: '1-1',
+        itemIndex: 1,
+  -     language: 'en',
+  -     repeatIndex: 1,
+  -     segment: 'term-translation',
+  -     text: 'the pear'
+  -   },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-2',
+  -     itemIndex: 2,
+        language: 'de',
+  -     repeatIndex: 0,
+  -     segment: 'term',
+  -     text: 'die Traube'
+  -   },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-2',
+  -     itemIndex: 2,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'the grape'
+  -   },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-2',
+  -     itemIndex: 2,
+  -     language: 'de',
+        repeatIndex: 1,
+        segment: 'term',
+        text: 'die Traube'
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-2',
+  -     itemIndex: 2,
+  -     language: 'en',
+  -     repeatIndex: 1,
+  -     segment: 'term-translation',
+  -     text: 'the grape'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:449:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-1', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-2', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' }, { itemId: '1-1', itemIndex: 0, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-2', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' } ],
+    expected: [ { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the pear' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Birne' }, { itemId: '1-1', itemIndex: 1, repeatIndex: 1, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the pear' }, { itemId: '1-2', itemIndex: 2, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' }, { itemId: '1-2', itemIndex: 2, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the grape' }, { itemId: '1-2', itemIndex: 2, repeatIndex: 1, segment: 'term', exampleIndex: null, language: 'de', text: 'die Traube' }, { itemId: '1-2', itemIndex: 2, repeatIndex: 1, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the grape' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:529:1
+✖ AUDIO-001-C1: empty English term-translation is skipped with a SKIPPED_EMPTY_TEXT warning, no substitution (0.2359ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:535:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:561:1
+✖ AUDIO-001-C1: English slash alternatives are kept intact in one English step and never split or reclassified (0.203374ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        exampleIndex: null,
+        itemId: '1-0',
+        itemIndex: 0,
+  ...
+      },
+  -   {
+  -     exampleIndex: null,
+  -     itemId: '1-0',
+  -     itemIndex: 0,
+  -     language: 'en',
+  -     repeatIndex: 0,
+  -     segment: 'term-translation',
+  -     text: 'the presentation / the introduction'
+  -   }
+    ]
+
+      at assertStepsEqual (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:125:12)
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:564:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Vorstellung, -en' } ],
+    expected: [ { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term', exampleIndex: null, language: 'de', text: 'die Vorstellung, -en' }, { itemId: '1-0', itemIndex: 0, repeatIndex: 0, segment: 'term-translation', exampleIndex: null, language: 'en', text: 'the presentation / the introduction' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/speech-plan.test.mjs:687:1
+✖ AUDIO-001-C1: deterministic item-major ordering holds for many items with repeats and translations (0.192044ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  10 !== 20
+
+      at TestContext.<anonymous> (file:///home/z/my-project/audio001c1-red-wt/tests/unit/speech-plan.test.mjs:695:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 10,
+    expected: 20,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

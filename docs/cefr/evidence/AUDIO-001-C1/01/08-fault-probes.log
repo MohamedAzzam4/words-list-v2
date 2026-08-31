@@ -1,0 +1,54 @@
+worktree at 2f51c07fd6e1feb74a74c90c73cec54f2ba4f287; module sha256: 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850
+baseline: exit=0 tests=40 pass=40 fail=0
+
+=== PROBE: 1. language-access (term translation reads card.language) ===
+risk/contract: LF-AUDIO / C1 finding 1: real normalized metadata boundary
+mutated syntax check: exit 0 (behavioral mutant, parses cleanly)
+exit=1 tests=40 pass=26 fail=14
+  failing: AUDIO-001-C1: normalized A1-shaped card with translationLanguage "en" emits term then English term-translation (1.52467ms)
+  failing: AUDIO-001-C1: normalized B2 mixed card with translationLanguage "mixed" emits term, en, then ar term-translations (0.598986ms)
+  failing: AUDIO-001-C1: Arabic-only normalized card with translationLanguage "ar" emits term then Arabic term-translation, never English (0.388383ms)
+  failing: AUDIO-001-C1: a stale synthetic card.language property is ignored; term translation follows card.translationLanguage (0.35641ms)
+  failing: AUDIO-001-C1: a card produced by the actual A1 parser plans term, en term-translation, example, and en example-translation steps (0.367958ms)
+  failing: AUDIO-001-C1: a mixed card produced by the actual B2 parser plans term, en/ar term-translations, and en/ar example-translations (0.530754ms)
+  failing: AUDIO-001-C1: an Arabic-only card produced by the actual B2 parser plans term, Arabic term-translation, example, and Arabic example-translation (0.323716ms)
+  failing: AUDIO-001-C1: a real A1 dataset card plans term, en term-translation, example, and en example-translation steps (0.269003ms)
+  failing: AUDIO-001-C1: a real B2 dataset card keeps slash alternatives in one en step and splits its mixed example into en and ar steps (0.390093ms)
+  failing: AUDIO-001-C1: each item repetition contains its term, requested translation, and requested examples before the next repetition or item (0.755318ms)
+  failing: AUDIO-001-C1: item ids and original indices stay stable across repeats after a startIndex (0.436705ms)
+  failing: AUDIO-001-C1: empty English term-translation is skipped with a SKIPPED_EMPTY_TEXT warning, no substitution (0.278344ms)
+  failing: AUDIO-001-C1: English slash alternatives are kept intact in one English step and never split or reclassified (0.248415ms)
+  failing: AUDIO-001-C1: deterministic item-major ordering holds for many items with repeats and translations (0.25932ms)
+classification: KILLED
+after-restore sha256: 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850
+
+=== PROBE: 2. sequence-nesting (whole-list repetition, repeat-major) ===
+risk/contract: AC-11 / C1 finding 2: verbs item-major repeat order
+mutated syntax check: exit 0 (behavioral mutant, parses cleanly)
+exit=1 tests=40 pass=36 fail=4
+  failing: AUDIO-001-C1: two items with repeatCount 2 emit item 1 both repeats then item 2 both repeats (Verbs autoplay order) (1.567877ms)
+  failing: AUDIO-001-C1: each item repetition contains its term, requested translation, and requested examples before the next repetition or item (1.05234ms)
+  failing: AUDIO-001-C1: item ids and original indices stay stable across repeats after a startIndex (0.447697ms)
+  failing: AUDIO-001-C1: deterministic item-major ordering holds for many items with repeats and translations (0.333155ms)
+classification: KILLED
+after-restore sha256: 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850
+
+=== PROBE: 3. index-rebase (itemIndex re-based after startIndex) ===
+risk/contract: AC-11 / C1 finding 3: stable source indexing
+mutated syntax check: exit 0 (behavioral mutant, parses cleanly)
+exit=1 tests=40 pass=37 fail=3
+  failing: AUDIO-001-C1: startIndex in the middle retains the original item indices 1 and 2 without re-basing (1.717105ms)
+  failing: AUDIO-001-C1: startIndex at the last item plays exactly that item with its original index (0.425172ms)
+  failing: AUDIO-001-C1: item ids and original indices stay stable across repeats after a startIndex (0.698895ms)
+classification: KILLED
+after-restore sha256: 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850
+
+=== SUMMARY ===
+language-access: KILLED
+sequence-nesting: KILLED
+index-rebase: KILLED
+final module sha256: 1c2f26ab5f4187a293b15b43bee8d18acf68907da84d4cc6b722a3a42efcd850
+byte-identical to original: True
+ALL PROBES KILLED + SOURCE INTACT: True
+worktree removed
+

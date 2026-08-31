@@ -1,0 +1,22 @@
+✔ LEVEL-DATA-001: A1 retains the German and translated first example (1.822913ms)
+✔ LEVEL-DATA-002: B2 retains bilingual display text without mislabeling it as English-only (0.401165ms)
+✔ LEVEL-DATA-002A: slash-separated English alternatives stay English-only (0.199901ms)
+✔ LEVEL-DATA-002B: Arabic-only translations expose only Arabic speech text (0.141926ms)
+✔ LEVEL-DATA-003: cards without examples expose empty collections without changing legacy fields (0.265587ms)
+✔ LEVEL-DATA-004: real A1 and B2 configs retain units, IDs, and example fields (5.389833ms)
+✔ LEVEL-DATA-005: real A1 and B2 configs pass the normalized vocabulary validator (14.286756ms)
+✔ LEVEL-DATA-006: content-sensitive snapshots detect unit counts and accidental reordering (43.568548ms)
+✔ LEVEL-DATA-007: validator rejects duplicate IDs, unit mismatches, and broken examples (0.559933ms)
+✔ LEVEL-DATA-008: validator rejects duplicate words and inconsistent normalized aliases (0.403246ms)
+✔ LEVEL-DATA-009: duplicate-word allowances are exact and become stale when the data changes (0.28502ms)
+✔ LEVEL-DATA-010: legacy level progress loads with stable IDs still present in normalized data (5.075718ms)
+✔ LEVEL-DATA-011: a level config cannot omit its level identity (0.250008ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 202.110618
+
