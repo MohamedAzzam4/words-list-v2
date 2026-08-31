@@ -772,16 +772,23 @@ th {
 }
 
 /* LF-CARD / AC-09: visible keyboard focus + minimum 44x44 primary touch
-   targets for the shared flashcard controls (the card affordances already
-   receive both through css/shared-card.css; these cover the level-owned
-   grade and navigation buttons below the card). */
+   targets for every visible level-owned flashcard control (the card
+   affordances already receive both through css/shared-card.css; these cover
+   the grade and navigation buttons below the card and the two .controls-row
+   toolbars above it: Back to List, Shuffle, the All Cards / Still Learning /
+   Favourites filters, and the German / English-Translation front switches).
+   html[data-level] keeps the toolbar rules on the CEFR level pages only:
+   verbs.html reuses the #view-flashcard id for its own different toolbar,
+   which must stay untouched. */
 #view-flashcard .fc-btn:focus-visible,
-#view-flashcard .fc-nav .btn:focus-visible {
+#view-flashcard .fc-nav .btn:focus-visible,
+html[data-level] #view-flashcard .controls-row .btn:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
 
-#view-flashcard .fc-nav .btn {
+#view-flashcard .fc-nav .btn,
+html[data-level] #view-flashcard .controls-row .btn {
     min-width: 44px;
     min-height: 44px;
     box-sizing: border-box;
