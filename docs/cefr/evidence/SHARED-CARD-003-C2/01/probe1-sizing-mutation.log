@@ -1,0 +1,101 @@
+Running 4 tests using 1 worker
+
+(node:20149) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [chromium] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.4s)
+(node:20251) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (874ms)
+(node:20351) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.4s)
+(node:20452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (676ms)
+
+
+  1) [chromium] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+
+    Error: #view-flashcard .controls-row > .btn:first-child height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1025 |             // comparison; the 44px threshold is unchanged.
+      1026 |             expect(roundCssPixels(box.width), `${sel} width`).toBeGreaterThanOrEqual(44);
+    > 1027 |             expect(roundCssPixels(box.height), `${sel} height`).toBeGreaterThanOrEqual(44);
+           |                                                                 ^
+      1028 |         }
+      1029 |     });
+      1030 | });
+        at tests/e2e/cefr-cards.spec.js:1027:65
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-8779a-or-and-44x44-targets-AC-09--chromium/error-context.md
+
+  2) [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)
+
+    Error: back-to-list height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1475 |             // the 44px threshold is unchanged and 37px still fails hard.
+      1476 |             expect(roundCssPixels(box.width), `${label} width`).toBeGreaterThanOrEqual(44);
+    > 1477 |             expect(roundCssPixels(box.height), `${label} height`).toBeGreaterThanOrEqual(44);
+           |                                                                   ^
+      1478 |         }
+      1479 |     });
+      1480 |
+        at tests/e2e/cefr-cards.spec.js:1477:67
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-a0e8d-ast-44x44-CSS-pixels-AC-09--chromium/error-context.md
+
+  3) [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+
+    Error: #view-flashcard .controls-row > .btn:first-child height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1025 |             // comparison; the 44px threshold is unchanged.
+      1026 |             expect(roundCssPixels(box.width), `${sel} width`).toBeGreaterThanOrEqual(44);
+    > 1027 |             expect(roundCssPixels(box.height), `${sel} height`).toBeGreaterThanOrEqual(44);
+           |                                                                 ^
+      1028 |         }
+      1029 |     });
+      1030 | });
+        at tests/e2e/cefr-cards.spec.js:1027:65
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-8779a-or-and-44x44-targets-AC-09--Mobile-Chrome/error-context.md
+
+  4) [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)
+
+    Error: back-to-list height
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 44
+    Received:    37
+
+      1475 |             // the 44px threshold is unchanged and 37px still fails hard.
+      1476 |             expect(roundCssPixels(box.width), `${label} width`).toBeGreaterThanOrEqual(44);
+    > 1477 |             expect(roundCssPixels(box.height), `${label} height`).toBeGreaterThanOrEqual(44);
+           |                                                                   ^
+      1478 |         }
+      1479 |     });
+      1480 |
+        at tests/e2e/cefr-cards.spec.js:1477:67
+
+    Error Context: test-results/cefr-cards-SHARED-CARD-003-a0e8d-ast-44x44-CSS-pixels-AC-09--Mobile-Chrome/error-context.md
+
+  4 failed
+    [chromium] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+    [chromium] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)
+    [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:990:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09)
+    [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1449:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09)

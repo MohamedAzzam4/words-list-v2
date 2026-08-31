@@ -1,0 +1,15 @@
+SHARED-CARD-003-C2 normalization arithmetic proof (node)
+rule: roundCssPixels(v) = Math.round(v * 100) / 100, threshold unchanged at >= 44
+
+input 43.99998474121094  -> normalized 44      >= 44 ? PASS   (owner-reported Windows combined-run Shuffle height (CSS min-height: 44px))
+input 44                 -> normalized 44      >= 44 ? PASS   (nominal compliant size)
+input 44.6               -> normalized 44.6    >= 44 ? PASS   (oversized compliant control)
+input 43.994             -> normalized 43.99   >= 44 ? FAIL   (below the 0.005px absorption window)
+input 43.995             -> normalized 44      >= 44 ? PASS   (inside the absorption window (rounds up))
+input 37                 -> normalized 37      >= 44 ? FAIL   (the former SHARED-CARD-003-C1 defect height)
+input 37.5               -> normalized 37.5    >= 44 ? FAIL   (undersized control with fractional px)
+input 38                 -> normalized 38      >= 44 ? FAIL   (upper edge of the former defect range)
+
+conclusion: the exact flake value 43.99998474121094 normalizes to 44 and passes;
+the former 37px defect stays 37 and fails by a decisive 7px margin;
+maximum leniency introduced by the normalization is 0.005px (0.011% of the threshold).

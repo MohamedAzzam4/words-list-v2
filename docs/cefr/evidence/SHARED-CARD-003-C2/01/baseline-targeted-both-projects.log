@@ -1,0 +1,12 @@
+Running 4 tests using 1 worker
+
+(node:15936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.4s)
+  ✓  2 [chromium] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (790ms)
+(node:16074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:979:9 › SHARED-CARD-003 B2 ordinary card — real dataset › SC3-B2-A11Y-TOOLBAR: B2 toolbar controls are keyboard-focusable with a visible indicator and 44x44 targets (AC-09) (1.2s)
+  ✓  4 [Mobile Chrome] › tests/e2e/cefr-cards.spec.js:1436:9 › SHARED-CARD-003 interaction and accessibility (A1) › SC3-A11Y-TARGETS: card and toolbar touch targets are at least 44x44 CSS pixels (AC-09) (588ms)
+
+  4 passed (5.6s)

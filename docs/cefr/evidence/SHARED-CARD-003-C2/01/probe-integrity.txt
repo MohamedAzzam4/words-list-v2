@@ -1,0 +1,7 @@
+31d8d77374b4a09b9c8eea67868a138352aed89fcbc755bdc8717f04cb681697  css/core.css
+5c0c29f8728c26d8f6af0fdfa2e7866a55d1a07cf123abb1f5ba18c097725d2b  tests/e2e/cefr-cards.spec.js
+worktree revision: 2da9b4ba595c15fd6c6cde93be027cc2f7f9d07b
+31d8d77374b4a09b9c8eea67868a138352aed89fcbc755bdc8717f04cb681697  css/core.css
+5c0c29f8728c26d8f6af0fdfa2e7866a55d1a07cf123abb1f5ba18c097725d2b  tests/e2e/cefr-cards.spec.js
+worktree revision: 2da9b4ba595c15fd6c6cde93be027cc2f7f9d07b
+restore verified: css/core.css must equal 31d8d77374b4a09b9c8eea67868a138352aed89fcbc755bdc8717f04cb681697
