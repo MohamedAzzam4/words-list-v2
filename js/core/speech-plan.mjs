@@ -122,9 +122,10 @@ function pushSkip(warnings, itemId, segment, language, detail, exampleIndex) {
 
 /**
  * Emit translation step(s) for a German term or example, following the
- * `language` metadata. `mixed` emits two separate steps (en then ar); each
- * step carries text in exactly one language. Empty text is skipped with a
- * warning and never substituted from another language.
+ * `translationLanguage` metadata exposed by the real normalized cards.
+ * `mixed` emits two separate steps (en then ar); each step carries text in
+ * exactly one language. Empty text is skipped with a warning and never
+ * substituted from another language.
  */
 function emitTranslationSteps(steps, warnings, itemId, itemIndex, repeatIndex, segment, exampleIndex, language, speech) {
     if (language === 'en') {
@@ -165,9 +166,11 @@ function emitItemSteps(steps, warnings, card, itemIndex, repeatIndex, options) {
         pushSkip(warnings, itemId, 'term', 'de', 'term speechText.de is empty; the German term step was omitted without substituting another language.', null);
     }
 
-    // Term translation (only when requested).
+    // Term translation (only when requested). Real A1/B2 cards carry
+    // `translationLanguage` ('en' | 'ar' | 'mixed' | null); the planner never
+    // reads a synthetic `language` property.
     if (options.includeTranslation) {
-        emitTranslationSteps(steps, warnings, itemId, itemIndex, repeatIndex, 'term-translation', null, card.language, speech);
+        emitTranslationSteps(steps, warnings, itemId, itemIndex, repeatIndex, 'term-translation', null, card.translationLanguage, speech);
     }
 
     // Examples.
@@ -194,9 +197,11 @@ function emitItemSteps(steps, warnings, card, itemIndex, repeatIndex, options) {
  *
  * Inputs:
  * - `items`: array of normalized cards (may be empty). Each card exposes
- *   `id`, `language` in {'en','ar','mixed',null}, `speechText.{de,en,ar}`,
- *   and `examples[]` whose entries expose `translationLanguage` and
- *   `speechText.{de,en,ar}`.
+ *   `id`, `translationLanguage` in {'en','ar','mixed',null},
+ *   `speechText.{de,en,ar}`, and `examples[]` whose entries expose
+ *   `translationLanguage` and `speechText.{de,en,ar}` — exactly the shape
+ *   produced by the real A1/B2 parsers. No synthetic `language` property is
+ *   read or required.
  * - `options`: optional fields with documented defaults:
  *   - `repeatCount` (positive integer, default 1)
  *   - `exampleMode` ('none' | 'first' | 'all', default 'first')
@@ -206,6 +211,15 @@ function emitItemSteps(steps, warnings, card, itemIndex, repeatIndex, options) {
  * Output: `{ steps: SpeechStep[], warnings: Warning[] }`. Each step carries
  * text in exactly one language. Missing language-specific text is skipped and
  * reported in `warnings`; it is never substituted from another language.
+ * `itemIndex` always reports the item's ORIGINAL index in the input array;
+ * `startIndex` selects where playback begins but never re-bases indices, and
+ * `itemId` is stable across repeats.
+ *
+ * Ordering follows the existing Verbs autoplay controller
+ * (`verbs-engine.js` playAllVerbsAudio): the outer loop walks the selected
+ * items and the inner loop emits every repetition of the current item (term,
+ * requested translation, requested examples) before the next repetition or
+ * item.
  *
  * Throws `InvalidSpeechPlanOptionError` synchronously for invalid option
  * values or a non-array `items`. A `startIndex >= items.length` is NOT an
@@ -240,11 +254,14 @@ export function planSpeechSequence(items, options) {
 
     const steps = [];
     const warnings = [];
-    const playList = items.slice(normalized.startIndex);
 
-    for (let repeatIndex = 0; repeatIndex < normalized.repeatCount; repeatIndex++) {
-        for (let itemIndex = 0; itemIndex < playList.length; itemIndex++) {
-            emitItemSteps(steps, warnings, playList[itemIndex], itemIndex, repeatIndex, normalized);
+    // Verbs autoplay order: items in the outer loop, repeats of the current
+    // item in the inner loop. itemIndex is the item's original index in the
+    // input array; startIndex selects the first item but never re-bases the
+    // reported indices (verbs-engine.js keeps verb.index the same way).
+    for (let itemIndex = normalized.startIndex; itemIndex < items.length; itemIndex++) {
+        for (let repeatIndex = 0; repeatIndex < normalized.repeatCount; repeatIndex++) {
+            emitItemSteps(steps, warnings, items[itemIndex], itemIndex, repeatIndex, normalized);
         }
     }
 
