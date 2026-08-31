@@ -1,0 +1,40 @@
+worktree: /home/z/my-project/audio-probe-wt
+baseline module sha256: 4e3cda6c0556c9c53809fb2856cceeaf8ba31ea21bcaee9d01ff747a876f7575 (expected 4e3cda6c0556c9c53809fb2856cceeaf8ba31ea21bcaee9d01ff747a876f7575)
+baseline tests: pass=30 fail=0 exit=0
+
+=== PROBE: probe1-language ===
+mutation find:      } else if (language === 'mixed') {         if (speech.en...
+mutation replace:     } else if (language === 'mixed') {         // MUTATION: ...
+exit=1 pass=27 fail=3
+  failing: AUDIO-001: mixed translation language emits two separate steps (en then ar), never one merged step (1.388718ms)
+  failing: AUDIO-001: mixed-language example translation emits example, en-translation, ar-translation as separate steps (0.467394ms)
+  failing: AUDIO-001: every step carries the source card id and correctly-ordered itemIndex/repeatIndex/exampleIndex (0.750363ms)
+  failing: AUDIO-001: mixed translation language emits two separate steps (en then ar), never one merged step (1.388718ms)
+  failing: AUDIO-001: mixed-language example translation emits example, en-translation, ar-translation as separate steps (0.467394ms)
+integrity after restore: 4e3cda6c0556c9c5... (OK)
+
+=== PROBE: probe2-sequence ===
+mutation find:      for (let repeatIndex = 0; repeatIndex < normalized.repea...
+mutation replace:     for (let itemIndex = 0; itemIndex < playList.length; ite...
+exit=1 pass=28 fail=2
+  failing: AUDIO-001: repeatCount=2 with two items emits term-1, term-2, term-1, term-2 (outer repeat, inner item) (1.63992ms)
+  failing: AUDIO-001: deterministic ordering holds for many items with repeats and translations (0.356038ms)
+  failing: AUDIO-001: repeatCount=2 with two items emits term-1, term-2, term-1, term-2 (outer repeat, inner item) (1.63992ms)
+  failing: AUDIO-001: deterministic ordering holds for many items with repeats and translations (0.356038ms)
+integrity after restore: 4e3cda6c0556c9c5... (OK)
+
+=== PROBE: probe3-start-index ===
+mutation find:      const playList = items.slice(normalized.startIndex);...
+mutation replace:     const playList = items.slice(normalized.startIndex - 1);...
+exit=1 pass=24 fail=6
+  failing: AUDIO-001: many items default options produce one term step per item in source order (1.596484ms)
+  failing: AUDIO-001: repeatCount=2 with two items emits term-1, term-2, term-1, term-2 (outer repeat, inner item) (0.528552ms)
+  failing: AUDIO-001: startIndex 0 plays the full sequence (0.418709ms)
+  failing: AUDIO-001: startIndex in the middle plays from that item to the end with itemIndex re-based at 0 (0.286262ms)
+  failing: AUDIO-001: startIndex at the last item plays exactly that item (0.210476ms)
+integrity after restore: 4e3cda6c0556c9c5... (OK)
+
+=== SUMMARY ===
+probe1-language: KILLED
+probe2-sequence: KILLED
+probe3-start-index: KILLED

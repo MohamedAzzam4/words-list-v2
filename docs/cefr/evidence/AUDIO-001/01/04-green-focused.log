@@ -1,0 +1,38 @@
+✔ AUDIO-001: zero items produces an empty step list with no warnings (1.641571ms)
+✔ AUDIO-001: one item without examples and defaults produces one German term step (0.412255ms)
+✔ AUDIO-001: many items default options produce one term step per item in source order (0.430261ms)
+✔ AUDIO-001: repeatCount=2 with two items emits term-1, term-2, term-1, term-2 (outer repeat, inner item) (0.235208ms)
+✔ AUDIO-001: repeatCount=3 on one item emits the term three times with ascending repeatIndex (0.226381ms)
+✔ AUDIO-001: exampleMode none omits all example steps (0.186426ms)
+✔ AUDIO-001: exampleMode first emits only the first example (0.152831ms)
+✔ AUDIO-001: exampleMode all emits every example in source order (0.157337ms)
+✔ AUDIO-001: includeTranslation=false (default) omits translation steps even when text is available (0.492495ms)
+✔ AUDIO-001: includeTranslation=true with English translation emits term then English translation (0.364735ms)
+✔ AUDIO-001: empty English translation is skipped with a SKIPPED_EMPTY_TEXT warning, no substitution (0.269437ms)
+✔ AUDIO-001: English slash alternatives are kept intact in one English step and never split or reclassified (0.952573ms)
+✔ AUDIO-001: Arabic-only translation emits an Arabic-language translation step, never English (0.215608ms)
+✔ AUDIO-001: mixed translation language emits two separate steps (en then ar), never one merged step (0.130588ms)
+✔ AUDIO-001: mixed-language example translation emits example, en-translation, ar-translation as separate steps (0.114234ms)
+✔ AUDIO-001: startIndex 0 plays the full sequence (0.105514ms)
+✔ AUDIO-001: startIndex in the middle plays from that item to the end with itemIndex re-based at 0 (0.079448ms)
+✔ AUDIO-001: startIndex at the last item plays exactly that item (0.082891ms)
+✔ AUDIO-001: startIndex out of range produces an empty step list with an OUT_OF_RANGE_START_INDEX warning (0.099425ms)
+✔ AUDIO-001: invalid exampleMode throws InvalidSpeechPlanOptionError (0.3884ms)
+✔ AUDIO-001: repeatCount 0 throws InvalidSpeechPlanOptionError (0.097061ms)
+✔ AUDIO-001: negative repeatCount throws InvalidSpeechPlanOptionError (0.083679ms)
+✔ AUDIO-001: non-boolean includeTranslation throws InvalidSpeechPlanOptionError (0.074903ms)
+✔ AUDIO-001: negative startIndex throws InvalidSpeechPlanOptionError (0.071614ms)
+✔ AUDIO-001: non-integer startIndex throws InvalidSpeechPlanOptionError (0.158234ms)
+✔ AUDIO-001: items not an array throws InvalidSpeechPlanOptionError (0.078702ms)
+✔ AUDIO-001: every step carries the source card id and correctly-ordered itemIndex/repeatIndex/exampleIndex (0.201774ms)
+✔ AUDIO-001: planSpeechSequence never mutates items, cards, examples, or options (0.215765ms)
+✔ AUDIO-001: two calls with the same inputs produce deep-equal results (fresh arrays each call) (0.116229ms)
+✔ AUDIO-001: deterministic ordering holds for many items with repeats and translations (0.124299ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.239429
