@@ -1,0 +1,5 @@
+node --check tests/unit/verbs-audio.test.mjs
+exit=0
+node --input-type=module --check < tests/e2e/verbs-audio.spec.js
+exit=0
+exit=0

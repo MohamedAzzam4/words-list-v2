@@ -1,0 +1,17 @@
+AUDIO-002 supplement: the final unit test file (including B11, the empty-playAll cleanup characterization added after review of verification item 22) run against the UNMODIFIED BASE source (disposable worktree at tests commit d5e5949, base production files).
+Result: 18 passed / 5 failed / 23 total, exit 1 — the same five genuine defects as the original RED run (A9, A11, A12, B8, B10); B11 passes at base (the empty-list early return and cleanup are unchanged base behavior), so B11 is characterization for the refactor, not a defect test.
+Command: node --test tests/unit/verbs-audio.test.mjs (in the disposable worktree)
+
+✖ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (1.514612ms)
+✖ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.717703ms)
+✖ AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue (3.636578ms)
+✖ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.502676ms)
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.489457ms)
+ℹ tests 23
+ℹ pass 18
+ℹ fail 5
+✖ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (1.514612ms)
+✖ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.717703ms)
+✖ AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue (3.636578ms)
+✖ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.502676ms)
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.489457ms)

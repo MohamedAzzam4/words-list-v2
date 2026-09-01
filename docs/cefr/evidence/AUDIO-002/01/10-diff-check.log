@@ -1,0 +1,29 @@
+AUDIO-002 final hygiene at the docs commit (staged state; captured before the commit itself — the in-commit log cannot embed its own commit's check, the same disclosed AUDIO-001-C2 constraint; the final-HEAD rerun is reported in the handoff/worklog)
+Command: git diff --check && git diff --cached --check && git status --short
+
+--- git diff --check (unstaged tracked) ---
+exit=0 (clean)
+--- git diff --cached --check (staged docs) ---
+exit=0
+--- git status --short (staged set only: 16 evidence/report files) ---
+A  docs/cefr/evidence/AUDIO-002/01/01-red-e2e.log
+A  docs/cefr/evidence/AUDIO-002/01/01-red-unit-b11-supplement.log
+A  docs/cefr/evidence/AUDIO-002/01/01-red-unit.log
+A  docs/cefr/evidence/AUDIO-002/01/02-syntax-production.log
+A  docs/cefr/evidence/AUDIO-002/01/03-syntax-tests.log
+A  docs/cefr/evidence/AUDIO-002/01/04-green-focused-unit.log
+A  docs/cefr/evidence/AUDIO-002/01/05-green-focused-e2e-chromium.log
+A  docs/cefr/evidence/AUDIO-002/01/06-affected-chromium.log
+A  docs/cefr/evidence/AUDIO-002/01/07-affected-mobile-chrome.log
+A  docs/cefr/evidence/AUDIO-002/01/08-full-units.log
+A  docs/cefr/evidence/AUDIO-002/01/09-flake-isolation-reruns.log
+A  docs/cefr/evidence/AUDIO-002/01/09-full-e2e-both-projects.log
+A  docs/cefr/evidence/AUDIO-002/01/09-full-e2e-first-run-flakes.log
+AM docs/cefr/evidence/AUDIO-002/01/10-diff-check.log
+A  docs/cefr/evidence/AUDIO-002/01/11-fault-probes.log
+A  docs/cefr/evidence/AUDIO-002/01/INDEX.md
+A  docs/cefr/reports/AUDIO-002-01.md
+--- git diff --cached --stat (staged summary) ---
+ docs/cefr/evidence/AUDIO-002/01/INDEX.md           |  55 +++++
+ docs/cefr/reports/AUDIO-002-01.md                  | 167 +++++++++++++++
+ 17 files changed, 1269 insertions(+)

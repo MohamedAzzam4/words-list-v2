@@ -1,0 +1,80 @@
+AUDIO-002 fault probes — disposable worktree at implementation commit 300a9c2
+Mutations touch production code only; tests are never modified (TS-MUT-002).
+
+[baseline] node --test tests/unit/verbs-audio.test.mjs in the worktree: exit 0, 23 passed / 0 failed (unmodified source at the delivered tests revision 300a9c2)
+
+=== Probe 1-language-mislabel ===
+Risk/contract: LF-AUDIO / AC-03 / AC-11: every step must reach the voice in its planner language
+Production target: js/core/verbs-engine.js (worktree copy only)
+Mutation hunk 1: '            lang: step.language,\n' -> "            lang: step.language === 'de' ? 'en' : 'de',\n"
+Intended detecting test: unit A10 (item identity/language mapping) and the A1..A9/A11 sequence tables
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual unit run: exit 1, 12 passed / 11 failed
+  FAILING: AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (18.647977ms)
+  FAILING: AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (3.211752ms)
+  FAILING: AUDIO-002 A3: exampleMode none emits only the term and translation steps (1.15662ms)
+  FAILING: AUDIO-002 A4: exampleMode first emits only the first example pair (0.840128ms)
+  FAILING: AUDIO-002 A5: exampleMode all emits every example pair in source order (0.895716ms)
+  FAILING: AUDIO-002 A6: include-English unchecked omits every English translation step (7.901168ms)
+  FAILING: AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.764006ms)
+  FAILING: AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.434383ms)
+  FAILING: AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.407498ms)
+  FAILING: AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (1.19188ms)
+  FAILING: AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.524018ms)
+Classification: KILLED
+Integrity: sha256 before d3f2aecc52bb…, mutated 8b54c111e8b0…, restored d3f2aecc52bb… -> IDENTICAL (restore verified)
+
+=== Probe 2-stopped-delayed-speech-executes ===
+Risk/contract: AC-12 / AUDIO-002 success: stop must cancel all future speech
+Production target: js/core/tts.js (worktree copy only)
+Mutation hunk 1: '            // AUDIO-002: ownership guard — a stopped, paused, or replaced\n            // queue must never speak.\n            if (this._generation !== generation || !this.isPlaying) return;\n' -> ''
+Mutation hunk 2: '        if (this._speakDelayTimer) {\n            clearTimeout(this._speakDelayTimer);\n            this._speakDelayTimer = null;\n        }\n\n        if (this._watchdogTimer) {' -> '        if (this._watchdogTimer) {'
+Intended detecting test: unit B2 (stop during the delayed-speak window prevents any utterance); B9/B10 also expose the leak
+Attempt history: First attempt (documented per TS-MUT-005): removing ONLY the callback ownership guard SURVIVED — an equivalent mutant, because stop() still clears the timer via clearTimeout. The guard is mandated defense-in-depth; the corrected behavioral mutation above removes BOTH layers of the delayed-speak cancellation, which is the actual defect family ("stopped delayed speech executes").
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual unit run: exit 1, 19 passed / 4 failed
+  FAILING: AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.983513ms)
+  FAILING: AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.319495ms)
+  FAILING: AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.371159ms)
+  FAILING: AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.369925ms)
+Classification: KILLED
+Integrity: sha256 before 8ca70a9ebb63…, mutated 5b3509c18af9…, restored 8ca70a9ebb63… -> IDENTICAL (restore verified)
+
+=== Probe 3-cursor-advances-during-pause ===
+Risk/contract: AC-12 / AUDIO-002 success: pause retains position; late events cannot advance
+Production target: js/core/tts.js (worktree copy only)
+Mutation hunk 1: '        this._generation++;\n        this.isPlaying = false;\n        this.currentUtterance = null;\n' -> '        this.isPlaying = false;\n'
+Intended detecting test: unit B3 (pause preserves cursor; stale onend cannot advance or complete)
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual unit run: exit 1, 22 passed / 1 failed
+  FAILING: AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (1.161774ms)
+Classification: KILLED
+Integrity: sha256 before 8ca70a9ebb63…, mutated d694c90fd7c9…, restored 8ca70a9ebb63… -> IDENTICAL (restore verified)
+
+=== Probe 4-repeat-adapter-bypass ===
+Risk/contract: AC-11 / AUDIO-002 Work: the repeat control must reach the planner
+Production target: js/core/verbs-engine.js (worktree copy only)
+Mutation hunk 1: '        const plan = planSpeechSequence(speechCards, {\n            repeatCount,\n' -> '        const plan = planSpeechSequence(speechCards, {\n            repeatCount: 1,\n'
+Intended detecting test: unit A1 and A2 (repeat blocks per verb) — the controls would be bypassed
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual unit run: exit 1, 21 passed / 2 failed
+  FAILING: AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (5.236921ms)
+  FAILING: AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (3.927324ms)
+Classification: KILLED
+Integrity: sha256 before d3f2aecc52bb…, mutated 99aa05246a27…, restored d3f2aecc52bb… -> IDENTICAL (restore verified)
+
+=== Probe 5-stale-callback-affects-replacement ===
+Risk/contract: AC-12 / AUDIO-002 success: stale callbacks cannot advance a replacement queue
+Production target: js/core/tts.js (worktree copy only)
+Mutation hunk 1: '            utterance.onend = () => {\n                // AUDIO-002: generation + utterance identity — only the\n                // utterance of the currently owning queue may advance.\n                if (this._generation !== generation) return;\n                if (this.currentUtterance === utterance) {\n' -> '            utterance.onend = () => {\n                if (true) {\n'
+Intended detecting test: unit B10 variant 1 and B3 — a stale onend would advance the replacement/paused queue
+Attempt history: B11 may also fail under this mutant: when B10 aborts mid-test it leaves pending mocked timers in the shared process, poisoning the next test's mock-timer context (node:test cross-test effect that only occurs after a test has already failed — failures cascade, they never mask). B11 passes in isolation under this mutant (verified: --test-name-pattern B11, 1/1 pass). Intended detectors: B3 and B10.
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual unit run: exit 1, 20 passed / 3 failed
+  FAILING: AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (1.089816ms)
+  FAILING: AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.641198ms)
+  FAILING: AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.327445ms)
+Classification: KILLED
+Integrity: sha256 before 8ca70a9ebb63…, mutated ec5b1712ad56…, restored 8ca70a9ebb63… -> IDENTICAL (restore verified)
+
+Main working tree was never mutated; the worktree is removed after the probes.

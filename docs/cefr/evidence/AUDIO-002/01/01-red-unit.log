@@ -1,0 +1,160 @@
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (2.481611ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.486543ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.276325ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.205335ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.288902ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.250798ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.205331ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.191548ms)
+✖ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (1.673541ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.360724ms)
+✖ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.70555ms)
+✖ AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue (0.466534ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.458333ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.235203ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.355273ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.240908ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.953275ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.429501ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.219702ms)
+✖ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.511089ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.327742ms)
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.614455ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 17
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89.642003
+
+✖ failing tests:
+
+test at tests/unit/verbs-audio.test.mjs:441:1
+✖ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (1.673541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + []
+  - [
+  -   {
+  -     label: 'Verb (1/1)',
+  -     lang: 'de',
+  -     text: 'sehen',
+  -     verbId: 'v_sehen',
+  -     verbIndex: 3,
+  -     verbInfinitive: 'sehen'
+  -   },
+  -   {
+  -     label: 'Translation',
+  -     lang: 'en',
+  -     text: 'to see',
+  -     verbId: 'v_sehen',
+  -     verbIndex: 3,
+  -     verbInfinitive: 'sehen'
+  -   },
+  -   {
+  -     label: 'Example (DE)',
+  -     lang: 'de',
+  -     text: 'Ich sehe.',
+  -     verbId: 'v_sehen',
+  -     verbIndex: 3,
+  -     verbInfinitive: 'sehen'
+  -   },
+  -   {
+  -     label: 'Example (EN)',
+  -     lang: 'en',
+  -     text: 'I see.',
+  -     verbId: 'v_sehen',
+  -     verbIndex: 3,
+  -     verbInfinitive: 'sehen'
+  -   }
+  - ]
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ { verbId: 'v_sehen', verbInfinitive: 'sehen', verbIndex: 3, text: 'sehen', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_sehen', verbInfinitive: 'sehen', verbIndex: 3, text: 'to see', lang: 'en', label: 'Translation' }, { verbId: 'v_sehen', verbInfinitive: 'sehen', verbIndex: 3, text: 'Ich sehe.', lang: 'de', label: 'Example (DE)' }, { verbId: 'v_sehen', verbInfinitive: 'sehen', verbIndex: 3, text: 'I see.', lang: 'en', label: 'Example (EN)' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:484:1
+✖ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.70555ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+
+    [
+      {
+        label: 'Verb (1/1)',
+        lang: 'de',
+        text: 'tun',
+  ...
+      {
+  +     label: 'Verb (1/1)',
+  +     lang: 'de',
+  +     text: '',
+  +     verbId: 'v_nogerman',
+  +     verbIndex: 10,
+  +     verbInfinitive: ''
+  +   },
+  +   {
+        label: 'Translation',
+        lang: 'en',
+        text: 'to y',
+        verbId: 'v_nogerman',
+        verbIndex: 10,
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { verbId: 'v_empty', verbInfinitive: 'tun', verbIndex: 9, text: 'tun', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_nogerman', verbInfinitive: '', verbIndex: 10, text: '', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_nogerman', verbInfinitive: '', verbIndex: 10, text: 'to y', lang: 'en', label: 'Translation' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'machen', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'to make', lang: 'en', label: 'Translation' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'Ich mache das.', lang: 'de', label: 'Example (DE)' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'I do it.', lang: 'en', label: 'Example (EN)' } ],
+    expected: [ { verbId: 'v_empty', verbInfinitive: 'tun', verbIndex: 9, text: 'tun', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_nogerman', verbInfinitive: '', verbIndex: 10, text: 'to y', lang: 'en', label: 'Translation' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'machen', lang: 'de', label: 'Verb (1/1)' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'to make', lang: 'en', label: 'Translation' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'Ich mache das.', lang: 'de', label: 'Example (DE)' }, { verbId: 'v_machen', verbInfinitive: 'machen', verbIndex: 1, text: 'I do it.', lang: 'en', label: 'Example (EN)' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:508:1
+✖ AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue (0.466534ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 0
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:711:1
+✖ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.511089ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 3
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 3,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:753:1
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.614455ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  2 !== 1
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

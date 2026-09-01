@@ -1,0 +1,90 @@
+=== Isolation reruns of the three first-run flaky failures (final revision e32352c) ===
+--- verbs.spec.js:33 Mobile Chrome (dataset-load race in the old spec; passed in every isolated run) ---
+
+Running 1 test using 1 worker
+
+
+(node:10408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [Mobile Chrome] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 passed (2.1s)
+exit=0
+--- verb-guided-challenge.spec.js:1088 chromium (R2; SC-INFRA-01 flake family) ---
+
+Running 1 test using 1 worker
+
+
+(node:10537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 passed (3.3s)
+exit=0
+--- verb-guided-challenge.spec.js:736 Mobile Chrome (GC-07; SC-INFRA-01 flake family) ---
+
+Running 1 test using 1 worker
+
+
+(node:10671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 passed (2.7s)
+exit=0

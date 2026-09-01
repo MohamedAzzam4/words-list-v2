@@ -1,0 +1,232 @@
+
+Running 306 tests using 1 worker
+(node:20907) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+F(node:25515) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+F(node:26190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+[Browser Console log] 🚀 DOM loaded / App booting.
+[Browser Console log] 📱 Using offline mode
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+T(node:30723) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+F(node:31494) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+F
+
+  1) [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('#view-guided')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for locator('#view-guided')
+        13 × locator resolved to <div class="hidden" id="view-guided">…</div>
+           - unexpected value "hidden"
+
+
+      1125 |         await page.reload();
+      1126 |         await page.locator('button:has-text("Daily Review")').click();
+    > 1127 |         await expect(page.locator('#view-guided')).toBeVisible();
+           |                                                    ^
+      1128 |
+      1129 |         // Walk through recognition (2 cards), transition into production,
+      1130 |         // grade the first production card — the session is now production-active
+        at /home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:1127:52
+
+    Error Context: test-results/verb-guided-challenge-Guid-0cf1b-xact-production-phase-state-chromium/error-context.md
+
+  2) [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 | });
+      80 |
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-chromium/error-context.md
+
+  3) [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('button:has-text("Continue")').first()
+
+
+      51 | async function continueThrough(page) {
+      52 |     const contBtn = page.locator('button:has-text("Continue")').first();
+    > 53 |     await contBtn.click();
+         |                   ^
+      54 |     await expect(page.locator('.guided-prompt-main')).toBeVisible();
+      55 | }
+      56 |
+        at continueThrough (/home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:53:19)
+        at /home/z/my-project/words-list-v2/tests/e2e/verb-guided-challenge.spec.js:754:15
+
+    Error Context: test-results/verb-guided-challenge-Guid-1691b-ard-per-terminal-completion-Mobile-Chrome/error-context.md
+
+  4) [Mobile Chrome] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Timeout: 5000ms
+    Expected pattern: /Auto Playing/
+    Received string:  "
+                                    ▶️ Auto Play Audio
+                                "
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button class="btn btn-primary" id="btn-play-all-words" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "
+                                    ▶️ Auto Play Audio
+                                "
+
+
+      55 |
+      56 |     // Check playing button state
+    > 57 |     await expect(autoPlayBtn).toHaveText(/Auto Playing/);
+         |                               ^
+      58 |
+      59 |     // Verify row highlighting
+      60 |     const highlightedRow = page.locator('tr.highlighted-speech');
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs.spec.js:57:31
+
+    Error Context: test-results/verbs-Top-German-Verbs-Mas-1cc9e-English-TTS-start-location--Mobile-Chrome/error-context.md
+
+  5) [Mobile Chrome] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 | });
+      80 |
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-Mobile-Chrome/error-context.md
+
+  5 failed
+    [chromium] › tests/e2e/verb-guided-challenge.spec.js:1088:9 › Guided Challenge E2E Suite › R2: Resume Daily Review after refresh restores the exact production-phase state
+    [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+    [Mobile Chrome] › tests/e2e/verb-guided-challenge.spec.js:736:9 › Guided Challenge E2E Suite › GC-07: daily review progress indicator advances card-by-card per terminal completion
+    [Mobile Chrome] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+    [Mobile Chrome] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+  1 skipped
+  300 passed (9.3m)
+exit=1

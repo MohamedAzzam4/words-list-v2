@@ -1,0 +1,35 @@
+=== 04: node --test tests/unit/verbs-audio.test.mjs ===
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (2.691759ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.404952ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.246058ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.215107ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.216894ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.264162ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.211151ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.205329ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.266785ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.318412ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.333241ms)
+✔ AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue (0.203212ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.313108ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.199159ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.370745ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.215881ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.844604ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.313748ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.219915ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.176753ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.370776ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.314058ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.173772ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.307972
+exit=0

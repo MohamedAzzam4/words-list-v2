@@ -1,0 +1,7 @@
+node --check js/core/speech-plan.mjs
+exit=0
+node --input-type=module --check < js/core/tts.js
+exit=0
+node --input-type=module --check < js/core/verbs-engine.js
+exit=0
+exit=0
