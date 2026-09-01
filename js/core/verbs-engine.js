@@ -706,6 +706,15 @@ class VerbsEngineClass {
         const deck = this.dataset.decks.find(d => d.deckId === deckId);
         if (!deck) return;
 
+        // AUDIO-002-C1: changing the deck changes the active verb context, so
+        // any live autoplay session is cancelled BEFORE the new deck is
+        // presented. stopAudioQueue() stops future utterances, invalidates the
+        // session's outstanding callbacks through the SpeechQueue generation
+        // mechanism, clears row highlights, hides the floating player, and
+        // restores the Play/Pause controls without firing a completion — and
+        // touches nothing else, so the new deck context loads intact.
+        this.stopAudioQueue();
+
         this.currentDeckId = deckId;
         this.queue = [...deck.verbs]; // ALWAYS PRESERVES NATURAL NUMERICAL DECK ORDER (#1..#50)
         this._shuffledFlashcardQueue = null;
@@ -1056,7 +1065,14 @@ class VerbsEngineClass {
 
     // ── ADVANCED AUTO-PLAY AUDIO PRACTICE QUEUE ──
     playAllVerbsAudio(startIndex = null) {
-        if (!this.queue || this.queue.length === 0) return;
+        // AUDIO-002-C1: an empty controller queue must not leave a previous
+        // SpeechQueue session alive (owner finding 2) — the early return
+        // stops any session that still owns playback and restores the resting
+        // controls, so pressing Play while empty is a clean no-op.
+        if (!this.queue || this.queue.length === 0) {
+            this.stopAudioQueue();
+            return;
+        }
 
         const repeatSelect = document.getElementById('auto-repeat-count');
         const exampleSelect = document.getElementById('auto-example-mode');
@@ -1094,9 +1110,14 @@ class VerbsEngineClass {
         });
         const itemsToPlay = mapSpeechStepsToQueueItems(plan.steps, this.queue, repeatCount);
 
-        // AUDIO-002: a plan with no speakable steps must not put the controls
-        // into a playing state that no utterance queue backs.
-        if (itemsToPlay.length === 0) return;
+        // AUDIO-002-C1: a plan with no speakable steps must not put the controls
+        // into a playing state that no utterance queue backs — and must not
+        // leave a previous session alive either: the empty-plan early return
+        // stops whatever session still owns playback before returning.
+        if (itemsToPlay.length === 0) {
+            this.stopAudioQueue();
+            return;
+        }
 
         const btn = document.getElementById('btn-play-all-words');
         const pauseBtn = document.getElementById('btn-pause-words');
@@ -1693,8 +1714,16 @@ class VerbsEngineClass {
         this.switchView(mode);
     }
 
-    // WP-041: Unified view switcher (glossary / flashcard / dashboard / trophies / leaderboard)
+    // WP-041: Unified view switcher (glossary / flashcard / guided / dashboard / trophies / leaderboard)
     switchView(v) {
+        // AUDIO-002-C1: navigating away from the current view changes the
+        // visible autoplay context (the Play controls and the table live in
+        // the glossary view, while the floating player is global), so a real
+        // view change cancels any live session before the new view is shown.
+        if (v !== this.activeMode) {
+            this.stopAudioQueue();
+        }
+
         this.activeMode = v;
         const views = ['glossary', 'flashcard', 'guided', 'dashboard', 'trophies', 'leaderboard'];
         views.forEach(id => {
@@ -2668,6 +2697,13 @@ class VerbsEngineClass {
         const searchInput = document.getElementById('verbs-search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
+                // AUDIO-002-C1: a search change redefines the visible verb
+                // context (including a transition to an empty result set),
+                // so any live autoplay session is cancelled BEFORE the
+                // filtered context is presented; the old queue can never
+                // keep speaking hidden/non-current verbs.
+                this.stopAudioQueue();
+
                 const q = e.target.value.toLowerCase().trim();
                 if (!q) {
                     this.loadDeck(this.currentDeckId);

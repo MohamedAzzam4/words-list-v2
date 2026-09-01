@@ -1002,7 +1002,7 @@ test('AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so a stale utteranc
     // The real controller source wired to the REAL SpeechQueue from the
     // tts.js VM layer: the navigation wiring is proven against the queue
     // implementation that actually owns the generation tokens.
-    const engineReal = loadVerbsEngineModule(SpeechQueue);
+    const engineReal = loadVerbsEngineModule(SpeechQueue).VerbsEngine;
     engineReal.dataset = makeDataset();
 
     engineReal.loadDeck(1);
