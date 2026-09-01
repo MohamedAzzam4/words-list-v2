@@ -994,7 +994,7 @@ test('AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck
     assert.equal(engine.queue[0].id, 'v_tragen');
 });
 
-test('AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so a stale utterance callback cannot advance after navigation (controller + real queue)', (t) => {
+test('AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue)', (t) => {
     t.mock.timers.enable({ apis: ['setTimeout'] });
     resetQueueHarness();
     resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
@@ -1030,6 +1030,24 @@ test('AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so a stale utteranc
     assert.equal(synthState.utterances.length, 1);
     assert.equal(SpeechQueue.currentIndex, 0);
     assertControlsResting();
+
+    // A replacement session started in the new context must be immune to the
+    // old session's late callbacks: the stale onend firing while the
+    // replacement owns the speaker can neither advance it nor add speech.
+    // (P5 probe scenario — deterministic at this layer via mock timers.)
+    engineReal.playAllVerbsAudio();
+    t.mock.timers.tick(250);
+    assert.equal(synthState.utterances.length, 2);
+    assert.equal(synthState.utterances[1].text, 'tragen');
+    assert.equal(SpeechQueue.isPlaying, true);
+    assert.equal(controls['btn-play-all-words'].classes.includes('playing'), true);
+
+    staleUtterance.onend(new Event('end'));
+    assert.equal(SpeechQueue.currentIndex, 0);
+    t.mock.timers.tick(250);
+    t.mock.timers.tick(12000);
+    assert.equal(synthState.utterances.length, 2);
+    assert.equal(SpeechQueue.isPlaying, true);
 
     SpeechQueue.stop();
 });
