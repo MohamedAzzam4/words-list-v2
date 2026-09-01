@@ -124,6 +124,15 @@ class SpeechQueueClass {
         this.currentUtterance = null;
         this._watchdogTimer = null;
         this._speakDelayTimer = null;
+        // AUDIO-002: the no-speech-synthesis fallback timer is tracked like
+        // the other two timers so stop()/pause() can always cancel it.
+        this._noSynthesisTimer = null;
+        // AUDIO-002: queue-ownership generation. Every stop()/pause() mints a
+        // new generation; every async callback below captures the generation
+        // that scheduled it and ignores the event once a later queue (or a
+        // pause) owns the speaker. Stale callbacks can no longer advance the
+        // cursor, speak, highlight, or complete a replacement queue.
+        this._generation = 0;
     }
 
     playAll(items, onHighlight, onFinished) {
@@ -149,6 +158,7 @@ class SpeechQueueClass {
         }
 
         const item = this.queue[this.currentIndex];
+        const generation = this._generation;
         
         // Notify highlight callback
         if (this.onHighlightCallback) {
@@ -156,7 +166,12 @@ class SpeechQueueClass {
         }
 
         if (!window.speechSynthesis) {
-            setTimeout(() => {
+            // AUDIO-002: tracked, generation-owned fallback advance. A paused,
+            // stopped, or replaced queue is never advanced by a stale
+            // no-synthesis timer (it was previously untracked, so pause and
+            // stop could not cancel it and it fired completion early).
+            this._noSynthesisTimer = setTimeout(() => {
+                if (this._generation !== generation || !this.isPlaying) return;
                 this.currentIndex++;
                 this._speakCurrent();
             }, 1500);
@@ -171,7 +186,9 @@ class SpeechQueueClass {
         window.speechSynthesis.cancel();
 
         this._speakDelayTimer = setTimeout(() => {
-            if (!this.isPlaying) return;
+            // AUDIO-002: ownership guard — a stopped, paused, or replaced
+            // queue must never speak.
+            if (this._generation !== generation || !this.isPlaying) return;
 
             const itemLang = item.lang || 'de';
             const rawText = item.text || item.de || item;
@@ -194,6 +211,9 @@ class SpeechQueueClass {
             utterance.rate = itemLang === 'en' ? 0.92 : 0.85;
 
             utterance.onend = () => {
+                // AUDIO-002: generation + utterance identity — only the
+                // utterance of the currently owning queue may advance.
+                if (this._generation !== generation) return;
                 if (this.currentUtterance === utterance) {
                     if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
                     this.currentUtterance = null;
@@ -205,6 +225,9 @@ class SpeechQueueClass {
             utterance.onerror = (e) => {
                 if (e.error === 'interrupted' || e.error === 'canceled') return;
                 console.warn('SpeechQueue: Speech error occurred', e.error);
+                // AUDIO-002: generation + utterance identity — a stale error
+                // from a replaced or paused queue never advances.
+                if (this._generation !== generation) return;
                 if (this.currentUtterance === utterance) {
                     if (this._watchdogTimer) { clearTimeout(this._watchdogTimer); this._watchdogTimer = null; }
                     this.currentUtterance = null;
@@ -218,6 +241,8 @@ class SpeechQueueClass {
             window.speechSynthesis.speak(utterance);
 
             this._watchdogTimer = setTimeout(() => {
+                // AUDIO-002: generation-guarded watchdog.
+                if (this._generation !== generation) return;
                 if (this.isPlaying && this.currentUtterance === utterance) {
                     console.warn('SpeechQueue: Watchdog fired — advancing.');
                     window.speechSynthesis.cancel();
@@ -235,6 +260,10 @@ class SpeechQueueClass {
     }
 
     stop() {
+        // AUDIO-002: minting a new generation invalidates every outstanding
+        // callback of the queue being stopped (delayed speak, utterance
+        // onend/onerror, watchdog, no-synthesis fallback).
+        this._generation++;
         this.isPlaying = false;
         this.queue = [];
         this.currentIndex = 0;
@@ -250,12 +279,22 @@ class SpeechQueueClass {
             this._watchdogTimer = null;
         }
 
+        if (this._noSynthesisTimer) {
+            clearTimeout(this._noSynthesisTimer);
+            this._noSynthesisTimer = null;
+        }
+
         if (typeof window !== 'undefined' && window.speechSynthesis) {
             window.speechSynthesis.cancel();
         }
     }
 
     pause() {
+        // AUDIO-002: pause keeps the queue and cursor (item-level position)
+        // but mints a new generation and clears ALL pending timers, so the
+        // canceled utterance's late onend/onerror can never advance the
+        // paused cursor or fire completion early.
+        this._generation++;
         this.isPlaying = false;
         this.currentUtterance = null;
         if (this._speakDelayTimer) {
@@ -265,6 +304,10 @@ class SpeechQueueClass {
         if (this._watchdogTimer) {
             clearTimeout(this._watchdogTimer);
             this._watchdogTimer = null;
+        }
+        if (this._noSynthesisTimer) {
+            clearTimeout(this._noSynthesisTimer);
+            this._noSynthesisTimer = null;
         }
         if (typeof window !== 'undefined' && window.speechSynthesis) {
             window.speechSynthesis.cancel();

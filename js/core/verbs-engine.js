@@ -58,10 +58,59 @@ import {
     PHASE_REVIEW,
     PHASE_COMPLETE
 } from './verb-challenge-engine.js';
+import { planSpeechSequence } from './speech-plan.mjs';
 
 // Review sessions live under their own storage slot so they can never be
 // mistaken for (or overwrite) a learning session for whatever deckId they span.
 const REVIEW_SESSION_KEY = '__daily_review__';
+
+// AUDIO-002: example-mode values the Auto-Play settings control can produce.
+// Validated before reaching the planner, which rejects unknown modes.
+const AUTOPLAY_EXAMPLE_MODES = new Set(['none', 'first', 'all']);
+
+// AUDIO-002: Verbs autoplay adapter — the mapping between Verbs queue records
+// and the AUDIO-001 speech-plan boundary (FP-DESIGN-010: speech-sequence
+// planning is a pure calculation; this mapping is too, so it stays free of
+// DOM/storage state). The ordering itself (item-major repeats, examples,
+// translations, start index) comes ONLY from planSpeechSequence(); no
+// duplicated ordering logic lives in this controller.
+function mapVerbToSpeechCard(verb, examplePairs) {
+    const infinitive = typeof verb.infinitive === 'string' ? verb.infinitive : '';
+    const meaning = typeof verb.meaning === 'string' ? verb.meaning : '';
+    return {
+        // Stable verb id: the highlight callback resolves rows by it.
+        id: verb.id,
+        // The English meaning is the only translation verbs carry.
+        translationLanguage: meaning !== '' ? 'en' : null,
+        speechText: { de: infinitive, en: meaning, ar: '' },
+        examples: examplePairs.map((pair) => ({
+            translationLanguage: pair.en !== '' ? 'en' : null,
+            speechText: { de: pair.de, en: pair.en, ar: '' }
+        }))
+    };
+}
+
+// Map planned steps back onto SpeechQueue queue records, re-attaching the
+// verb identity (stable verb id + deck index) the highlight callback needs
+// and the planner's per-step language for voice selection. The record shape
+// matches the previous hand-built items exactly (label included).
+function mapSpeechStepsToQueueItems(steps, queue, repeatCount) {
+    return steps.map((step) => {
+        const verb = queue[step.itemIndex];
+        const label = step.segment === 'term' ? `Verb (${step.repeatIndex + 1}/${repeatCount})`
+            : step.segment === 'term-translation' ? 'Translation'
+            : step.segment === 'example' ? 'Example (DE)'
+            : 'Example (EN)';
+        return {
+            verbId: verb.id,
+            verbInfinitive: verb.infinitive,
+            verbIndex: verb.index,
+            text: step.text,
+            lang: step.language,
+            label
+        };
+    });
+}
 
 class VerbsEngineClass {
     constructor() {
@@ -1015,72 +1064,39 @@ class VerbsEngineClass {
         const startVerbSelect = document.getElementById('auto-start-verb');
 
         const repeatCount = repeatSelect ? parseInt(repeatSelect.value, 10) || 1 : 1;
-        const exampleMode = exampleSelect ? exampleSelect.value : 'first';
+        const exampleMode = exampleSelect && AUTOPLAY_EXAMPLE_MODES.has(exampleSelect.value) ? exampleSelect.value : 'first';
         const includeEn = includeEnCheck ? includeEnCheck.checked : true;
 
         let startIdx = 0;
         if (startIndex !== null && typeof startIndex === 'number') {
             startIdx = Math.max(0, Math.min(startIndex, this.queue.length - 1));
-            if (startVerbSelect) startVerbSelect.value = startIdx;
         } else if (startVerbSelect && startVerbSelect.value !== '') {
             startIdx = parseInt(startVerbSelect.value, 10) || 0;
         }
+        // AUDIO-002: clamp every start source to the last verb so the plan can
+        // never begin past the end of the queue (the planner would return an
+        // empty sequence and the controls would disagree with the queue).
+        startIdx = Math.max(0, Math.min(startIdx, this.queue.length - 1));
+        // Keep the Start-At control in agreement with the playback that
+        // actually starts (a real DOM select coerces the number to its option).
+        if (startVerbSelect) startVerbSelect.value = startIdx;
 
-        const itemsToPlay = [];
+        // AUDIO-002: the sequence is planned by the AUDIO-001 planner. This
+        // controller only maps verb records onto the planner's input boundary
+        // and maps the planned steps back to queue records; repeat, example,
+        // translation, and start ordering lives in the planner alone.
+        const speechCards = this.queue.map((verb) => mapVerbToSpeechCard(verb, this._getExamplePairs(verb)));
+        const plan = planSpeechSequence(speechCards, {
+            repeatCount,
+            exampleMode,
+            includeTranslation: includeEn,
+            startIndex: startIdx
+        });
+        const itemsToPlay = mapSpeechStepsToQueueItems(plan.steps, this.queue, repeatCount);
 
-        for (let i = startIdx; i < this.queue.length; i++) {
-            const verb = this.queue[i];
-            const exPairs = this._getExamplePairs(verb);
-
-            for (let r = 0; r < repeatCount; r++) {
-                itemsToPlay.push({
-                    verbId: verb.id,
-                    verbInfinitive: verb.infinitive,
-                    verbIndex: verb.index,
-                    text: verb.infinitive,
-                    lang: 'de',
-                    label: `Verb (${r+1}/${repeatCount})`
-                });
-
-                if (includeEn && verb.meaning) {
-                    itemsToPlay.push({
-                        verbId: verb.id,
-                        verbInfinitive: verb.infinitive,
-                        verbIndex: verb.index,
-                        text: verb.meaning,
-                        lang: 'en',
-                        label: `Translation`
-                    });
-                }
-
-                if (exampleMode !== 'none' && exPairs.length > 0) {
-                    const targetPairs = exampleMode === 'first' ? [exPairs[0]] : exPairs;
-
-                    for (const pair of targetPairs) {
-                        if (pair.de) {
-                            itemsToPlay.push({
-                                verbId: verb.id,
-                                verbInfinitive: verb.infinitive,
-                                verbIndex: verb.index,
-                                text: pair.de,
-                                lang: 'de',
-                                label: `Example (DE)`
-                            });
-                        }
-                        if (includeEn && pair.en) {
-                            itemsToPlay.push({
-                                verbId: verb.id,
-                                verbInfinitive: verb.infinitive,
-                                verbIndex: verb.index,
-                                text: pair.en,
-                                lang: 'en',
-                                label: `Example (EN)`
-                            });
-                        }
-                    }
-                }
-            }
-        }
+        // AUDIO-002: a plan with no speakable steps must not put the controls
+        // into a playing state that no utterance queue backs.
+        if (itemsToPlay.length === 0) return;
 
         const btn = document.getElementById('btn-play-all-words');
         const pauseBtn = document.getElementById('btn-pause-words');
