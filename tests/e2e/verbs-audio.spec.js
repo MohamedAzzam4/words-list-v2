@@ -271,4 +271,250 @@ test.describe('AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks)', (
     const speakCount = await page.evaluate(() => window.__verbsAudio.speakCount);
     expect(speakCount).toBe(0);
   });
+
+  // ── AUDIO-002-C1: navigation and queue-context ownership cancellation ──
+  // Owner review finding: autoplay was not cancelled when the visible
+  // navigation or queue context changed (deck switch, view navigation, search
+  // change) and the playAllVerbsAudio() early returns could leave a previous
+  // SpeechQueue session alive. These tests are RED on the accepted base
+  // 1080ac7 and drive the real controller through the real page.
+
+  async function expectAutoplayCancelled(page) {
+    await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+    await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+    await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+    await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+    await expect(page.locator('tr.highlighted-speech')).toHaveCount(0);
+    const speaking = await page.evaluate(() => window.speechSynthesis.speaking);
+    expect(speaking).toBe(false);
+  }
+
+  test('[AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Playing/);
+    await expect(page.locator('tr[data-id="v_werden"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#floating-audio-bar')).toBeVisible();
+    await page.evaluate(() => { window.__verbsAudio.stale = window.__verbsAudio.current; });
+
+    // Navigation: select deck 2 in the deck tracker (owner repro 1).
+    await page.locator('.deck-chip-card[data-deck-id="2"]').click();
+
+    await expectAutoplayCancelled(page);
+    // The newly selected deck context is intact.
+    await expect(page.locator('#verbs-deck-title')).toHaveText('Deck 2 (Verbs 51–100)');
+    await expect(page.locator('tr[data-id="v_tragen"]')).toHaveCount(1);
+    const newDeck = await page.evaluate(() => ({
+      deckId: window.verbsEngine.currentDeckId,
+      queueLength: window.verbsEngine.queue.length
+    }));
+    expect(newDeck).toEqual({ deckId: 2, queueLength: 50 });
+
+    // The cancelled session's late onend/onerror callbacks are no-ops.
+    await page.evaluate(() => {
+      window.__verbsAudio.stale.onend(new Event('end'));
+      window.__verbsAudio.stale.onerror({ error: 'synthesis-failed' });
+    });
+    await expectAutoplayCancelled(page);
+
+    // Restart on the new deck begins exactly at the new deck's first verb,
+    // proving no orphaned old-queue utterance was spoken in between.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 2);
+    const spoken = await page.evaluate(() => ({
+      count: window.__verbsAudio.speakCount,
+      last: window.__verbsAudio.utterances[1]
+    }));
+    expect(spoken.count).toBe(2);
+    expect(spoken.last).toEqual({ text: 'tragen', lang: 'de-DE' });
+    await page.locator('#btn-stop-words').click();
+  });
+
+  test('[AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await page.locator('#btn-pause-words').click();
+    await expect(page.locator('#btn-pause-words')).toHaveText(/Resume/);
+
+    await page.locator('.deck-chip-card[data-deck-id="2"]').click();
+
+    await expectAutoplayCancelled(page);
+    // The Pause control is restored to its resting label, not left as Resume.
+    await expect(page.locator('#btn-pause-words')).toHaveText(/Pause/);
+    await expect(page.locator('#verbs-deck-title')).toHaveText('Deck 2 (Verbs 51–100)');
+
+    // Play on the new deck speaks the new deck's first verb: the paused old
+    // session is gone rather than resumed (its next item would be English).
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 2);
+    const spoken = await page.evaluate(() => ({
+      count: window.__verbsAudio.speakCount,
+      last: window.__verbsAudio.utterances[1]
+    }));
+    expect(spoken.count).toBe(2);
+    expect(spoken.last).toEqual({ text: 'tragen', lang: 'de-DE' });
+    await page.locator('#btn-stop-words').click();
+  });
+
+  test('[AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await page.evaluate(() => { window.__verbsAudio.stale = window.__verbsAudio.current; });
+
+    // Navigation: a search producing an empty verb queue (owner repro 2).
+    await page.fill('#verbs-search-input', 'zzzzqqqq');
+    await page.waitForFunction(() => window.verbsEngine.queue.length === 0);
+
+    // Cancellation happened when the context changed, not on a later reload.
+    await expectAutoplayCancelled(page);
+
+    // Pressing Play while the controller queue is empty is a clean no-op.
+    await page.locator('#btn-play-all-words').click();
+    await expectAutoplayCancelled(page);
+    const speakCountAfterPlay = await page.evaluate(() => window.__verbsAudio.speakCount);
+    expect(speakCountAfterPlay).toBe(1);
+
+    // The cancelled session's late onend cannot resurrect anything.
+    await page.evaluate(() => window.__verbsAudio.stale.onend(new Event('end')));
+    await expectAutoplayCancelled(page);
+  });
+
+  test('[AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await page.evaluate(() => { window.__verbsAudio.stale = window.__verbsAudio.current; });
+
+    // Navigation: a search with a different non-empty result set (13 matches).
+    await page.fill('#verbs-search-input', 'tragen');
+    await page.waitForFunction(() => window.verbsEngine.queue.length === 13);
+
+    await expectAutoplayCancelled(page);
+    const context = await page.evaluate(() => ({
+      firstId: window.verbsEngine.queue[0].id,
+      firstIndex: window.verbsEngine.queue[0].index
+    }));
+    expect(context).toEqual({ firstId: 'v_tragen', firstIndex: 51 });
+
+    // The old queue's late onend is a no-op.
+    await page.evaluate(() => window.__verbsAudio.stale.onend(new Event('end')));
+
+    // Restart: only the filtered (current) verbs speak.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 2);
+    const spoken = await page.evaluate(() => ({
+      count: window.__verbsAudio.speakCount,
+      last: window.__verbsAudio.utterances[1]
+    }));
+    expect(spoken.count).toBe(2);
+    expect(spoken.last).toEqual({ text: 'tragen', lang: 'de-DE' });
+    await expect(page.locator('tr[data-id="v_tragen"]')).toHaveClass(/highlighted-speech/);
+    await page.locator('#btn-stop-words').click();
+  });
+
+  test('[AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Playing/);
+
+    // The controller queue becomes empty by a path that did not itself cancel
+    // (defense in depth for the empty-queue early return; synthetic state,
+    // disclosed in the report — the Play path itself is the real controller).
+    await page.evaluate(() => { window.verbsEngine.queue = []; });
+
+    await page.locator('#btn-play-all-words').click();
+
+    await expectAutoplayCancelled(page);
+    const speakCount = await page.evaluate(() => window.__verbsAudio.speakCount);
+    expect(speakCount).toBe(1);
+  });
+
+  test('[AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Playing/);
+
+    // Only an unspeakable verb remains, so the planned sequence is empty
+    // (synthetic state, disclosed in the report; the Play path is real).
+    await page.evaluate(() => {
+      window.verbsEngine.queue = [{
+        id: 'v_synthetic_mute', index: 999, infinitive: '', meaning: '',
+        exampleDe: '', exampleEn: '', tags: [], prefixInfo: {}, conjugation: {}
+      }];
+    });
+
+    await page.locator('#btn-play-all-words').click();
+
+    await expectAutoplayCancelled(page);
+    const speakCount = await page.evaluate(() => window.__verbsAudio.speakCount);
+    expect(speakCount).toBe(1);
+  });
+
+  test('[AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player', async ({ page }) => {
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await page.evaluate(() => { window.__verbsAudio.stale = window.__verbsAudio.current; });
+
+    // View navigation away from the glossary autoplay context (the sidebar
+    // items call exactly this controller method; the floating player lives
+    // outside the view containers, so only cancellation can hide it).
+    await page.evaluate(() => window.verbsEngine.switchView('dashboard'));
+
+    await expectAutoplayCancelled(page);
+    await expect(page.locator('#view-dashboard')).not.toHaveClass(/hidden/);
+    await expect(page.locator('#view-glossary')).toHaveClass(/hidden/);
+
+    // The cancelled session's late onend is a no-op.
+    await page.evaluate(() => window.__verbsAudio.stale.onend(new Event('end')));
+    await expectAutoplayCancelled(page);
+
+    // Returning to the glossary presents the deck intact with no session.
+    await page.evaluate(() => window.verbsEngine.switchView('glossary'));
+    await expect(page.locator('#view-glossary')).not.toHaveClass(/hidden/);
+    await expectAutoplayCancelled(page);
+  });
+
+  test('[AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation', async ({ page }) => {
+    // Verb-only mode so every session's sequence is one step per verb and the
+    // exact utterance list is a direct ownership fingerprint.
+    await openSettings(page);
+    await page.locator('#auto-repeat-count').selectOption('1');
+    await page.locator('#auto-example-mode').selectOption('none');
+    await page.locator('#auto-include-en').uncheck();
+
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1); // 'werden'
+    await page.evaluate(() => window.__verbsAudio.finishCurrent());
+    await waitForUtterance(page, 2); // 'haben'
+    await page.evaluate(() => { window.__verbsAudio.stale = window.__verbsAudio.current; });
+
+    // Replace the session via navigation (deck change) + a fresh Play.
+    await page.locator('.deck-chip-card[data-deck-id="2"]').click();
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 3); // 'tragen' (deck 2)
+    await expect(page.locator('tr[data-id="v_tragen"]')).toHaveClass(/highlighted-speech/);
+
+    // The replaced session's late onend fires while the new session owns the
+    // speaker: it must not advance anything — the current row stays put and
+    // no extra utterance appears.
+    await page.evaluate(() => window.__verbsAudio.stale.onend(new Event('end')));
+    await expect(page.locator('tr[data-id="v_tragen"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('tr[data-id="v_gewinnen"]')).not.toHaveClass(/highlighted-speech/);
+    const afterStale = await page.evaluate(() => window.__verbsAudio.speakCount);
+    expect(afterStale).toBe(3);
+
+    // The new session continues its own exact verb-only sequence.
+    await page.evaluate(() => window.__verbsAudio.finishCurrent()); // finish 'tragen'
+    await waitForUtterance(page, 4); // 'gewinnen'
+    await page.evaluate(() => window.__verbsAudio.finishCurrent());
+    await waitForUtterance(page, 5); // 'fallen'
+    const spoken = await page.evaluate(() => window.__verbsAudio.utterances.slice(0, 5));
+    expect(spoken).toEqual([
+      { text: 'werden', lang: 'de-DE' },
+      { text: 'haben', lang: 'de-DE' },
+      { text: 'tragen', lang: 'de-DE' },
+      { text: 'gewinnen', lang: 'de-DE' },
+      { text: 'fallen', lang: 'de-DE' }
+    ]);
+    await page.locator('#btn-stop-words').click();
+  });
 });

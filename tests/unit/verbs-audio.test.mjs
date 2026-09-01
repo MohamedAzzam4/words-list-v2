@@ -132,14 +132,14 @@ function makeControls(options) {
 }
 
 let controls = makeControls();
-const queueLog = { playAllCalls: [], isPlaying: false };
+const queueLog = { playAllCalls: [], isPlaying: false, stopCalls: 0 };
 const speechQueueStub = {
     get isPlaying() { return queueLog.isPlaying; },
     playAll(items, onHighlight, onFinished) {
         queueLog.playAllCalls.push({ items: items.slice(), onHighlight, onFinished });
         queueLog.isPlaying = true;
     },
-    stop() { queueLog.isPlaying = false; },
+    stop() { queueLog.stopCalls++; queueLog.isPlaying = false; },
     pause() { queueLog.isPlaying = false; },
     resume() { queueLog.isPlaying = true; },
     speakSingle() {}
@@ -147,18 +147,24 @@ const speechQueueStub = {
 
 const documentStub = {
     getElementById: (id) => (Object.prototype.hasOwnProperty.call(controls, id) ? controls[id] : null),
-    querySelectorAll: () => []
+    querySelectorAll: () => [],
+    // AUDIO-002-C1: the controller's highlight callback resolves rows through
+    // document.querySelector; the U6 controller+real-queue integration test
+    // needs the shape to exist (null = no rows, exactly like an empty page).
+    querySelector: () => null
 };
 
-function loadVerbsEngineModule() {
+function loadVerbsEngineModule(injectedSpeechQueue) {
     const sandbox = {
         console,
         window: {},
         document: documentStub,
-        // tts.js boundary (SpeechQueue stubbed; cleanTextForAudio is real).
+        // tts.js boundary (SpeechQueue stubbed by default; cleanTextForAudio
+        // is real). AUDIO-002-C1 U6 injects the REAL SpeechQueue from the
+        // tts.js VM layer to prove the controller wiring end-to-end.
         speak: () => {},
         cleanTextForAudio,
-        SpeechQueue: speechQueueStub,
+        SpeechQueue: injectedSpeechQueue || speechQueueStub,
         setSpeakHook: () => {},
         playChime: () => {},
         // firebase.js boundary: stubbed; autoplay paths never call it.
@@ -285,6 +291,7 @@ function plainItems(items) {
 function resetAdapterHarness(options) {
     queueLog.playAllCalls.length = 0;
     queueLog.isPlaying = false;
+    queueLog.stopCalls = 0;
     controls = makeControls(options);
     engine.queue = [];
 }
@@ -505,7 +512,14 @@ test('AUDIO-002 A11: verbs with missing text are skipped by the planner without 
     }
 });
 
-test('AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and never starts the queue', () => {
+// AUDIO-002-C1 revision (CM-MOD-002/003): the original A12 asserted the
+// empty-plan early return left the fake controls untouched (innerHTML ''),
+// an artifact of the harness fakes rather than real resting DOM. The owner
+// correction requires the early return to actively STOP any previous session
+// and RESTORE the resting control state, so the superseded assertions are
+// replaced with the corrected resting-state contract (the queue still never
+// starts — that part of A12 is unchanged and still asserted).
+test('AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state', () => {
     resetAdapterHarness({ repeat: '1', mode: 'none', includeEn: false, start: '0' });
     const vNothing = makeVerb('v_nothing', 11, '', '', '', '');
     engine.queue = [vNothing];
@@ -513,13 +527,15 @@ test('AUDIO-002 A12: an empty planned sequence leaves the controls unchanged and
     engine.playAllVerbsAudio();
 
     // Nothing is speakable: the queue must not start and the visible controls
-    // must not claim a playing state that no utterance queue backs.
+    // must be in the resting state (no playing claim, no live session).
     assert.equal(queueLog.playAllCalls.length, 0);
+    assert.equal(queueLog.stopCalls, 1);
     const playButton = controls['btn-play-all-words'];
-    assert.equal(playButton.innerHTML, '');
+    assert.equal(playButton.innerHTML, '<span>▶️</span> Auto Play Audio');
     assert.equal(playButton.classes.includes('playing'), false);
-    assert.equal(controls['btn-pause-words'].classes.includes('hidden'), false);
-    assert.equal(controls['floating-audio-bar'].classes.includes('hidden'), false);
+    assert.equal(controls['btn-pause-words'].classes.includes('hidden'), true);
+    assert.equal(controls['btn-pause-words'].innerHTML, '<span>⏸️</span> Pause');
+    assert.equal(controls['floating-audio-bar'].classes.includes('hidden'), true);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -829,4 +845,191 @@ test('AUDIO-002 B11: playAll with an empty list stops and cleans the current que
     assert.equal(synthState.utterances.length, 1); // only 'eins' from before the empty play
     assert.equal(completionsFirst, 0);
     assert.equal(completionsEmpty, 0);
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// C) AUDIO-002-C1: navigation and queue-context ownership cancellation
+//
+// Owner review finding: AUDIO-002 did not cancel active autoplay when the
+// visible navigation or queue context changed (deck switch, view navigation,
+// search change) and the playAllVerbsAudio() early returns for an empty
+// controller queue / empty planned sequence could leave a previous
+// SpeechQueue session alive. These tests are RED on the accepted base
+// 1080ac7e: each asserts the navigation itself stops the old session, resets
+// the controls, and leaves the newly selected context intact.
+// Contract refs: AC-12 (lifecycle/highlight/floating state agree with the
+// queue; stale callbacks cannot restart or advance it), CM-FIX-001..005.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// A small synthetic dataset shaped like the real one so loadDeck() runs its
+// real code path against the fake DOM.
+const V_TRAGEN = makeVerb('v_tragen', 51, 'tragen', 'to carry', 'Sie trägt.', 'She carries.');
+const V_GEWINNEN = makeVerb('v_gewinnen', 52, 'gewinnen', 'to win', 'Er gewinnt.', 'He wins.');
+const V_FALLEN = makeVerb('v_fallen', 53, 'fallen', 'to fall', 'Es fällt.', 'It falls.');
+
+function makeDataset() {
+    return {
+        totalVerbs: 6,
+        totalDecks: 2,
+        decks: [
+            { deckId: 1, title: 'Deck 1 (Verbs 1–3)', count: 3, verbs: [V_MACHEN, V_GEHEN, V_SEHEN] },
+            { deckId: 2, title: 'Deck 2 (Verbs 51–53)', count: 3, verbs: [V_TRAGEN, V_GEWINNEN, V_FALLEN] }
+        ]
+    };
+}
+
+function assertControlsResting() {
+    const playButton = controls['btn-play-all-words'];
+    assert.equal(playButton.classes.includes('playing'), false);
+    assert.equal(playButton.innerHTML, '<span>▶️</span> Auto Play Audio');
+    assert.equal(controls['btn-pause-words'].classes.includes('hidden'), true);
+    assert.equal(controls['btn-pause-words'].innerHTML, '<span>⏸️</span> Pause');
+    assert.equal(controls['floating-audio-bar'].classes.includes('hidden'), true);
+}
+
+test('AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented', () => {
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+    engine.dataset = makeDataset();
+
+    engine.loadDeck(1);
+    engine.playAllVerbsAudio();
+    assert.equal(queueLog.playAllCalls.length, 1);
+    assert.equal(queueLog.isPlaying, true);
+    assert.equal(controls['btn-play-all-words'].classes.includes('playing'), true);
+    const stopsBefore = queueLog.stopCalls; // loadDeck(1) itself cancelled nothing live (no-op stop)
+
+    engine.loadDeck(2); // navigation: deck change
+
+    assert.equal(queueLog.stopCalls, stopsBefore + 1);
+    assert.equal(queueLog.isPlaying, false);
+    assert.equal(queueLog.playAllCalls.length, 1); // no new session auto-starts
+    assertControlsResting();
+
+    // The newly selected deck context is intact.
+    assert.equal(engine.currentDeckId, 2);
+    assert.equal(engine.queue.length, 3);
+    assert.equal(engine.queue[0].id, 'v_tragen');
+});
+
+test('AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session', () => {
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+    engine.dataset = makeDataset();
+
+    engine.loadDeck(1);
+    engine.playAllVerbsAudio();
+    const stopsBefore = queueLog.stopCalls;
+
+    engine.switchView('flashcard'); // navigation: view change away from glossary
+
+    assert.equal(queueLog.stopCalls, stopsBefore + 1);
+    assert.equal(queueLog.isPlaying, false);
+    assert.equal(queueLog.playAllCalls.length, 1);
+    assertControlsResting();
+    assert.equal(engine.activeMode, 'flashcard');
+
+    // Returning to the glossary presents the deck intact; nothing resurrects.
+    engine.switchView('glossary');
+    assert.equal(engine.activeMode, 'glossary');
+    assert.equal(queueLog.playAllCalls.length, 1);
+    assertControlsResting();
+});
+
+test('AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive', () => {
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+    engine.dataset = makeDataset();
+
+    engine.loadDeck(1);
+    engine.playAllVerbsAudio(); // session 1 is live
+    assert.equal(queueLog.isPlaying, true);
+    const stopsBefore = queueLog.stopCalls;
+
+    // The controller queue becomes empty by a path that did not itself cancel
+    // (defense in depth for the empty-queue early return; owner repro 2).
+    engine.queue = [];
+    engine.playAllVerbsAudio(); // early return
+
+    assert.equal(queueLog.stopCalls, stopsBefore + 1);
+    assert.equal(queueLog.isPlaying, false);
+    assert.equal(queueLog.playAllCalls.length, 1); // no second session started
+    assertControlsResting();
+});
+
+test('AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive', () => {
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+    engine.dataset = makeDataset();
+
+    engine.loadDeck(1);
+    engine.playAllVerbsAudio(); // session 1 is live
+    const stopsBefore = queueLog.stopCalls;
+
+    // Every remaining verb is unspeakable, so the planned sequence is empty.
+    const vMute = makeVerb('v_mute', 99, '', '', '', '');
+    engine.queue = [vMute];
+    engine.playAllVerbsAudio(); // empty-plan early return
+
+    assert.equal(queueLog.stopCalls, stopsBefore + 1);
+    assert.equal(queueLog.isPlaying, false);
+    assert.equal(queueLog.playAllCalls.length, 1); // the empty plan never started a queue
+    assertControlsResting();
+});
+
+test('AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes', () => {
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+    engine.dataset = makeDataset();
+
+    engine.loadDeck(1);
+    engine.playAllVerbsAudio();
+    engine.togglePauseAudio(); // pause: the session stays alive, controls show Resume
+    assert.equal(controls['btn-pause-words'].innerHTML, '<span>▶️</span> Resume');
+    assert.equal(queueLog.isPlaying, false);
+    const stopsBefore = queueLog.stopCalls;
+
+    engine.loadDeck(2); // navigation: deck change
+
+    // The paused session was cancelled (not resumed and not silently kept).
+    assert.equal(queueLog.stopCalls, stopsBefore + 1);
+    assert.equal(queueLog.playAllCalls.length, 1);
+    assertControlsResting();
+    assert.equal(engine.currentDeckId, 2);
+    assert.equal(engine.queue[0].id, 'v_tragen');
+});
+
+test('AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so a stale utterance callback cannot advance after navigation (controller + real queue)', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    resetQueueHarness();
+    resetAdapterHarness({ repeat: '1', mode: 'first', includeEn: true, start: '0' });
+
+    // The real controller source wired to the REAL SpeechQueue from the
+    // tts.js VM layer: the navigation wiring is proven against the queue
+    // implementation that actually owns the generation tokens.
+    const engineReal = loadVerbsEngineModule(SpeechQueue);
+    engineReal.dataset = makeDataset();
+
+    engineReal.loadDeck(1);
+    engineReal.playAllVerbsAudio();
+
+    t.mock.timers.tick(250);
+    assert.equal(synthState.utterances.length, 1);
+    assert.equal(synthState.utterances[0].text, 'machen');
+    const staleUtterance = synthState.current;
+
+    engineReal.loadDeck(2); // navigation: deck change
+
+    // The navigation itself stopped the real queue and minted a generation.
+    assert.equal(SpeechQueue.isPlaying, false);
+    assert.equal(SpeechQueue.queue.length, 0);
+    assertControlsResting();
+    assert.equal(engineReal.currentDeckId, 2);
+
+    // A late onend from the pre-navigation utterance is a complete no-op:
+    // no advance, no further utterance, no completion, even after the
+    // delayed-speak and watchdog windows elapse.
+    staleUtterance.onend(new Event('end'));
+    t.mock.timers.tick(250);
+    t.mock.timers.tick(12000);
+    assert.equal(synthState.utterances.length, 1);
+    assert.equal(SpeechQueue.currentIndex, 0);
+    assertControlsResting();
+
+    SpeechQueue.stop();
 });
