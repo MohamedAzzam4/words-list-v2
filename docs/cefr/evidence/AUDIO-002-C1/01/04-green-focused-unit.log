@@ -1,0 +1,40 @@
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.788904ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.42219ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.211455ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.226772ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.204039ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.202295ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.190385ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.228416ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.262233ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.285838ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.344212ms)
+✔ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.316531ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.413965ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.23786ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.3783ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.230507ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.851001ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.355737ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.201254ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.137491ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.189304ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.352111ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.200057ms)
+✔ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (0.783975ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.283308ms)
+✔ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.152698ms)
+✔ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.207574ms)
+✔ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.217758ms)
+✔ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.882922ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 87.833311

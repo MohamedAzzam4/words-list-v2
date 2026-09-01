@@ -1,0 +1,6 @@
+Remote checkpoint verification (fresh capture 2026-09-01 05:20 UTC):
+$ git ls-remote origin refs/heads/codex/glm-audio-002-c1-01
+1080ac7e057d62c4ca7efa78d20240c7df0f5c75	refs/heads/codex/glm-audio-002-c1-01
+$ git rev-parse HEAD
+ca0b479f392caa6c2d47f3b415501f14948ee908
+The initial non-forced checkpoint push (HEAD:refs/heads/codex/glm-audio-002-c1-01) exited 0 with the PAT staged via a transient chmod-600 file outside the repository, deleted immediately and verified absent (AUTH_HTTP_CODE=200, TOKEN_LOGIN=MohamedAzzam4, PUSH_EXIT=0, REMOTE_BRANCH_SHA=1080ac7e057d62c4ca7efa78d20240c7df0f5c75, CRED_FILE_DELETED_VERIFIED) — original output recorded in the session worklog; this log re-verifies the published state.

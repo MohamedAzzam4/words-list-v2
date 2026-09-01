@@ -1,0 +1,20 @@
+$ git diff --check
+exit 0
+
+$ git diff --cached --check
+exit 0
+
+$ git status --short (staged docs files only; nothing unstaged)
+AM docs/cefr/evidence/AUDIO-002-C1/01/10-diff-check.log
+AM docs/cefr/evidence/AUDIO-002-C1/01/INDEX.md
+(no unstaged/untracked output above = everything staged)
+
+$ git log --oneline 1080ac7..HEAD
+ca0b479 test(audio): strengthen C1 U6 with the replacement-session stale-callback phase (AUDIO-002-C1)
+d68898e fix(audio): cancel verbs autoplay on navigation and queue-context changes (AUDIO-002-C1)
+a965592 test(audio): add RED-first verbs navigation and queue-ownership cancellation tests (AUDIO-002-C1)
+
+$ git diff --cached --stat (this docs commit: report + evidence only)
+ docs/cefr/evidence/AUDIO-002-C1/01/INDEX.md        |   62 +
+ docs/cefr/reports/AUDIO-002-C1-01.md               |  146 +
+ 22 files changed, 19455 insertions(+)

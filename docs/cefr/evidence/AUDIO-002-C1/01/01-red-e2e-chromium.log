@@ -1,0 +1,544 @@
+
+Running 16 tests using 1 worker
+
+
+(node:1948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/16] [chromium] › tests/e2e/verbs-audio.spec.js:72:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] real controller speaks the exact planned sequence with per-step language
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/16] [chromium] › tests/e2e/verbs-audio.spec.js:111:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] pause and resume keep the current position without skipping or duplicating an item
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/16] [chromium] › tests/e2e/verbs-audio.spec.js:150:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] stop cancels future speech, clears highlights, hides the floating player, and resets the controls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/16] [chromium] › tests/e2e/verbs-audio.spec.js:179:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] completing the queue resets the controls exactly once and speaks every planned step exactly once
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/16] [chromium] › tests/e2e/verbs-audio.spec.js:210:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] row-play starts at that row and syncs the Start-At dropdown
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/16] [chromium] › tests/e2e/verbs-audio.spec.js:222:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] a rapid restart replaces the queue exactly once and stale utterance callbacks cannot disturb it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[7/16] [chromium] › tests/e2e/verbs-audio.spec.js:248:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] individual pronunciation stops the autoplay queue and speaks only that item
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/16] [chromium] › tests/e2e/verbs-audio.spec.js:262:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002] an empty filtered queue never enters the playing state
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[9/16] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:303:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-ffca0--leaves-the-new-deck-intact-chromium/error-context.md
+
+
+
+(node:2299) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[10/16] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:341:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-302e7-sumed-when-the-deck-changes-chromium/error-context.md
+
+
+
+(node:2394) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/16] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  3) [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:369:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-9d7ac-nd-Play-stays-a-clean-no-op-chromium/error-context.md
+
+
+
+(node:2498) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/16] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  4) [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:391:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-639d0-nly-current-verbs-can-speak-chromium/error-context.md
+
+
+
+(node:2604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/16] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  5) [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:426:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-36360-instead-of-leaving-it-alive-chromium/error-context.md
+
+
+
+(node:2701) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[14/16] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  6) [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:447:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-d9c45-instead-of-leaving-it-alive-chromium/error-context.md
+
+
+
+(node:2807) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/16] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  7) [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        13 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/words-list-v2/tests/e2e/verbs-audio.spec.js:462:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-eff62-d-hides-the-floating-player-chromium/error-context.md
+
+
+
+(node:2913) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/16] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  7 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+    [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+    [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+    [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+    [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+    [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+    [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+  9 passed (1.0m)

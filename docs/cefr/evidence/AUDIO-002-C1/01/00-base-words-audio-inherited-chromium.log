@@ -1,0 +1,52 @@
+
+Running 1 test using 1 worker
+
+
+(node:1475) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 | });
+      80 |
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-chromium/error-context.md
+
+
+  1 failed
+    [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters

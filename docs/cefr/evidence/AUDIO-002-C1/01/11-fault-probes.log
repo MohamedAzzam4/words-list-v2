@@ -1,0 +1,1435 @@
+================ AUDIO-002-C1 FAULT PROBES — SUMMARY ================
+
+## P1 deck-change-cancellation-removed
+- risk: owner repro 1: deck switch leaves the old session running
+- mutation target: js/core/verbs-engine.js (production only; tests unmodified)
+- intended detectors: U1/U5/U6 (unit) and the deck-change E2E tests
+- mutant syntax check: exit 0 (must be 0)
+- unit run: exit 1; failing tests: ['AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented', 'AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes', 'AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement']
+- focused new-test E2E run: exit 1; failing tests: ['[chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact', '[chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes']
+- classification: KILLED
+- integrity: sha256 before == after: True (6ae7bfef02c7…)
+
+## P2 search-context-cancellation-removed
+- risk: search changes leave the old queue speaking non-current verbs
+- mutation target: js/core/verbs-engine.js (production only; tests unmodified)
+- intended detectors: the search-context E2E tests (empty and non-empty result sets)
+- mutant syntax check: exit 0 (must be 0)
+- unit run: exit 0; failing tests: none
+- focused new-test E2E run: exit 1; failing tests: ['[chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op', '[chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak']
+- classification: KILLED
+- integrity: sha256 before == after: True (6ae7bfef02c7…)
+
+## P3 empty-queue-early-return-without-cleanup
+- risk: owner repro 2: pressing Play on an empty queue leaves the previous session alive
+- mutation target: js/core/verbs-engine.js (production only; tests unmodified)
+- intended detectors: U3 (unit) and the empty-controller-queue E2E test
+- mutant syntax check: exit 0 (must be 0)
+- unit run: exit 1; failing tests: ['AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive']
+- focused new-test E2E run: exit 1; failing tests: ['[chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive']
+- classification: KILLED
+- integrity: sha256 before == after: True (6ae7bfef02c7…)
+
+## P4 empty-plan-early-return-without-cleanup
+- risk: an empty planned sequence leaves the previous session alive
+- mutation target: js/core/verbs-engine.js (production only; tests unmodified)
+- intended detectors: U4 + revised A12 (unit) and the empty-plan E2E test
+- mutant syntax check: exit 0 (must be 0)
+- unit run: exit 1; failing tests: ['AUDIO-002 A12', 'AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive']
+- focused new-test E2E run: exit 1; failing tests: ['[chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive']
+- classification: KILLED
+- integrity: sha256 before == after: True (6ae7bfef02c7…)
+
+## P5 stale-callback-alters-replacement (two-layer onend guard removal)
+- risk: a late onend from the replaced queue advances/completes the new state
+- mutation target: js/core/tts.js (production only; tests unmodified)
+- intended detectors: U6 (unit; also the pre-existing B3/B10 as collateral) and the stale-callback E2E test
+- mutant syntax check: exit 0 (must be 0)
+- unit run: exit 1; failing tests: ['AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement', 'AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion', 'AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue', 'AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement']
+- focused new-test E2E run: exit 1; failing tests: ['[chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation']
+- classification: KILLED
+- integrity: sha256 before == after: True (8ca70a9ebb63…)
+
+================ P1 UNIT DETECTOR RUN (raw, sanitized) ================
+
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.925325ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.408222ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.239941ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.358544ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.297627ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.230082ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.236789ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.355974ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.37023ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.564981ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.52494ms)
+✔ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.505406ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.904624ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.345868ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.600832ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.380739ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (1.326713ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.40339ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.362735ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.177521ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.249602ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.353855ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.162916ms)
+✖ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (1.516182ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.339996ms)
+✔ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.151538ms)
+✔ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.173194ms)
+✖ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.370725ms)
+✖ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.943318ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 26
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.150789
+
+✖ failing tests:
+
+test at tests/unit/verbs-audio.test.mjs:890:1
+✖ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (1.516182ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:976:1
+✖ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.370725ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:997:1
+✖ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.943318ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+================ P1 E2E DETECTOR RUN (raw, sanitized) ================
+
+
+Running 8 tests using 1 worker
+
+
+
+[1/8] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:303:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-ffca0--leaves-the-new-deck-intact-chromium/error-context.md
+
+
+
+
+[2/8] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:341:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-302e7-sumed-when-the-deck-changes-chromium/error-context.md
+
+
+
+
+[3/8] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/8] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/8] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/8] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[7/8] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/8] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+    [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+  6 passed (22.1s)
+(node:20805) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:20909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21006) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+================ P2 UNIT DETECTOR RUN (raw, sanitized) ================
+
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.742124ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.373414ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.245033ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.239194ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.190382ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.175903ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.22578ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.216745ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.258193ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.348034ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.367424ms)
+✔ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.214957ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.293666ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.213232ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.327968ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.212905ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.776417ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.316649ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.194486ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.131905ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.223998ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.395437ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.157656ms)
+✔ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (0.712586ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.247305ms)
+✔ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.144569ms)
+✔ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.201443ms)
+✔ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.182634ms)
+✔ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.736773ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.853481
+
+================ P2 E2E DETECTOR RUN (raw, sanitized) ================
+
+
+Running 8 tests using 1 worker
+
+
+
+[1/8] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/8] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/8] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:369:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-9d7ac-nd-Play-stays-a-clean-no-op-chromium/error-context.md
+
+
+
+
+[4/8] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:391:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-639d0-nly-current-verbs-can-speak-chromium/error-context.md
+
+
+
+
+[5/8] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/8] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[7/8] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/8] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+    [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+  6 passed (22.1s)
+(node:21326) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21490) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21585) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+================ P3 UNIT DETECTOR RUN (raw, sanitized) ================
+
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.791684ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.428029ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.308641ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.258593ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.192632ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.254623ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.22576ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.198041ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (3.535476ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.375222ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.356362ms)
+✔ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.275525ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.423699ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.250833ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.383333ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.205194ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.927811ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.346101ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.205698ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.152941ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.199514ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.375689ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.239616ms)
+✔ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (0.788984ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.265095ms)
+✖ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.954278ms)
+✔ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.281664ms)
+✔ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.263113ms)
+✔ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.949937ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 28
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.355574
+
+✖ failing tests:
+
+test at tests/unit/verbs-audio.test.mjs:937:1
+✖ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.954278ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 2
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+================ P3 E2E DETECTOR RUN (raw, sanitized) ================
+
+
+Running 8 tests using 1 worker
+
+
+
+[1/8] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/8] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/8] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/8] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/8] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:426:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-36360-instead-of-leaving-it-alive-chromium/error-context.md
+
+
+
+
+[6/8] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[7/8] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/8] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+  7 passed (17.9s)
+(node:21836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+================ P4 UNIT DETECTOR RUN (raw, sanitized) ================
+
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.519052ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.395377ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.269592ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.242126ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.176444ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.205333ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.202568ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.194344ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (3.479494ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.321966ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.289515ms)
+✖ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.912065ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.307544ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.19688ms)
+✔ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (0.349384ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.205347ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.888623ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.341696ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.202651ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.145041ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.189239ms)
+✔ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.335626ms)
+✔ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.189259ms)
+✔ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (0.784389ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.27418ms)
+✔ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.167682ms)
+✖ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.340031ms)
+✔ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.234112ms)
+✔ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.874799ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 27
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 92.30998
+
+✖ failing tests:
+
+test at tests/unit/verbs-audio.test.mjs:522:1
+✖ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.912065ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:957:1
+✖ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.340031ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 2
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+================ P4 E2E DETECTOR RUN (raw, sanitized) ================
+
+
+Running 8 tests using 1 worker
+
+
+
+[1/8] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/8] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/8] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/8] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/8] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/8] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: /Auto Play Audio/
+    Received string:  "🔊 Auto Playing..."
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.verbsEngine.playAllVerbsAudio()">…</button>
+           - unexpected value "🔊 Auto Playing..."
+
+
+      281 |
+      282 |   async function expectAutoplayCancelled(page) {
+    > 283 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Auto Play Audio/);
+          |                                                       ^
+      284 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+      285 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      286 |     await expect(page.locator('#floating-audio-bar')).toHaveClass(/hidden/);
+        at expectAutoplayCancelled (/home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:283:55)
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:447:11
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-d9c45-instead-of-leaving-it-alive-chromium/error-context.md
+
+
+
+
+[7/8] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/8] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+  7 passed (17.0s)
+(node:22284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22546) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+================ P5 UNIT DETECTOR RUN (raw, sanitized) ================
+
+SpeechQueue: Speech error occurred synthesis-failed
+SpeechQueue: Watchdog fired — advancing.
+✔ AUDIO-002 A1: default controls plan term, English translation, and first-example steps per repetition in item-major order (3.87641ms)
+✔ AUDIO-002 A2: repeatCount 3 emits three full repetitions of a verb before anything else (0.414451ms)
+✔ AUDIO-002 A3: exampleMode none emits only the term and translation steps (0.25486ms)
+✔ AUDIO-002 A4: exampleMode first emits only the first example pair (0.258405ms)
+✔ AUDIO-002 A5: exampleMode all emits every example pair in source order (0.203112ms)
+✔ AUDIO-002 A6: include-English unchecked omits every English translation step (0.188297ms)
+✔ AUDIO-002 A7: the Start-At dropdown selection begins the plan at that queue position (0.202287ms)
+✔ AUDIO-002 A8: a row-play startIndex begins at that row and syncs the Start-At dropdown (0.244184ms)
+✔ AUDIO-002 A9: out-of-range start values clamp to the last verb instead of producing an empty queue (0.227275ms)
+✔ AUDIO-002 A10: planned queue items carry the stable verb identity, the planner language, and the text (0.294559ms)
+✔ AUDIO-002 A11: verbs with missing text are skipped by the planner without substituting another language (0.339663ms)
+✔ AUDIO-002 A12 (revised by AUDIO-002-C1): an empty planned sequence never starts the queue and restores the resting control state (0.267128ms)
+✔ AUDIO-002 B1: playAll speaks each item once in order, highlights each item, and fires completion exactly once at drain (1.372946ms)
+✔ AUDIO-002 B2: stop during the delayed-speak window prevents any utterance (0.220276ms)
+✖ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (1.080142ms)
+✔ AUDIO-002 B4: resume after a pause during the speak delay re-speaks the current item exactly once (0.311501ms)
+✔ AUDIO-002 B5: canceled and interrupted utterance errors do not advance; a genuine error advances (0.861932ms)
+✔ AUDIO-002 B6: the watchdog advances a stuck utterance and is cleared by pause (0.338893ms)
+✔ AUDIO-002 B7: the no-synthesis fallback advances items with highlight and completes at drain (0.236212ms)
+✔ AUDIO-002 B8: pause and stop fully cancel the pending no-synthesis fallback timer (0.272397ms)
+✔ AUDIO-002 B9: rapid restart speaks the replacement queue first item exactly once (0.410186ms)
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.429081ms)
+✖ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.275671ms)
+✔ AUDIO-002-C1 U1: changing the deck cancels the running autoplay session before the new deck is presented (0.736879ms)
+✔ AUDIO-002-C1 U2: switching the view away from the autoplay context cancels the session (0.254677ms)
+✔ AUDIO-002-C1 U3: starting playback with an empty controller queue stops a previous session instead of leaving it alive (0.167738ms)
+✔ AUDIO-002-C1 U4: a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive (0.184574ms)
+✔ AUDIO-002-C1 U5: a paused session is cancelled, not resumed, when the deck changes (0.192636ms)
+✖ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.905347ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 25
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.070961
+
+✖ failing tests:
+
+test at tests/unit/verbs-audio.test.mjs:607:1
+✖ AUDIO-002 B3: pause preserves the cursor and queue; a stale onend cannot advance or complete the paused queue (1.080142ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 3
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 3,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:769:1
+✖ AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or complete the replacement (0.429081ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 0
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:825:1
+✖ AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion (0.275671ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  0 !== 1
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/verbs-audio.test.mjs:997:1
+✖ AUDIO-002-C1 U6: loadDeck cancels the real SpeechQueue so stale utterance callbacks can neither advance after navigation nor disturb the replacement (controller + real queue) (1.905347ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 0
+
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+================ P5 E2E DETECTOR RUN (raw, sanitized) ================
+
+
+Running 8 tests using 1 worker
+
+
+
+[1/8] [chromium] › tests/e2e/verbs-audio.spec.js:292:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] selecting another deck cancels the running autoplay and leaves the new deck intact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/8] [chromium] › tests/e2e/verbs-audio.spec.js:333:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a paused autoplay session is cancelled, not resumed, when the deck changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/8] [chromium] › tests/e2e/verbs-audio.spec.js:359:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that empties the queue cancels autoplay at input time and Play stays a clean no-op
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/8] [chromium] › tests/e2e/verbs-audio.spec.js:382:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a search that changes the result set cancels the old queue; only current verbs can speak
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/8] [chromium] › tests/e2e/verbs-audio.spec.js:414:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] starting playback with an empty controller queue stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/8] [chromium] › tests/e2e/verbs-audio.spec.js:431:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a start attempt producing an empty planned sequence stops a previous session instead of leaving it alive
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[7/8] [chromium] › tests/e2e/verbs-audio.spec.js:452:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] navigating to another view cancels autoplay and hides the floating player
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[8/8] [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+
+    Error: expect(locator).toHaveClass(expected) failed
+
+    Locator: locator('tr[data-id="v_tragen"]')
+    Expected pattern: /highlighted-speech/
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveClass" with timeout 5000ms
+      - waiting for locator('tr[data-id="v_tragen"]')
+        14 × locator resolved to <tr class="" data-id="v_tragen" data-array-idx="0">…</tr>
+           - unexpected value ""
+
+
+      498 |     // no extra utterance appears.
+      499 |     await page.evaluate(() => window.__verbsAudio.stale.onend(new Event('end')));
+    > 500 |     await expect(page.locator('tr[data-id="v_tragen"]')).toHaveClass(/highlighted-speech/);
+          |                                                          ^
+      501 |     await expect(page.locator('tr[data-id="v_gewinnen"]')).not.toHaveClass(/highlighted-speech/);
+      502 |     const afterStale = await page.evaluate(() => window.__verbsAudio.speakCount);
+      503 |     expect(afterStale).toBe(3);
+        at /home/z/my-project/c1-probe-worktree/tests/e2e/verbs-audio.spec.js:500:58
+
+    Error Context: test-results/verbs-audio-AUDIO-002-Verb-3bb48-ew-session-after-navigation-chromium/error-context.md
+
+
+  1 failed
+    [chromium] › tests/e2e/verbs-audio.spec.js:476:7 › AUDIO-002 Verbs Autoplay Adapter (deterministic speech mocks) › [AUDIO-002-C1] a stale callback from the replaced queue cannot advance the new session after navigation
+  7 passed (15.7s)
+(node:22731) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

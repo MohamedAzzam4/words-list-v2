@@ -1,0 +1,8 @@
+$ node --input-type=module --check < js/core/verbs-engine.js
+exit 0 — js/core/verbs-engine.js parses (module mode)
+
+$ node --check js/core/speech-plan.mjs
+exit 0 — js/core/speech-plan.mjs parses (unchanged, verified)
+
+$ node --input-type=module --check < js/core/tts.js
+exit 0 — js/core/tts.js parses (unchanged, verified)
