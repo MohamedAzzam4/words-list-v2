@@ -805,3 +805,28 @@ test('AUDIO-002 B10: stale callbacks from a replaced queue cannot advance or com
     assert.equal(completionsC, 1);
     installMockSynthesis();
 });
+
+test('AUDIO-002 B11: playAll with an empty list stops and cleans the current queue without firing completion', (t) => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    resetQueueHarness();
+    const highlights = [];
+    let completionsFirst = 0;
+    SpeechQueue.playAll(QUEUE_ITEMS, (idx) => highlights.push(idx), () => { completionsFirst++; });
+    t.mock.timers.tick(250); // 'eins' is speaking
+
+    let completionsEmpty = 0;
+    SpeechQueue.playAll([], () => {}, () => { completionsEmpty++; });
+
+    // The previous queue is stopped and fully cleaned; nothing plays.
+    assert.equal(SpeechQueue.isPlaying, false);
+    assert.equal(SpeechQueue.queue.length, 0);
+    assert.equal(SpeechQueue.currentIndex, 0);
+    assert.equal(completionsFirst, 0);
+    assert.equal(completionsEmpty, 0);
+
+    t.mock.timers.tick(1500);
+    t.mock.timers.tick(12000);
+    assert.equal(synthState.utterances.length, 1); // only 'eins' from before the empty play
+    assert.equal(completionsFirst, 0);
+    assert.equal(completionsEmpty, 0);
+});
