@@ -967,6 +967,162 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await page.locator('#btn-stop-words').click();
   });
 
+  // ── AUDIO-003-C2 correction cases ──
+  // Owner finding at 91e1271: AUDIO-003-C1 unified Start At and playback
+  // for every scope transition EXCEPT the individual inline reveal — the
+  // glossary's "click to reveal" on a hidden German word only removed the
+  // hidden-word class (making the card speakable for _getSpeakableWords())
+  // without stopping the active queue or rebuilding Start At.
+
+  const mixedSpeakableIds = ['1-1', '1-3', '1-5', '1-7', '1-9', '1-11', '1-13', '1-15', '1-17', '1-19', '1-21', '1-23', '1-25', '1-27', '1-29'];
+
+  // Deterministic Hide Mixed (the same override as the C1 mixed-identity
+  // case): the render draws exactly one Math.random per row, so an
+  // alternating override hides the German column of every EVEN-index card
+  // (1-0, 1-2, ...) and leaves every ODD-index card speakable (15 of 30).
+  async function enableDeterministicHideMixed(page) {
+    await page.evaluate(() => {
+      window.__mixedRandomCalls = 0;
+      Math.random = () => (window.__mixedRandomCalls++ % 2 === 0 ? 0.99 : 0.01);
+    });
+    await page.locator('button', { hasText: 'Hide Mixed' }).click();
+  }
+
+  // The German word span of a glossary row: the second span.hideable in the
+  // row's first cell ([0] is the article span, [1] the German word — the
+  // element the _isRowSpeakable() guard checks).
+  function germanWordSpan(page, id) {
+    return page.locator(`tr[data-id="${id}"] td:first-child span.hideable`).nth(1);
+  }
+
+  // Required test A — idle individual reveal: the revealed card immediately
+  // appears in Start At in the correct unit position, and selecting it
+  // speaks exactly that card.
+  test('[AUDIO-003-C2] an idle individual German reveal immediately joins Start At and playback speaks exactly that card', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+    await enableDeterministicHideMixed(page);
+
+    // 1-0's German word is hidden and the card is excluded from Start At.
+    await expect(germanWordSpan(page, '1-0')).toHaveClass(/hidden-word/);
+    expect(await startOptionValues(page)).toEqual(mixedSpeakableIds);
+
+    // Reveal 1-0's German word individually.
+    await germanWordSpan(page, '1-0').click();
+    await expect(germanWordSpan(page, '1-0')).not.toHaveClass(/hidden-word/);
+
+    // The revealed card IMMEDIATELY appears in Start At in the correct unit
+    // position (1-0 is the unit's first card); the other options and the
+    // unit order are unchanged.
+    expect(await startOptionValues(page)).toEqual(['1-0', ...mixedSpeakableIds]);
+
+    // Selecting the revealed card and starting playback speaks exactly that
+    // card: same option id, first utterance, highlighted row, and progress
+    // identity (16 speakable cards = the revealed 1-0 + the 15 odd cards).
+    await configure(page, { start: '1-0' });
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Hallo!');
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#words-audio-progress')).toHaveText('1 / 16 · Hallo!');
+    await page.locator('#btn-stop-words').click();
+  });
+
+  // Required test B — reveal during active playback: the old queue stops
+  // immediately, no further old utterance occurs, stale callbacks cannot
+  // restore or advance the cancelled queue, and Start At rebuilds with the
+  // revealed card.
+  test('[AUDIO-003-C2] revealing a hidden German word during playback cancels the queue immediately and rebuilds Start At', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+    await enableDeterministicHideMixed(page);
+
+    // Start playback from the mixed speakable scope: card 1-1 is speaking.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Guten Morgen!');
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await page.evaluate(() => { window.__cefrAudio.stale = window.__cefrAudio.current; });
+    const speakCountAtReveal = await page.evaluate(() => window.__cefrAudio.speakCount);
+
+    // Individually reveal the previously hidden German word of 1-0: the old
+    // queue stops immediately.
+    await germanWordSpan(page, '1-0').click();
+    await expectWordsCancelled(page);
+
+    // No further old utterance occurs for the cancelled session.
+    const speakCountAfter = await page.evaluate(() => window.__cefrAudio.speakCount);
+    expect(speakCountAfter).toBe(speakCountAtReveal);
+
+    // Start At rebuilds from the scope that now includes the revealed card,
+    // in unit order with stable word-id values.
+    expect(await startOptionValues(page)).toEqual(['1-0', ...mixedSpeakableIds]);
+
+    // Stale onend/onerror callbacks from the cancelled session cannot
+    // restore or advance the cancelled queue.
+    await page.evaluate(() => {
+      window.__cefrAudio.stale.onend(new Event('end'));
+      window.__cefrAudio.stale.onerror({ error: 'synthesis-failed' });
+    });
+    await expectWordsCancelled(page);
+    const speakCountAfterStale = await page.evaluate(() => window.__cefrAudio.speakCount);
+    expect(speakCountAfterStale).toBe(speakCountAtReveal);
+    expect(await startOptionValues(page)).toEqual(['1-0', ...mixedSpeakableIds]);
+  });
+
+  // Required test C — non-scope reveal constraint: revealing elements that
+  // do not change _isRowSpeakable() (English, an article, context text, or
+  // an already-visible German word) must not unnecessarily cancel or
+  // rebuild the words queue. Constraint guard: it also passes on the
+  // uncorrected base; the correction must keep it passing.
+  test('[AUDIO-003-C2] non-scope reveals leave the running queue and Start At untouched', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+    await enableDeterministicHideMixed(page);
+
+    // The mixed scope is playing: card 1-1 is speaking.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+
+    // Reveal 1-1's hidden ENGLISH (odd cards hide English under mixed): the
+    // words queue is not cancelled.
+    await page.locator('tr[data-id="1-1"] td:nth-child(2) span.hideable').first().click();
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+
+    // Clicking 1-1's ALREADY-VISIBLE German word (a no-op reveal through
+    // the same controller path) must not cancel either.
+    await germanWordSpan(page, '1-1').click();
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+
+    // Revealing the hidden ARTICLE of the German-hidden noun 1-24
+    // ('die Frau, -en' — even index under mixed): the German word stays
+    // hidden, so the speakable scope is unchanged and the queue keeps
+    // playing.
+    await page.locator('tr[data-id="1-24"] td:first-child span.hideable').nth(0).click();
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+
+    // Toggling the example (context text) open is equally cosmetic.
+    await page.locator('tr[data-id="1-1"] button.example-toggle').click();
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+
+    // Start At remains valid (the unchanged mixed scope) and the session
+    // still advances on its own queue: the next speakable card after 1-1
+    // is 1-3.
+    expect(await startOptionValues(page)).toEqual(mixedSpeakableIds);
+    await page.evaluate(() => window.__cefrAudio.finishCurrent());
+    await waitForUtterance(page, 2);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe('Guten Abend!');
+    await expect(page.locator('tr[data-id="1-3"]')).toHaveClass(/highlighted-speech/);
+    await page.locator('#btn-stop-words').click();
+  });
+
   // Cases 23 + 24 (phrase/conversation/favorites/SRS/shared-card regressions)
   // are covered by their own tracked suites in the verification ladder and
   // are deliberately not duplicated here.
