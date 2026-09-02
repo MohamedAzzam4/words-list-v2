@@ -9,7 +9,7 @@ import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime, SpeechQueue, setSpeakHook } from './tts.js?v=3';
 import { planSpeechSequence } from './speech-plan.mjs';
-import { mapCefrSpeechStepsToQueueItems } from './cefr-audio.mjs';
+import { mapCefrSpeechStepsToQueueItems, resolveStartWordIndex } from './cefr-audio.mjs';
 import { debounce, sanitize } from './utils.js?v=3';
 import { AuthService } from './auth-service.js?v=4';
 import { NavigationService } from './nav-service.js?v=3';
@@ -722,6 +722,11 @@ window.app = {
     switchMode(m) {
         this.stopAudioQueue();
         navService.switchMode(m);
+        // AUDIO-003-C1: returning to the glossary re-renders the table (the
+        // mixed-hide rows re-roll their hidden columns) — Start At rebuilds
+        // from the rendered scope so the control and playback stay on one
+        // identical card collection.
+        this._populateStartWordSelect();
     },
     toggleSidebar: (e) => navService.toggleSidebar(e),
     switchUnit(i) {
@@ -832,8 +837,27 @@ window.app = {
         engines.glossary?.toggleColumn(col);
         state.data.columnHideCount = (state.data.columnHideCount || 0) + 1;
         _save();
+        if (col === 'de' || col === 'mixed') {
+            // AUDIO-003-C1: the German-visibility change altered the
+            // speakable scope — Start At rebuilds from the same collection
+            // playback uses (hiding English/Article leaves the speakable
+            // scope untouched, so those paths do not rebuild the control).
+            this._populateStartWordSelect();
+        }
     },
-    revealAllTable() { engines.glossary?.revealAll(); },
+    revealAllTable() {
+        // AUDIO-003-C1: Reveal All restores the speakable scope — when the
+        // membership actually changes, the queue planned from the shrunken
+        // scope stops and Start At rebuilds from the restored collection
+        // (a reveal with nothing hidden changes neither queue nor control).
+        const before = this._getSpeakableWords().map(card => card.id).join('\u0000');
+        engines.glossary?.revealAll();
+        const after = this._getSpeakableWords().map(card => card.id).join('\u0000');
+        if (before !== after) {
+            this.stopAudioQueue();
+            this._populateStartWordSelect();
+        }
+    },
     revealAllPhrases() {
         state.hiddenPhrases.clear();
         state.phraseMixedMap.clear();
@@ -904,13 +928,31 @@ window.app = {
         if (hideables.length > 1 && hideables[1].classList.contains('hidden-word')) return false;
         return true;
     },
+    // AUDIO-003-C1: the ONE controller boundary for the current ordered
+    // speakable vocabulary collection — the engine's active filter result
+    // (the same rule that renders the table) intersected with the row-
+    // visibility guard. _populateStartWordSelect() AND playAllWords()
+    // both consume this exact collection, so the option a user selects and
+    // the first card spoken can never live in different index spaces
+    // (owner Finding 2). No filter or ordering rule is duplicated here.
+    _getSpeakableWords() {
+        const tbody = document.getElementById('glossary-tbody');
+        if (!tbody) return [];
+        return (engines.glossary?.getFilteredWords() || [])
+            .filter(card => this._isRowSpeakable(tbody, card.id));
+    },
     _populateStartWordSelect() {
         const startSelect = document.getElementById('auto-start-word');
         if (!startSelect) return;
-        const cards = engines.glossary?.getFilteredWords() || [];
+        // AUDIO-003-C1: option values are the STABLE word ids of the same
+        // ordered speakable collection playback plans from (one identity
+        // space); the 1-based label is the card's position in that scope.
+        // An empty scope exposes no stale options.
+        const cards = this._getSpeakableWords();
         startSelect.innerHTML = cards.map((card, i) =>
-            `<option value="${i}">${i + 1}. ${sanitize(card.de)}</option>`
+            `<option value="${card.id}">${i + 1}. ${sanitize(card.de)}</option>`
         ).join('');
+        if (cards.length > 0) startSelect.value = cards[0].id;
     },
     toggleAudioSettingsDrawer() {
         const drawer = document.getElementById('audio-settings-drawer');
@@ -920,8 +962,10 @@ window.app = {
         const tbody = document.getElementById('glossary-tbody');
         if (!tbody) return;
 
-        const cards = (engines.glossary?.getFilteredWords() || [])
-            .filter(card => this._isRowSpeakable(tbody, card.id));
+        // AUDIO-003-C1: playback plans from the SAME speakable collection
+        // the Start-At control was built from (single boundary — no second
+        // card list, no second index space).
+        const cards = this._getSpeakableWords();
 
         // AUDIO-002-C1 lesson: an empty queue scope must stop any session
         // that still owns playback instead of leaving it alive — pressing
@@ -940,12 +984,22 @@ window.app = {
         const exampleMode = exampleSelect && AUTOPLAY_EXAMPLE_MODES.has(exampleSelect.value) ? exampleSelect.value : 'first';
         const includeTranslation = includeCheck ? includeCheck.checked : true;
 
-        let startIdx = startWordSelect ? parseInt(startWordSelect.value, 10) || 0 : 0;
-        // Clamp every start source to the last card so the plan can never
-        // begin past the end of the list (the controls stay in agreement
-        // with the playback that actually starts).
-        startIdx = Math.max(0, Math.min(startIdx, cards.length - 1));
-        if (startWordSelect) startWordSelect.value = String(startIdx);
+        // AUDIO-003-C1: the selected STABLE word id resolves to its index
+        // in the current speakable scope immediately before planning. A
+        // missing, empty, or no-longer-in-scope id deterministically falls
+        // back to the FIRST card of the scope (the documented rule in
+        // resolveStartWordIndex), and the control is normalized to the
+        // resolved card so the option shown and the first utterance always
+        // reference the same card. -1 (empty scope) is unreachable here —
+        // the guard above already stopped the session.
+        const startIdx = resolveStartWordIndex(cards, startWordSelect ? startWordSelect.value : null);
+        if (startIdx < 0) {
+            this.stopAudioQueue();
+            return;
+        }
+        if (startWordSelect && cards[startIdx]) {
+            startWordSelect.value = cards[startIdx].id;
+        }
 
         const plan = planSpeechSequence(cards, {
             repeatCount,
@@ -1090,7 +1144,11 @@ window.app = {
         }
         const startWordSelect = document.getElementById('auto-start-word');
         if (startWordSelect) {
-            startWordSelect.value = '0';
+            // AUDIO-003-C1: stable word-id space — a fresh session starts at
+            // the first card of the CURRENT speakable scope; an empty scope
+            // leaves the control with no options and no stale value.
+            const firstSpeakable = this._getSpeakableWords()[0];
+            startWordSelect.value = firstSpeakable ? firstSpeakable.id : '';
         }
     },
     togglePausePhrases() {
@@ -1158,7 +1216,16 @@ window.app = {
     async toggleFavorite(id, fromPhrasesTab = false) {
         if (!state.data.favorites) state.data.favorites = [];
         let isFav = false;
-        
+
+        // AUDIO-003-C1 (owner Finding 1): snapshot the active filter's card
+        // membership BEFORE the change so the reconciliation below can tell
+        // an actual scope change from a cosmetic star toggle — only a
+        // membership change in the ACTIVE scope may touch the queue.
+        const glossaryEngine = engines.glossary;
+        const scopeBefore = glossaryEngine
+            ? glossaryEngine.getFilteredWords().map(word => word.id).join('\u0000')
+            : null;
+
         const idx = state.data.favorites.indexOf(id);
         if (idx > -1) {
             state.data.favorites.splice(idx, 1);
@@ -1166,28 +1233,47 @@ window.app = {
             state.data.favorites.push(id);
             isFav = true;
         }
-        
+
         if (engines.flashcard && engines.flashcard.favoritesIds) {
             if (isFav) engines.flashcard.favoritesIds.add(id);
             else engines.flashcard.favoritesIds.delete(id);
         }
-        
+
         if (engines.glossary && engines.glossary.favoritesIds) {
             if (isFav) engines.glossary.favoritesIds.add(id);
             else engines.glossary.favoritesIds.delete(id);
         }
-        
-        if (state.view === 'glossary') {
+
+        const scopeAfter = glossaryEngine
+            ? glossaryEngine.getFilteredWords().map(word => word.id).join('\u0000')
+            : null;
+        const scopeChanged = scopeBefore !== null && scopeBefore !== scopeAfter;
+
+        if (scopeChanged) {
+            // AUDIO-003-C1 (Finding 1): the active Favorites-filter result
+            // changed — the queue owning the OLD scope is cancelled
+            // immediately (no stale callback can advance or restore it),
+            // the glossary rerenders from the updated favorite set, and
+            // Start At rebuilds from that same current scope. This holds
+            // from every authorized favorite path (glossary star,
+            // flashcard card, phrases tab) regardless of the active view;
+            // when no favorite remains the table shows its empty state and
+            // Start At exposes no stale options.
+            this.stopAudioQueue();
+            glossaryEngine.render();
+            this._populateStartWordSelect();
+        } else if (state.view === 'glossary') {
             const starSpans = document.querySelectorAll(`tr[data-id="${id}"] span[title="Toggle Favorite"]`);
             starSpans.forEach(span => {
                 span.style.filter = isFav ? 'grayscale(0)' : 'grayscale(100%)';
                 span.style.opacity = isFav ? '1' : '0.25';
             });
-            if (fromPhrasesTab) {
-                this.switchUnitTab('phrases');
-            }
         }
-        
+
+        if (state.view === 'glossary' && fromPhrasesTab) {
+            this.switchUnitTab('phrases');
+        }
+
         if (state.view === 'flashcard' && engines.flashcard) engines.flashcard.render();
         _save();
         await _evaluateTrophies();

@@ -886,6 +886,9 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await configure(page, { start: '1-15' });
     await page.locator('#btn-play-all-words').click();
     await drive(page, 3);
+    // drive() finishes utterance 3; the queue schedules the fourth speak
+    // through its 250ms delay — wait for it before reading the transcript.
+    await waitForUtterance(page, 4);
     const spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(1).map(u => u.text));
     expect(spoken).toEqual(['Entschuldigung!', 'sein', 'gehen']);
     await page.locator('#btn-stop-words').click();

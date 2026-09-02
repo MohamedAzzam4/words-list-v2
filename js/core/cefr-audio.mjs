@@ -56,6 +56,32 @@ export function matchesVocabularyFilter(card, typeFilter, favoritesIds) {
 }
 
 /**
+ * AUDIO-003-C1: resolve the Start-At selection against the current ordered
+ * speakable-card collection.
+ *
+ * The Start-At control and playback share ONE identity space: option values
+ * are the stable word ids of the same ordered cards the queue plans from.
+ * `selectedId` resolves to the index of the card with that exact id. A
+ * missing, empty, null, non-string, or no-longer-in-scope id (the card was
+ * hidden or filtered away) deterministically falls back to 0 — the first
+ * card of the current scope — so the option shown and the first spoken
+ * utterance always reference the same card.
+ *
+ * An empty collection returns -1 (no card exists to select or fall back
+ * to); callers must treat the empty scope before planning. Inputs are never
+ * mutated.
+ */
+export function resolveStartWordIndex(cards, selectedId) {
+    if (!Array.isArray(cards)) {
+        throw new InvalidCefrAudioInputError('cards must be an array of normalized cards.');
+    }
+    if (cards.length === 0) return -1;
+    if (typeof selectedId !== 'string' || selectedId === '') return 0;
+    const exact = cards.findIndex(card => card && card.id === selectedId);
+    return exact === -1 ? 0 : exact;
+}
+
+/**
  * Map planned speech steps onto SpeechQueue queue records for ordinary
  * level vocabulary.
  *
