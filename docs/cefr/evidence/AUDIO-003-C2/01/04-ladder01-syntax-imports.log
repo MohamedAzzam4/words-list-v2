@@ -1,0 +1,13 @@
+=== AUDIO-003-C2 ladder step 1: syntax and import checks (at implementation commit 19b4280) ===
+$ node --check (ESM copies) on js/core/app.js js/core/glossary.js js/core/cefr-audio.mjs tests/e2e/cefr-audio.spec.js
+OK: js/core/app.js
+OK: js/core/glossary.js
+OK: js/core/cefr-audio.mjs
+OK: tests/e2e/cefr-audio.spec.js
+
+$ node -e live ESM import of js/core/cefr-audio.mjs
+IMPORT_OK: resolveStartWordIndex, mapCefrSpeechStepsToQueueItems, matchesVocabularyFilter, InvalidCefrAudioInputError
+
+RED commit production-identity check: git diff 91e1271..752e9c1 --stat (tests only):
+ tests/e2e/cefr-audio.spec.js | 156 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 156 insertions(+)

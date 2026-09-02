@@ -1,0 +1,52 @@
+AUDIO-003-C2 fault probes — disposable worktree at implementation commit 19b4280
+Worktree: /home/z/my-project/audio003c2-probe-worktree (removed after the probes; owner working tree never mutated)
+Node v24.19.0, npx playwright from the repo installation (symlinked node_modules)
+Mutations touch production code only; tests are never modified (TS-MUT-002).
+
+[baseline] C2 detector set on the UNMUTATED worktree: exit 0, 3 passed / None failed (expected 3/0)
+
+=== Probe 1-missing-queue-cancellation-on-individual-reveal ===
+Risk/contract: AUDIO-003-C2 required correction 2: revealing an individual German word that changes speakable membership must stop the active words autoplay queue
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this.stopAudioQueue();\n            this._populateStartWordSelect();\n        }\n" -> "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this._populateStartWordSelect();\n        }\n"
+Intended detecting test: e2e [AUDIO-003-C2] playback test (play button keeps the playing class; the old session keeps speaking)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g revealing a hidden German word during playback cancels the queue immediately
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before c954020c343d…, mutated b3c356c83815…, restored c954020c343d… -> IDENTICAL (restore verified)
+
+=== Probe 2-missing-start-at-rebuild-on-individual-reveal ===
+Risk/contract: AUDIO-003-C2 required correction 3: the newly revealed card must immediately appear in Start At (rebuilt from the current scope)
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this.stopAudioQueue();\n            this._populateStartWordSelect();\n        }\n" -> "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this.stopAudioQueue();\n        }\n"
+Intended detecting test: e2e [AUDIO-003-C2] idle test AND playback test (Start At keeps the stale 15-option mixed scope; the revealed 1-0 never appears)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g AUDIO-003-C2
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, 1 passed / 2 failed
+Classification: KILLED
+Integrity: sha256 before c954020c343d…, mutated 2856c7b14188…, restored c954020c343d… -> IDENTICAL (restore verified)
+
+=== Probe 3-stale-callback-generation-invalidation-bypassed ===
+Risk/contract: AUDIO-003-C2 required correction 2: cancellation must go through the SpeechQueue path (generation minted) — a cosmetic control reset lets stale onend/onerror callbacks advance or restore the cancelled queue
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this.stopAudioQueue();\n            this._populateStartWordSelect();\n        }\n" -> "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            const _pb = document.getElementById('btn-play-all-words');\n            if (_pb) { _pb.classList.remove('playing'); _pb.innerHTML = '<span>▶️</span> Play All'; }\n            const _pp = document.getElementById('btn-pause-words');\n            if (_pp) { _pp.classList.add('hidden'); _pp.innerHTML = '<span>⏸️</span> Pause'; }\n            const _pg = document.getElementById('words-audio-progress');\n            if (_pg) { _pg.textContent = ''; _pg.classList.add('hidden'); }\n            document.querySelectorAll('.highlighted-speech').forEach(el => el.classList.remove('highlighted-speech'));\n            if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();\n            this._populateStartWordSelect();\n        }\n"
+Intended detecting test: e2e [AUDIO-003-C2] playback test (SpeechQueue never invalidated: the stale onend re-highlights the next row and schedules the next utterance of the cancelled session)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g revealing a hidden German word during playback cancels the queue immediately
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before c954020c343d…, mutated 6ab6ebf780a9…, restored c954020c343d… -> IDENTICAL (restore verified)
+
+=== Probe 4-accidental-cancellation-on-non-scope-reveal ===
+Risk/contract: AUDIO-003-C2 required correction 5: a reveal that does not change _isRowSpeakable() (already-visible German word, article, English, context) must not unnecessarily cancel or rebuild the queue
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        if (scopeBefore !== scopeAfter) {\n            this.stopAudioQueue();\n            this._populateStartWordSelect();\n        }\n" -> "        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\\u0000');\n        this.stopAudioQueue();\n        this._populateStartWordSelect();\n"
+Intended detecting test: e2e [AUDIO-003-C2] constraint test (the no-op German-word click cancels the running queue)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g non-scope reveals leave the running queue and Start At untouched
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before c954020c343d…, mutated a8a5668806b9…, restored c954020c343d… -> IDENTICAL (restore verified)
+
+Main working tree was never mutated; the worktree is removed after the probes.

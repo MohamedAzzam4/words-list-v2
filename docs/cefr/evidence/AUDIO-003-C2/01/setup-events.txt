@@ -1,0 +1,23 @@
+AUDIO-003-C2 setup / environment events (disclosed per the delivery contract):
+
+1. Playwright chromium binary was missing in this sandbox session (the cache
+   from the AUDIO-003-C1 session was not retained). The FIRST RED attempt
+   (npx playwright test ... -g "AUDIO-003-C2" on chromium) failed to launch
+   with "browserType.launch: Executable doesn't exist at
+   /home/z/.cache/ms-playwright/chromium_headless_shell-1228/..." — an
+   infrastructure failure before any test logic executed (3/3 failed at
+   browser launch; not test results). One "npx playwright install chromium"
+   download (114.2 MiB, playwright chromium-headless-shell v1228, Chrome
+   Headless Shell 149.0.7827.55) restored the browser. All subsequent runs
+   (including every RED and ladder log in this evidence directory) used the
+   installed binary. No repo file was changed by the download.
+
+2. No other environment events: no tool-stream timeouts during evidence
+   capture, no port conflicts on the Playwright webServer (port 9012
+   verified free before the fault probes so each worktree run served the
+   mutated tree), no test-harness bugs encountered.
+
+3. Transient warning seen on every npx run (cosmetic, pre-existing):
+   "The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set"
+   and npm's "New major version of npm available" notice. Neither affects
+   test execution or results.

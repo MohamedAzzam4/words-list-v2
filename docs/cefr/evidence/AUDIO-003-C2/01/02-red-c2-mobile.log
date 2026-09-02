@@ -1,0 +1,148 @@
+
+Running 3 tests using 1 worker
+
+(node:2473) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:03] "GET /index.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /level.html?level=a1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/speech-plan.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/cefr-audio.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:04] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+  ✘  1 [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1001:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] an idle individual German reveal immediately joins Start At and playback speaks exactly that card (2.1s)
+(node:2587) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /index.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /level.html?level=a1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/cefr-audio.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/speech-plan.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:06] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:07] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+  ✘  2 [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1035:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] revealing a hidden German word during playback cancels the queue immediately and rebuilds Start At (6.5s)
+(node:2699) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /index.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /level.html?level=a1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/speech-plan.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/cefr-audio.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:13] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:14] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:14] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:14] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:14] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 21:44:14] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+  ✓  3 [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1079:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] non-scope reveals leave the running queue and Start At untouched (2.0s)
+
+
+  1) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1001:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] an idle individual German reveal immediately joins Start At and playback speaks exactly that card
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+    @@ -1,7 +1,6 @@
+      Array [
+    -   "1-0",
+        "1-1",
+        "1-3",
+        "1-5",
+        "1-7",
+        "1-9",
+
+      1015 |     // position (1-0 is the unit's first card); the other options and the
+      1016 |     // unit order are unchanged.
+    > 1017 |     expect(await startOptionValues(page)).toEqual(['1-0', ...mixedSpeakableIds]);
+           |                                           ^
+      1018 |
+      1019 |     // Selecting the revealed card and starting playback speaks exactly that
+      1020 |     // card: same option id, first utterance, highlighted row, and progress
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:1017:43
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--2c1b5-ck-speaks-exactly-that-card-Mobile-Chrome/error-context.md
+
+  2) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1035:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] revealing a hidden German word during playback cancels the queue immediately and rebuilds Start At
+
+    Error: expect(locator).not.toHaveClass(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: not /playing/
+    Received string: "btn btn-primary playing"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "not toHaveClass" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.app.playUnitAudio()">…</button>
+           - unexpected value "btn btn-primary playing"
+
+
+      113 |
+      114 |   async function expectWordsCancelled(page) {
+    > 115 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+          |                                                           ^
+      116 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Play All/);
+      117 |     await expect(page.locator('#btn-pause-words')).toHaveClass(/hidden/);
+      118 |     await expect(page.locator('#words-audio-progress')).toHaveClass(/hidden/);
+        at expectWordsCancelled (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:115:59)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:1052:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--e8574-ately-and-rebuilds-Start-At-Mobile-Chrome/error-context.md
+
+  2 failed
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1001:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] an idle individual German reveal immediately joins Start At and playback speaks exactly that card
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:1035:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003-C2] revealing a hidden German word during playback cancels the queue immediately and rebuilds Start At
+  1 passed (12.6s)
