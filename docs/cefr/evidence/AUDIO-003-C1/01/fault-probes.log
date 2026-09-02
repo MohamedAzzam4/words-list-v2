@@ -1,0 +1,75 @@
+AUDIO-003-C1 fault probes — disposable worktree at implementation commit 3e1234b
+Worktree: /home/z/my-project/audio003c1-probe-worktree (removed after the probes; owner working tree never mutated)
+Node v24.19.0, npx playwright from the repo installation (symlinked node_modules)
+Mutations touch production code only; tests are never modified (TS-MUT-002).
+
+[baseline] detector set on the UNMUTATED worktree: exit 0, 8 passed / None failed (expected 8/0)
+
+=== Probe 1-no-cancellation-on-favorites-scope-change ===
+Risk/contract: Owner Finding 1 / AUDIO-003-C1: a favorite-membership change that alters the active Favorites-filter result must cancel the queue owning the old scope
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '            this.stopAudioQueue();\n            glossaryEngine.render();\n            this._populateStartWordSelect();\n' -> '            glossaryEngine.render();\n            this._populateStartWordSelect();\n'
+Intended detecting test: e2e [AUDIO-003-C1] removing the playing favorite under the Favorites filter cancels autoplay and empties the scope (playing controls persist / speech continues)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g removing the playing favorite under the Favorites filter cancels autoplay and empties the scope
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated d89b7c2c5a5e…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+=== Probe 2-no-favorites-glossary-rerender ===
+Risk/contract: Owner Finding 1 / AUDIO-003-C1: the glossary must rerender from the updated favorite set under the active Favorites filter
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '            this.stopAudioQueue();\n            glossaryEngine.render();\n            this._populateStartWordSelect();\n' -> '            this.stopAudioQueue();\n            this._populateStartWordSelect();\n'
+Intended detecting test: e2e [AUDIO-003-C1] removal test (row count never drops to 0) and favorites-filters rerender test (stale row stays visible)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js tests/e2e/favorites-filters.spec.js --project=chromium -g removing the playing favorite under the Favorites filter cancels autoplay and empties the scope|Un-favoriting under the Favorites filter rerenders
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 2 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated db72a608847b…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+=== Probe 3-start-at-from-filtered-not-speakable ===
+Risk/contract: Owner Finding 2 / AUDIO-003-C1: Start At must be built from the SAME speakable collection playback uses (one identity space)
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '        const cards = this._getSpeakableWords();\n        startSelect.innerHTML = cards.map((card, i) =>\n' -> '        const cards = engines.glossary?.getFilteredWords() || [];\n        startSelect.innerHTML = cards.map((card, i) =>\n'
+Intended detecting test: e2e [AUDIO-003-C1] Hide Mixed test (30 filtered options instead of the 15 speakable ones) and context matrix (Hide German leaves 30 stale options instead of 0)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g Hide Mixed rebuilds Start At from the speakable scope|context changes keep Start At and the actual queue on the same scope
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 2 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated 38724b2a2be3…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+=== Probe 4-numeric-option-index-interpretation-restored ===
+Risk/contract: Owner Finding 2 / AUDIO-003-C1: stable word-id values resolved immediately before planning (numeric index interpretation is the defect)
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '        const startIdx = resolveStartWordIndex(cards, startWordSelect ? startWordSelect.value : null);\n        if (startIdx < 0) {\n            this.stopAudioQueue();\n            return;\n        }\n        if (startWordSelect && cards[startIdx]) {\n            startWordSelect.value = cards[startIdx].id;\n        }\n' -> '        let startIdx = startWordSelect ? parseInt(startWordSelect.value, 10) || 0 : 0;\n        startIdx = Math.max(0, Math.min(startIdx, cards.length - 1));\n        if (startWordSelect) startWordSelect.value = String(startIdx);\n'
+Intended detecting test: e2e [AUDIO-003-C1] Hide Mixed test ('1-29' parsed as numeric 1 -> wrong first card spoken) and [AUDIO-003] start-at test ('1-2' -> numeric 1 -> wrong card)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g Hide Mixed rebuilds Start At from the speakable scope|start-at beginning, middle, and end select the exact starting card
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 2 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated 6847c691e770…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+=== Probe 5-skip-start-at-rebuild-after-reveal-and-unit-change ===
+Risk/contract: AUDIO-003-C1 design req 7/8: Reveal All and unit changes must rebuild Start At from the current scope
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '        if (before !== after) {\n            this.stopAudioQueue();\n            this._populateStartWordSelect();\n        }\n' -> '        if (before !== after) {\n            this.stopAudioQueue();\n        }\n'
+Mutation hunk 2: '            this._populateStartWordSelect();\n            return _evaluateTrophies();\n' -> '            return _evaluateTrophies();\n'
+Intended detecting test: e2e [AUDIO-003-C1] context matrix (Start At stays empty after Reveal All; stale options after the unit change)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g context changes keep Start At and the actual queue on the same scope
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated 2c5d29f8aa4e…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+=== Probe 6-partial-teardown-leaves-live-queue-able-to-alter-replacement ===
+Risk/contract: AUDIO-003-C1 design req 7: a cancelled session must be invalidated (generation minted), never merely cosmetically reset — late callbacks / live queue state must not alter the replacement scope
+Production target: js/core/app.js (worktree copy only)
+Mutation hunk 1: '            this.stopAudioQueue();\n            glossaryEngine.render();\n            this._populateStartWordSelect();\n' -> "            const _pb = document.getElementById('btn-play-all-words');\n            if (_pb) { _pb.classList.remove('playing'); _pb.innerHTML = '<span>▶️</span> Play All'; }\n            const _pp = document.getElementById('btn-pause-words');\n            if (_pp) { _pp.classList.add('hidden'); _pp.innerHTML = '<span>⏸️</span> Pause'; }\n            const _pg = document.getElementById('words-audio-progress');\n            if (_pg) { _pg.textContent = ''; _pg.classList.add('hidden'); }\n            document.querySelectorAll('.highlighted-speech').forEach(el => el.classList.remove('highlighted-speech'));\n            if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();\n            glossaryEngine.render();\n            this._populateStartWordSelect();\n"
+Intended detecting test: e2e [AUDIO-003-C1] replacement-queue test (SpeechQueue never invalidated: isPlaying stays true, so the restart click toggles to Stop and the replacement never speaks; the cancelled session still owns the audio context)
+Command: npx playwright test tests/e2e/cefr-audio.spec.js --project=chromium -g a stale callback cannot disturb the replacement queue after favorites cancellation
+Mutated syntax check (node --input-type=module --check): exit 0 (parses — behavioral mutant, not a syntax crash)
+Actual run: exit 1, None passed / 1 failed
+Classification: KILLED
+Integrity: sha256 before de2bb848cc09…, mutated fb8fb98e7478…, restored de2bb848cc09… -> IDENTICAL (restore verified)
+
+Main working tree was never mutated; the worktree is removed after the probes.

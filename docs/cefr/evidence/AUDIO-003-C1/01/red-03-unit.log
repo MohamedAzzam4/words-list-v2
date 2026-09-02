@@ -1,0 +1,8 @@
+file:///home/z/my-project/words-list-v2/tests/unit/cefr-audio.test.mjs:31
+    resolveStartWordIndex,
+    ^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: The requested module '../../js/core/cefr-audio.mjs' does not provide an export named 'resolveStartWordIndex'
+    at #asyncInstantiate (node:internal/modules/esm/module_job:327:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:431:5)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)

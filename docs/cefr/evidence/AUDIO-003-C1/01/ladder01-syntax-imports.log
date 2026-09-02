@@ -1,0 +1,8 @@
+# Ladder 1: syntax/import checks (module-mode for ESM sources)
+js/core/app.js: module syntax OK
+js/core/cefr-audio.mjs: module syntax OK
+tests/e2e/cefr-audio.spec.js: module syntax OK
+tests/e2e/favorites-filters.spec.js: module syntax OK
+tests/unit/cefr-audio.test.mjs: module syntax OK
+tests/e2e/words-audio.spec.js: CJS syntax OK
+live import OK; exports: InvalidCefrAudioInputError, mapCefrSpeechStepsToQueueItems, matchesVocabularyFilter, resolveStartWordIndex

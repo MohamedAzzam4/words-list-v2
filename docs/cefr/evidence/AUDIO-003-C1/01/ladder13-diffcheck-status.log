@@ -1,0 +1,4 @@
+# Ladder 12-13: git diff --check; git status --short
+git diff --check: clean (no whitespace errors)
+?? docs/cefr/evidence/AUDIO-003-C1/
+# (status after the evidence capture — committed correction 3e1234b; evidence files untracked until the report commit)

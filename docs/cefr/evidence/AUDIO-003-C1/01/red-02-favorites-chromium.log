@@ -1,0 +1,52 @@
+
+Running 1 test using 1 worker
+
+(node:7001) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:24] "GET /index.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /level.html?level=a1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/speech-plan.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/cefr-audio.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 04:06:25] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+  ✘  1 [chromium] › tests/e2e/favorites-filters.spec.js:53:3 › Favorites and Filters State › Un-favoriting under the Favorites filter rerenders from the updated favorite set (30.1s)
+
+
+  1) [chromium] › tests/e2e/favorites-filters.spec.js:53:3 › Favorites and Filters State › Un-favoriting under the Favorites filter rerenders from the updated favorite set
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 30000ms exceeded.
+
+      71 |     // favorite set and the remaining favorite's star state is preserved.
+      72 |     await page.locator('tr[data-id="1-0"] span[title="Toggle Favorite"]').click();
+    > 73 |     await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 1);
+         |                ^
+      74 |     await expect(page.locator('tr[data-id="1-0"]')).toHaveCount(0);
+      75 |     await expect(page.locator('tr[data-id="1-1"]')).toHaveCount(1);
+      76 |     const remainingStar = page.locator('tr[data-id="1-1"] span[title="Toggle Favorite"]');
+        at /home/z/my-project/words-list-v2/tests/e2e/favorites-filters.spec.js:73:16
+
+    Error Context: test-results/favorites-filters-Favorite-fc613-om-the-updated-favorite-set-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/favorites-filters.spec.js:53:3 › Favorites and Filters State › Un-favoriting under the Favorites filter rerenders from the updated favorite set

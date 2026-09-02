@@ -1,0 +1,23 @@
+✔ AUDIO-003 unit: the vocabulary filter rule mirrors the glossary semantics (1.012944ms)
+✔ AUDIO-003 unit: the vocabulary filter never mutates its inputs (0.804978ms)
+✔ AUDIO-003 unit: planned steps map to queue records with word identity, language, and labels (0.366279ms)
+✔ AUDIO-003 unit: mapping never mutates the steps or the cards (0.211839ms)
+✔ AUDIO-003 unit: mapping validates its inputs like the planner boundary (0.54804ms)
+✔ AUDIO-003 unit: real A1 card plans and maps to the exact four-step record sequence (0.478508ms)
+✔ AUDIO-003 unit: a real B2 mixed card maps to separately tagged English and Arabic records (0.209948ms)
+✔ AUDIO-003 unit: an Arabic-only B2 card never substitutes English and maps the Arabic steps (0.284139ms)
+✔ AUDIO-003 unit: repeat ordering emits every repetition of an item before the next item (0.185422ms)
+✔ AUDIO-003 unit: example mode all queues every structured example in order (synthetic multi-example card) (0.579781ms)
+✔ AUDIO-003 unit: cards with no speakable text plan to an empty record list without inventing speech (0.350214ms)
+✔ AUDIO-003-C1 unit: a stable start-at id resolves to its exact index in the speakable list (0.140836ms)
+✔ AUDIO-003-C1 unit: a missing, empty, or no-longer-in-scope id falls back to the first card (0.108033ms)
+✔ AUDIO-003-C1 unit: an empty collection has no valid start and invalid input throws (0.134833ms)
+✔ AUDIO-003-C1 unit: resolution never mutates the card list (0.125312ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.385205
