@@ -1,0 +1,40 @@
+AUDIO-003 environment and setup events (honest record)
+=====================================================
+
+Sandbox: Debian Linux, Node v24.19.0, npm 11.17.0, Python 3.12.14 (python),
+Playwright 1.61.x with chromium build 1228 and the two configured projects
+(chromium, Mobile Chrome). Web server: python -m http.server 9012 (per
+playwright.config.js, reuseExistingServer).
+
+Setup events:
+1. First baseline launch failed with "Executable doesn't exist at
+   chromium_headless_shell-1228/..." BEFORE any test logic ran (browser build
+   missing from the sandbox cache; the same event occurred in the AUDIO-002
+   sessions). Fixed with `npx playwright install chromium` (build 1228
+   downloaded). This is an environment setup event, not a test result.
+2. The first RED run of cefr-audio.spec.js at the default 30s per-test
+   timeout exceeded the sandbox command window (500s) and was killed by the
+   command runner. Canceled run, no results; re-run with --timeout=8000 for
+   the RED capture (the shorter timeout only fails faster; every test still
+   ran to its own outcome).
+3. The first full-suite command (both projects in one process) exceeded the
+   600s command window and was killed (canceled, no results). An attempted
+   nohup background launch produced an empty log and died (infrastructure
+   failure; no test ran). The full suite was then run per project
+   (chromium, then Mobile Chrome), each inside the command window.
+4. Probe infrastructure round 1: the disposable probe copy was created via
+   git-archive (symlinks are blocked in this sandbox), so it had no .git and
+   the script's git-checkout restore failed silently; mutations leaked
+   between probes and produced one BASELINE_INVALID and false restore
+   failures. Fixed the restore to write the captured pristine bytes back,
+   added a pristine-state guard before every probe, recreated the copy, and
+   re-ran all probes cleanly. Round-1 logs were superseded; the clean
+   round's logs are published here.
+5. A hard-linked node_modules copy (cp -al) provides dependencies inside
+   the disposable probe copy; the owner's working tree was never mutated.
+
+Credential hygiene: every published file is scanned for token patterns
+(github_pat_, ghp_, gh_, x-access-token, Authorization headers); zero hits.
+No .env, browser profiles, or user data are included. Logs contain only
+test output (Playwright line reporter + the local web server's request
+lines, filtered where noisy).

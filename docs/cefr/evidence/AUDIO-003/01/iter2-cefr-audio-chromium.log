@@ -1,0 +1,622 @@
+
+Running 18 tests using 1 worker
+
+
+(node:11278) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/18] [chromium] › tests/e2e/cefr-audio.spec.js:129:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] A1 autoplay speaks the exact planned text and language sequence with visible progress
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/18] [chromium] › tests/e2e/cefr-audio.spec.js:165:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] B2 mixed cards speak separately tagged English and Arabic steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/18] [chromium] › tests/e2e/cefr-audio.spec.js:193:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a B2 Arabic-only translation speaks Arabic and never an English voice
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/18] [chromium] › tests/e2e/cefr-audio.spec.js:223:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] an available Arabic voice is selected for Arabic steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[5/18] [chromium] › tests/e2e/cefr-audio.spec.js:246:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] repeat count orders every repetition of an item before the next item
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[6/18] [chromium] › tests/e2e/cefr-audio.spec.js:259:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/cefr-audio.spec.js:259:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 4
+    + Received  + 1
+
+    - Array [
+    -   "Hallo!",
+    -   "Hallo, ich bin Anna.",
+    - ]
+    + Array []
+
+      272 |     await drive(page, 2);
+      273 |     spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(2, 4).map(u => u.text));
+    > 274 |     expect(spoken).toEqual(['Hallo!', 'Hallo, ich bin Anna.']);
+          |                    ^
+      275 |     await page.locator('#btn-stop-words').click();
+      276 |     await expectWordsCancelled(page);
+      277 |
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:274:20
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--470c0--change-the-spoken-sequence-chromium/error-context.md
+
+
+
+(node:11591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/18] [chromium] › tests/e2e/cefr-audio.spec.js:290:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [chromium] › tests/e2e/cefr-audio.spec.js:290:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 10
+    + Received  +  1
+
+    - Array [
+    -   Object {
+    -     "lang": "de-DE",
+    -     "text": "Hallo!",
+    -   },
+    -   Object {
+    -     "lang": "de-DE",
+    -     "text": "Guten Morgen!",
+    -   },
+    - ]
+    + Array []
+
+      306 |     await drive(page, 2);
+      307 |     spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(2, 4).map(u => ({ text: u.text, lang: u.lang })));
+    > 308 |     expect(spoken).toEqual([
+          |                    ^
+      309 |       { text: 'Hallo!', lang: 'de-DE' },
+      310 |       { text: 'Guten Morgen!', lang: 'de-DE' }
+      311 |     ]);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:308:20
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--76b55-trols-the-translation-steps-chromium/error-context.md
+
+
+
+(node:11699) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/18] [chromium] › tests/e2e/cefr-audio.spec.js:316:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  3) [chromium] › tests/e2e/cefr-audio.spec.js:316:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "sehr"
+    Received: "Hallo!"
+
+      342 |     await page.locator('#btn-play-all-words').click();
+      343 |     await waitForUtterance(page, 4);
+    > 344 |     expect(await page.evaluate(() => window.__cefrAudio.utterances[3].text)).toBe('sehr');
+          |                                                                              ^
+      345 |     await expect(page.locator('#auto-start-word')).toHaveValue('29');
+      346 |     await page.locator('#btn-stop-words').click();
+      347 |   });
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:344:78
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--83b21-ect-the-exact-starting-card-chromium/error-context.md
+
+
+
+(node:11807) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/18] [chromium] › tests/e2e/cefr-audio.spec.js:350:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] unit navigation cancels the old queue and the new unit speaks only its own words
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[10/18] [chromium] › tests/e2e/cefr-audio.spec.js:387:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  4) [chromium] › tests/e2e/cefr-audio.spec.js:387:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+
+    Error: expect(locator).toHaveClass(expected) failed
+
+    Locator: locator('tr[data-id="1-17"]')
+    Expected pattern: /highlighted-speech/
+    Received string:  ""
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveClass" with timeout 5000ms
+      - waiting for locator('tr[data-id="1-17"]')
+        14 × locator resolved to <tr class="" data-id="1-17">…</tr>
+           - unexpected value ""
+
+
+      396 |     await waitForUtterance(page, 1);
+      397 |     // Step 1 ("heißen", card 1-17) is highlighted while it is spoken.
+    > 398 |     await expect(page.locator('tr[data-id="1-17"]')).toHaveClass(/highlighted-speech/);
+          |                                                      ^
+      399 |     await page.evaluate(() => window.__cefrAudio.finishCurrent());
+      400 |     await waitForUtterance(page, 2);
+      401 |     // After the queue advances, the highlight moved to the next verb's row.
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:398:54
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--b8e5c-queue-and-cancels-on-change-chromium/error-context.md
+
+
+
+(node:11962) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/18] [chromium] › tests/e2e/cefr-audio.spec.js:440:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] pause and resume retain the current position without skipping or duplicating
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[12/18] [chromium] › tests/e2e/cefr-audio.spec.js:475:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] stop clears future speech, highlights, progress, and controls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[13/18] [chromium] › tests/e2e/cefr-audio.spec.js:504:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] tab changes cancel or replace queue ownership between words and phrases
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[14/18] [chromium] › tests/e2e/cefr-audio.spec.js:538:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] navigating to another level starts a fresh context with no cross-level speech
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[15/18] [chromium] › tests/e2e/cefr-audio.spec.js:564:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[16/18] [chromium] › tests/e2e/cefr-audio.spec.js:593:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a genuine speech error advances the queue
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[17/18] [chromium] › tests/e2e/cefr-audio.spec.js:612:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  5) [chromium] › tests/e2e/cefr-audio.spec.js:612:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+
+    Error: locator.click: Error: strict mode violation: locator('button').filter({ hasText: 'Back to List' }) resolved to 2 elements:
+        1) <button class="btn" onclick="window.app.switchMode('glossary')">⬅ Back to List</button> aka getByRole('button', { name: '⬅ Back to List' })
+        2) <button class="btn" onclick="window.app.switchMode('glossary')">⬅ Back to List</button> aka locator('#view-article-quiz').getByText('⬅ Back to List')
+
+    Call log:
+      - waiting for locator('button').filter({ hasText: 'Back to List' })
+
+
+      626 |     // Back on the glossary, autoplay example mode "first" speaks exactly the
+      627 |     // example shown on the card (never a duplicate of the vocabulary term).
+    > 628 |     await page.locator('button', { hasText: 'Back to List' }).click();
+          |                                                               ^
+      629 |     await configure(page, { repeat: 1, mode: 'first', include: false });
+      630 |     await page.locator('#btn-play-all-words').click();
+      631 |     await drive(page, 2);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:628:63
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--bbf09-in-visible-on-the-flashcard-chromium/error-context.md
+
+
+
+(node:12317) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[18/18] [chromium] › tests/e2e/cefr-audio.spec.js:655:7 › AUDIO-003 no-synthesis fallback (truthful behavior without speechSynthesis) › [AUDIO-003] autoplay advances and completes truthfully without speechSynthesis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  5 failed
+    [chromium] › tests/e2e/cefr-audio.spec.js:259:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+    [chromium] › tests/e2e/cefr-audio.spec.js:290:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+    [chromium] › tests/e2e/cefr-audio.spec.js:316:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+    [chromium] › tests/e2e/cefr-audio.spec.js:387:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+    [chromium] › tests/e2e/cefr-audio.spec.js:612:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+  13 passed (42.8s)

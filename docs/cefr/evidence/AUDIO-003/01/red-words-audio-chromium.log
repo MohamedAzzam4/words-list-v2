@@ -1,0 +1,234 @@
+
+Running 5 tests using 1 worker
+
+
+(node:6454) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/5] [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 |
+      80 |   // AUDIO-003: the Stop button must also clear the highlighted row (the
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+    Error Context: test-results/words-audio-Words-Play-All-61530-s-rows-and-respects-filters-chromium/error-context.md
+
+
+
+(node:6563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/5] [chromium] › tests/e2e/words-audio.spec.js:101:3 › Words Play All Audio Feature › Highlights clear after unit navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[3/5] [chromium] › tests/e2e/words-audio.spec.js:114:3 › Words Play All Audio Feature › Highlights clear after a filter change and the queue stops
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [chromium] › tests/e2e/words-audio.spec.js:114:3 › Words Play All Audio Feature › Highlights clear after a filter change and the queue stops
+
+    Error: expect(locator).not.toHaveClass(expected) failed
+
+    Locator: locator('#btn-play-all-words')
+    Expected pattern: not /playing/
+    Received string: "btn btn-primary playing"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "not toHaveClass" with timeout 5000ms
+      - waiting for locator('#btn-play-all-words')
+        14 × locator resolved to <button id="btn-play-all-words" class="btn btn-primary playing" onclick="window.app.playUnitAudio()">…</button>
+           - unexpected value "btn btn-primary playing"
+
+
+      91 |
+      92 |   async function expectRestingAndCleared(page) {
+    > 93 |     await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+         |                                                           ^
+      94 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Play All/);
+      95 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+      96 |     expect(highlightedRows.length).toBe(0);
+        at expectRestingAndCleared (/home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:93:59)
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:125:11
+
+    Error Context: test-results/words-audio-Words-Play-All-30321--change-and-the-queue-stops-chromium/error-context.md
+
+
+
+(node:6707) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/5] [chromium] › tests/e2e/words-audio.spec.js:132:3 › Words Play All Audio Feature › Highlights clear after rapid queue replacement and re-highlight only the current row
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  3) [chromium] › tests/e2e/words-audio.spec.js:132:3 › Words Play All Audio Feature › Highlights clear after rapid queue replacement and re-highlight only the current row
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      94 |     await expect(page.locator('#btn-play-all-words')).toHaveText(/Play All/);
+      95 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 96 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      97 |     const speaking = await page.evaluate(() => window.speechSynthesis.speaking);
+      98 |     expect(speaking).toBe(false);
+      99 |   }
+        at expectRestingAndCleared (/home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:96:36)
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:139:5
+
+    Error Context: test-results/words-audio-Words-Play-All-b1c2e-hlight-only-the-current-row-chromium/error-context.md
+
+
+
+(node:6816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/5] [chromium] › tests/e2e/words-audio.spec.js:149:3 › Words Play All Audio Feature › Highlights clear after natural completion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  4) [chromium] › tests/e2e/words-audio.spec.js:149:3 › Words Play All Audio Feature › Highlights clear after natural completion
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      154 |     // Minimal queue: start at the last card, one repeat, no examples, no
+      155 |     // translation -> a single utterance that the mock completes itself.
+    > 156 |     await page.locator('#btn-toggle-audio-settings').click();
+          |                                                      ^
+      157 |     await page.locator('#auto-repeat-count').selectOption('1');
+      158 |     await page.locator('#auto-example-mode').selectOption('none');
+      159 |     await page.locator('#auto-include-en').uncheck();
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:156:54
+
+    Error Context: test-results/words-audio-Words-Play-All-8da4c-ar-after-natural-completion-chromium/error-context.md
+
+
+  4 failed
+    [chromium] › tests/e2e/words-audio.spec.js:48:3 › Words Play All Audio Feature › Play all words highlights rows and respects filters
+    [chromium] › tests/e2e/words-audio.spec.js:114:3 › Words Play All Audio Feature › Highlights clear after a filter change and the queue stops
+    [chromium] › tests/e2e/words-audio.spec.js:132:3 › Words Play All Audio Feature › Highlights clear after rapid queue replacement and re-highlight only the current row
+    [chromium] › tests/e2e/words-audio.spec.js:149:3 › Words Play All Audio Feature › Highlights clear after natural completion
+  1 passed (19.1s)

@@ -1,0 +1,80 @@
+
+Running 1 test using 1 worker
+
+
+
+[1/1] [chromium] › tests/e2e/cefr-audio.spec.js:587:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [chromium] › tests/e2e/cefr-audio.spec.js:587:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      615 |     expect(staleResult.speakCount).toBe(2);
+      616 |     expect(staleResult.firstHighlighted).toBe(true);
+    > 617 |     expect(staleResult.secondHighlighted).toBe(false);
+          |                                           ^
+      618 |     await expect(page.locator('.phrase-card').first()).toHaveClass(/highlighted-speech/);
+      619 |
+      620 |     // The replacement continues its own sequence untouched.
+        at /home/z/my-project/audio003-probe/tests/e2e/cefr-audio.spec.js:617:43
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--c600a-callbacks-cannot-disturb-it-chromium/error-context.md
+
+
+  1 failed
+    [chromium] › tests/e2e/cefr-audio.spec.js:587:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+(node:24812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /index.html HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /level.html?level=a1 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /css/core.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /css/shared-card.css HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/app.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/storage.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/glossary.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/firebase.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/flashcards.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/quiz.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/trophies.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/tts.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/speech-plan.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/cefr-audio.mjs HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/utils.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/auth-service.js?v=4 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/leaderboard-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/stats-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/nav-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/content-parser.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/activity-service.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/srs-logic.js?v=3 HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:36] "GET /js/core/shared-card.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:37] "GET /js/core/utils.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:37] "GET /js/levels/a1.config.js HTTP/1.1" 200 -
+[WebServer] 127.0.0.1 - - [02/Sep/2026 02:19:37] "GET /content/generated/a1/unit-01-phrases.md HTTP/1.1" 200 -

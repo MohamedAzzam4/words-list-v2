@@ -1,0 +1,50 @@
+AUDIO-003 baseline defect capture (pristine base 742553c1ff4da7f5e03afb8f427d368204807019)
+===========================================================================================
+
+Console capture of the two actual pre-edit baseline runs of the known
+in-scope defect. The original full reporter output was not redirected to a
+file; this is the failure block exactly as captured from each run (the
+environment setup event that preceded them is recorded in setup-events.txt).
+
+Command: npx playwright test tests/e2e/words-audio.spec.js --project=chromium --reporter=line
+Outcome: 1 failed
+
+  1) [chromium] > tests/e2e/words-audio.spec.js:48:3 > Words Play All Audio Feature > Play all words highlights rows and respects filters
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      75 |     // Check if highlights are cleared
+      76 |     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    > 77 |     expect(highlightedRows.length).toBe(0);
+         |                                    ^
+      78 |   });
+      79 });
+      80
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+
+  1 failed
+    [chromium] > tests/e2e/words-audio.spec.js:48:3 > Words Play All Audio Feature > Play all words highlights rows and respects filters
+
+---
+
+Command: npx playwright test tests/e2e/words-audio.spec.js --project="Mobile Chrome" --reporter=line
+Outcome: 1 failed
+
+[1/1] [Mobile Chrome] > tests/e2e/words-audio.spec.js:48:3 > Words Play All Audio Feature > Play all words highlights rows and respects filters
+  1) [Mobile Chrome] > tests/e2e/words-audio.spec.js:48:3 > Words Play All Audio Feature > Play all words highlights rows and respects filters
+    Error: expect(received).toBe(expected) // Object.is equality
+    Expected: 0
+    Received: 1
+        at /home/z/my-project/words-list-v2/tests/e2e/words-audio.spec.js:77:36
+  1 failed
+    [Mobile Chrome] > tests/e2e/words-audio.spec.js:48:3 > Words Play All Audio Feature > Play all words highlights rows and respects filters
+
+---
+
+Root cause (from source inspection, pre-edit): js/core/app.js stopAudioQueue()
+reset the Play All buttons but never removed .highlighted-speech from the
+glossary rows (the Verbs controller clears them). The same missing clear
+affects natural completion, which routes through the same method.

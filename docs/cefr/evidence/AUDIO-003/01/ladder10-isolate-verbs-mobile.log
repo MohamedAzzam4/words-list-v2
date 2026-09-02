@@ -1,0 +1,27 @@
+
+Running 1 test using 1 worker
+
+
+(node:13942) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [Mobile Chrome] › tests/e2e/verbs.spec.js:33:7 › Top German Verbs Mastery E2E Suite (Card Recycling & Custom Auto-Play TTS) › should configure custom Auto-Play Audio sequence (repeat count, English TTS, start location)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1 passed (1.8s)

@@ -1,0 +1,198 @@
+
+Running 4 tests using 1 worker
+
+
+(node:19236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/4] [chromium] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2/4] [chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[chromium] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+(node:19393) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/4] [Mobile Chrome] › tests/e2e/favorites-filters.spec.js:15:3 › Favorites and Filters State › Toggling filters should not remove favorites
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[4/4] [Mobile Chrome] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[Mobile Chrome] › tests/e2e/srs.spec.js:70:7 › Spaced Repetition System (SRS) E2E Suite › SRS Level Progression and Time Machine Verification
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] [WP-010] Migration complete. Version set to 1.
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+
+[Browser Console log] 🎙️ Selected German Voice: Mock Voice
+
+[Browser Console log] ✅ [A1] Config loaded: 📚 A1 German
+
+[Browser Console log] ✅ Firebase initialized for appId: german-a1-app
+
+[Browser Console log] 🚀 DOM loaded / App booting.
+
+[Browser Console log] 📱 Using offline mode
+
+[Browser Console log] ✅ Engines initialized with 30 words in Unit 1
+
+  4 passed (7.2s)

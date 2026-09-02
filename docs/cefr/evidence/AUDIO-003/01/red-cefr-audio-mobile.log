@@ -1,0 +1,930 @@
+
+Running 18 tests using 1 worker
+
+
+(node:7462) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:123:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] A1 autoplay speaks the exact planned text and language sequence with visible progress
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:123:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] A1 autoplay speaks the exact planned text and language sequence with visible progress
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:125:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--57481-uence-with-visible-progress-Mobile-Chrome/error-context.md
+
+
+
+(node:7572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[2/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:157:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] B2 mixed cards speak separately tagged English and Arabic steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  2) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:157:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] B2 mixed cards speak separately tagged English and Arabic steps
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:159:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--2b3d9-ed-English-and-Arabic-steps-Mobile-Chrome/error-context.md
+
+
+
+(node:7679) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[3/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:183:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a B2 Arabic-only translation speaks Arabic and never an English voice
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  3) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:183:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a B2 Arabic-only translation speaks Arabic and never an English voice
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:195:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--45dec--and-never-an-English-voice-Mobile-Chrome/error-context.md
+
+
+
+(node:7781) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[4/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:213:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] an available Arabic voice is selected for Arabic steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  4) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:213:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] an available Arabic voice is selected for Arabic steps
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:225:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--d1aa9-s-selected-for-Arabic-steps-Mobile-Chrome/error-context.md
+
+
+
+(node:7891) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[5/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:236:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] repeat count orders every repetition of an item before the next item
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  5) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:236:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] repeat count orders every repetition of an item before the next item
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:238:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--5005f-n-item-before-the-next-item-Mobile-Chrome/error-context.md
+
+
+
+(node:7998) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[6/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:249:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  6) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:249:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:252:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--470c0--change-the-spoken-sequence-Mobile-Chrome/error-context.md
+
+
+
+(node:8100) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[7/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:280:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  7) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:280:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:283:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--76b55-trols-the-translation-steps-Mobile-Chrome/error-context.md
+
+
+
+(node:8207) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[8/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:306:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  8) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:306:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:308:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--83b21-ect-the-exact-starting-card-Mobile-Chrome/error-context.md
+
+
+
+(node:8311) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[9/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:340:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] unit navigation cancels the old queue and the new unit speaks only its own words
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  9) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:340:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] unit navigation cancels the old queue and the new unit speaks only its own words
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:342:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--709a4-t-speaks-only-its-own-words-Mobile-Chrome/error-context.md
+
+
+
+(node:8420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[10/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:377:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  10) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:377:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:379:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--b8e5c-queue-and-cancels-on-change-Mobile-Chrome/error-context.md
+
+
+
+(node:8529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[11/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:424:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] pause and resume retain the current position without skipping or duplicating
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  11) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:424:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] pause and resume retain the current position without skipping or duplicating
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:426:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--b6e6b-out-skipping-or-duplicating-Mobile-Chrome/error-context.md
+
+
+
+(node:8632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[12/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:459:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] stop clears future speech, highlights, progress, and controls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  12) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:459:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] stop clears future speech, highlights, progress, and controls
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:461:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--4e499-ights-progress-and-controls-Mobile-Chrome/error-context.md
+
+
+
+(node:8736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[13/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:488:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] tab changes cancel or replace queue ownership between words and phrases
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  13) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:488:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] tab changes cancel or replace queue ownership between words and phrases
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:490:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--d65d6-p-between-words-and-phrases-Mobile-Chrome/error-context.md
+
+
+
+(node:8837) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[14/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:522:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] navigating to another level starts a fresh context with no cross-level speech
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  14) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:522:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] navigating to another level starts a fresh context with no cross-level speech
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:524:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--2c33e--with-no-cross-level-speech-Mobile-Chrome/error-context.md
+
+
+
+(node:8947) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[15/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:548:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  15) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:548:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:550:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--c600a-callbacks-cannot-disturb-it-Mobile-Chrome/error-context.md
+
+
+
+(node:9056) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[16/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:577:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a genuine speech error advances the queue
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  16) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:577:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a genuine speech error advances the queue
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      89 |
+      90 |   async function openSettings(page) {
+    > 91 |     await page.locator('#btn-toggle-audio-settings').click();
+         |                                                      ^
+      92 |   }
+      93 |
+      94 |   async function configure(page, { repeat, mode, include, start }) {
+        at openSettings (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:91:54)
+        at configure (/home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:95:11)
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:579:11
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--0fe71-ch-error-advances-the-queue-Mobile-Chrome/error-context.md
+
+
+
+(node:9165) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[17/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:596:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  17) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:596:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+
+    Error: locator.click: Error: strict mode violation: locator('button').filter({ hasText: 'Back to List' }) resolved to 2 elements:
+        1) <button class="btn" onclick="window.app.switchMode('glossary')">⬅ Back to List</button> aka getByRole('button', { name: '⬅ Back to List' })
+        2) <button class="btn" onclick="window.app.switchMode('glossary')">⬅ Back to List</button> aka locator('#view-article-quiz').getByText('⬅ Back to List')
+
+    Call log:
+      - waiting for locator('button').filter({ hasText: 'Back to List' })
+
+
+      606 |     // Back on the glossary, autoplay example mode "first" speaks exactly the
+      607 |     // example shown on the card (never a duplicate of the vocabulary term).
+    > 608 |     await page.locator('button', { hasText: 'Back to List' }).click();
+          |                                                               ^
+      609 |     await configure(page, { repeat: 1, mode: 'first', include: false });
+      610 |     await page.locator('#btn-play-all-words').click();
+      611 |     await drive(page, 2);
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:608:63
+
+    Error Context: test-results/cefr-audio-AUDIO-003-CEFR--bbf09-in-visible-on-the-flashcard-Mobile-Chrome/error-context.md
+
+
+
+(node:9275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[18/18] [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:635:7 › AUDIO-003 no-synthesis fallback (truthful behavior without speechSynthesis) › [AUDIO-003] autoplay advances and completes truthfully without speechSynthesis
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  18) [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:635:7 › AUDIO-003 no-synthesis fallback (truthful behavior without speechSynthesis) › [AUDIO-003] autoplay advances and completes truthfully without speechSynthesis
+
+    Test timeout of 8000ms exceeded.
+
+    Error: locator.click: Test timeout of 8000ms exceeded.
+    Call log:
+      - waiting for locator('#btn-toggle-audio-settings')
+
+
+      643 |     await page.waitForSelector('#glossary-tbody tr[data-id]');
+      644 |
+    > 645 |     await page.locator('#btn-toggle-audio-settings').click();
+          |                                                      ^
+      646 |     await page.locator('#auto-repeat-count').selectOption('1');
+      647 |     await page.locator('#auto-example-mode').selectOption('none');
+      648 |     await page.locator('#auto-include-en').uncheck();
+        at /home/z/my-project/words-list-v2/tests/e2e/cefr-audio.spec.js:645:54
+
+    Error Context: test-results/cefr-audio-AUDIO-003-no-sy-2b37f-lly-without-speechSynthesis-Mobile-Chrome/error-context.md
+
+
+  18 failed
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:123:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] A1 autoplay speaks the exact planned text and language sequence with visible progress
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:157:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] B2 mixed cards speak separately tagged English and Arabic steps
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:183:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a B2 Arabic-only translation speaks Arabic and never an English voice
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:213:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] an available Arabic voice is selected for Arabic steps
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:236:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] repeat count orders every repetition of an item before the next item
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:249:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] example modes none, first, and all change the spoken sequence
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:280:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] include-translation on and off controls the translation steps
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:306:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] start-at beginning, middle, and end select the exact starting card
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:340:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] unit navigation cancels the old queue and the new unit speaks only its own words
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:377:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the active vocabulary filter scopes the queue and cancels on change
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:424:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] pause and resume retain the current position without skipping or duplicating
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:459:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] stop clears future speech, highlights, progress, and controls
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:488:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] tab changes cancel or replace queue ownership between words and phrases
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:522:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] navigating to another level starts a fresh context with no cross-level speech
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:548:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] rapid queue replacement owns the speaker and stale callbacks cannot disturb it
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:577:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] a genuine speech error advances the queue
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:596:7 › AUDIO-003 CEFR Level Autoplay (deterministic speech mocks) › [AUDIO-003] the first example and translation remain visible on the flashcard
+    [Mobile Chrome] › tests/e2e/cefr-audio.spec.js:635:7 › AUDIO-003 no-synthesis fallback (truthful behavior without speechSynthesis) › [AUDIO-003] autoplay advances and completes truthfully without speechSynthesis
