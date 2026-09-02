@@ -858,6 +858,32 @@ window.app = {
             this._populateStartWordSelect();
         }
     },
+    revealGermanWord(el) {
+        // AUDIO-003-C2 (owner finding): the individual German-word reveal —
+        // the inline "click to reveal" on a hidden German word — is
+        // controller-aware. Removing the hidden-word class IS the DOM
+        // visibility change; when that change actually alters the ordered
+        // speakable membership (the single boundary Start At and playback
+        // both consume), the same reconciliation every other scope change
+        // follows runs: the queue owning the old scope is cancelled through
+        // stopAudioQueue() — the existing SpeechQueue cancellation path that
+        // mints a new generation so stale onend/onerror callbacks cannot
+        // advance or restore it — and Start At rebuilds from the CURRENT
+        // scope AFTER the DOM change, preserving unit order and the stable
+        // word-id option values. A reveal that does not change speakable
+        // membership (a German word that is already visible, the article,
+        // the German context, the English column) stays cosmetic — no
+        // cancellation, no rebuild (the same before/after membership rule
+        // revealAllTable() applies).
+        if (!el || !el.classList) return;
+        const scopeBefore = this._getSpeakableWords().map(card => card.id).join('\u0000');
+        el.classList.remove('hidden-word');
+        const scopeAfter = this._getSpeakableWords().map(card => card.id).join('\u0000');
+        if (scopeBefore !== scopeAfter) {
+            this.stopAudioQueue();
+            this._populateStartWordSelect();
+        }
+    },
     revealAllPhrases() {
         state.hiddenPhrases.clear();
         state.phraseMixedMap.clear();

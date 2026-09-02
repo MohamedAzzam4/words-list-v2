@@ -85,7 +85,7 @@ export class GlossaryEngine {
               <button class="speak-btn" onclick="event.stopPropagation(); window.app.speakText('${safeDe}')" title="Listen" style="margin-right: 5px;">🔊</button>
               <div style="flex: 1;">
                   <span class="${hideArticle ? 'hidden-word' : ''} hideable" style="cursor: pointer;" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${article ? sanitize(article) + ' ' : ''}</span>
-                  <span class="${hideDE ? 'hidden-word' : ''} hideable" style="cursor: pointer;" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(wordOnly)}</span>
+                  <span class="${hideDE ? 'hidden-word' : ''} hideable" style="cursor: pointer;" onclick="window.app.revealGermanWord(this)" title="Click to reveal">${sanitize(wordOnly)}</span>
                   ${w.deContext ? `<div class="de-context hideable ${hideDE ? 'hidden-word' : ''}" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; cursor: pointer;" onclick="this.classList.remove('hidden-word')" title="Click to reveal">${sanitize(w.deContext)}</div>` : ''}
               </div>
             </div>
