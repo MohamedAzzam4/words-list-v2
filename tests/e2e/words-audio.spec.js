@@ -76,4 +76,97 @@ test.describe('Words Play All Audio Feature', () => {
     const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
     expect(highlightedRows.length).toBe(0);
   });
+
+  // AUDIO-003: the Stop button must also clear the highlighted row (the
+  // known baseline defect this package fixes), and the same clearing must
+  // hold across navigation, filter changes, queue replacement, and natural
+  // completion. The mock auto-completes each utterance after 50ms, so these
+  // tests await observable control/queue states instead of sleeping.
+
+  async function playAndAwaitFirstHighlight(page) {
+    await page.click('#btn-play-all-words');
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await page.waitForSelector('#glossary-tbody tr.highlighted-speech');
+  }
+
+  async function expectRestingAndCleared(page) {
+    await expect(page.locator('#btn-play-all-words')).not.toHaveClass(/playing/);
+    await expect(page.locator('#btn-play-all-words')).toHaveText(/Play All/);
+    const highlightedRows = await page.$$('#glossary-tbody tr.highlighted-speech');
+    expect(highlightedRows.length).toBe(0);
+    const speaking = await page.evaluate(() => window.speechSynthesis.speaking);
+    expect(speaking).toBe(false);
+  }
+
+  test('Highlights clear after unit navigation', async ({ page }) => {
+    await initEmptyProgressAndOpen(page);
+    await page.click('#tab-words');
+    await page.waitForSelector('#glossary-tbody tr');
+
+    await playAndAwaitFirstHighlight(page);
+
+    // Switching to another unit cancels the queue and clears the highlight.
+    await page.evaluate(() => window.app.switchUnit(1));
+    await page.waitForSelector('tr[data-id="2-0"]');
+    await expectRestingAndCleared(page);
+  });
+
+  test('Highlights clear after a filter change and the queue stops', async ({ page }) => {
+    await initEmptyProgressAndOpen(page);
+    await page.click('#tab-words');
+    await page.waitForSelector('#glossary-tbody tr');
+
+    await playAndAwaitFirstHighlight(page);
+    const speakCountAtFilterChange = await page.evaluate(() => window.__mockTTS.speakCount);
+
+    // An 'e' (expressions) filter keeps row 1-0 rendered, so a live queue
+    // could keep highlighting and speaking it; the change must cancel.
+    await page.locator('#type-filter').selectOption('e');
+    await expectRestingAndCleared(page);
+
+    // No further utterance may appear after the cancellation.
+    const speakCountAfter = await page.evaluate(() => window.__mockTTS.speakCount);
+    expect(speakCountAfter).toBe(speakCountAtFilterChange);
+  });
+
+  test('Highlights clear after rapid queue replacement and re-highlight only the current row', async ({ page }) => {
+    await initEmptyProgressAndOpen(page);
+    await page.click('#tab-words');
+    await page.waitForSelector('#glossary-tbody tr');
+
+    await playAndAwaitFirstHighlight(page);
+    await page.click('#btn-stop-words');
+    await expectRestingAndCleared(page);
+
+    // A restart replaces the queue: exactly one highlighted row again.
+    await playAndAwaitFirstHighlight(page);
+    const highlighted = await page.$$('#glossary-tbody tr.highlighted-speech');
+    expect(highlighted.length).toBe(1);
+    await page.click('#btn-stop-words');
+    await expectRestingAndCleared(page);
+  });
+
+  test('Highlights clear after natural completion', async ({ page }) => {
+    await initEmptyProgressAndOpen(page);
+    await page.click('#tab-words');
+    await page.waitForSelector('#glossary-tbody tr');
+
+    // Minimal queue: start at the last card, one repeat, no examples, no
+    // translation -> a single utterance that the mock completes itself.
+    await page.locator('#btn-toggle-audio-settings').click();
+    await page.locator('#auto-repeat-count').selectOption('1');
+    await page.locator('#auto-example-mode').selectOption('none');
+    await page.locator('#auto-include-en').uncheck();
+    await page.locator('#auto-start-word').selectOption('29');
+
+    await page.click('#btn-play-all-words');
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await page.waitForSelector('#glossary-tbody tr.highlighted-speech');
+
+    // The queue drains through the mock's automatic completion: controls
+    // reset and no highlight survives the natural completion.
+    await expectRestingAndCleared(page);
+    const speakCount = await page.evaluate(() => window.__mockTTS.speakCount);
+    expect(speakCount).toBe(1);
+  });
 });
