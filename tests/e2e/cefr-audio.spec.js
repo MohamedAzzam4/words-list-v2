@@ -599,10 +599,22 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await waitForUtterance(page, 2);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe("Hallo! Wie geht's?");
 
-    // The replaced words queue's late onend must be a no-op.
-    await page.evaluate(() => window.__cefrAudio.stale.onend(new Event('end')));
-    const afterStale = await page.evaluate(() => window.__cefrAudio.speakCount);
-    expect(afterStale).toBe(2);
+    // The replaced words queue's late onend must be a no-op. The check is
+    // atomic with the callback: a guard-less stale onend advances the
+    // phrase queue's cursor synchronously (highlighting the SECOND phrase
+    // card immediately), which is exactly what must never happen.
+    const staleResult = await page.evaluate(() => {
+      window.__cefrAudio.stale.onend(new Event('end'));
+      const cards = document.querySelectorAll('.phrase-card');
+      return {
+        speakCount: window.__cefrAudio.speakCount,
+        firstHighlighted: cards[0].classList.contains('highlighted-speech'),
+        secondHighlighted: cards.length > 1 ? cards[1].classList.contains('highlighted-speech') : null
+      };
+    });
+    expect(staleResult.speakCount).toBe(2);
+    expect(staleResult.firstHighlighted).toBe(true);
+    expect(staleResult.secondHighlighted).toBe(false);
     await expect(page.locator('.phrase-card').first()).toHaveClass(/highlighted-speech/);
 
     // The replacement continues its own sequence untouched.
