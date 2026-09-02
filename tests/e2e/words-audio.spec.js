@@ -153,11 +153,15 @@ test.describe('Words Play All Audio Feature', () => {
 
     // Minimal queue: start at the last card, one repeat, no examples, no
     // translation -> a single utterance that the mock completes itself.
+    // AUDIO-003-C1: Start-At option values are the stable word ids — the
+    // last card of A1 unit 1 is 1-29 (the former numeric option '29' no
+    // longer exists). Same card selection intent, adapted to the corrected
+    // identity space.
     await page.locator('#btn-toggle-audio-settings').click();
     await page.locator('#auto-repeat-count').selectOption('1');
     await page.locator('#auto-example-mode').selectOption('none');
     await page.locator('#auto-include-en').uncheck();
-    await page.locator('#auto-start-word').selectOption('29');
+    await page.locator('#auto-start-word').selectOption('1-29');
 
     await page.click('#btn-play-all-words');
     await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);

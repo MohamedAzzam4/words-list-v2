@@ -28,6 +28,7 @@ import { planSpeechSequence } from '../../js/core/speech-plan.mjs';
 import {
     matchesVocabularyFilter,
     mapCefrSpeechStepsToQueueItems,
+    resolveStartWordIndex,
     InvalidCefrAudioInputError
 } from '../../js/core/cefr-audio.mjs';
 
@@ -311,4 +312,47 @@ test('AUDIO-003 unit: cards with no speakable text plan to an empty record list 
 
     const items = mapCefrSpeechStepsToQueueItems(plan.steps, [muteCard], 1);
     assert.deepEqual(items, []);
+});
+
+// ---------------------------------------------------------------------------
+// AUDIO-003-C1: stable Start-At identity resolution (pure helper).
+// The Start-At control and playback share ONE ordered speakable-card
+// collection; option values are stable word ids, and the selected id
+// resolves back to its index immediately before planning.
+// ---------------------------------------------------------------------------
+
+test('AUDIO-003-C1 unit: a stable start-at id resolves to its exact index in the speakable list', () => {
+    const cards = [
+        { id: '1-1' }, { id: '1-3' }, { id: '1-15' }, { id: '1-29' }
+    ];
+    assert.equal(resolveStartWordIndex(cards, '1-1'), 0);
+    assert.equal(resolveStartWordIndex(cards, '1-3'), 1);
+    assert.equal(resolveStartWordIndex(cards, '1-15'), 2);
+    assert.equal(resolveStartWordIndex(cards, '1-29'), 3);
+});
+
+test('AUDIO-003-C1 unit: a missing, empty, or no-longer-in-scope id falls back to the first card', () => {
+    const cards = [{ id: '1-1' }, { id: '1-3' }];
+    assert.equal(resolveStartWordIndex(cards, ''), 0);
+    // A card filtered or hidden out of the current scope (Finding 2).
+    assert.equal(resolveStartWordIndex(cards, '1-0'), 0);
+    assert.equal(resolveStartWordIndex(cards, null), 0);
+    assert.equal(resolveStartWordIndex(cards, undefined), 0);
+    // A legacy numeric option value can never match a stable id by accident.
+    assert.equal(resolveStartWordIndex(cards, 0), 0);
+    assert.equal(resolveStartWordIndex(cards, 1), 0);
+});
+
+test('AUDIO-003-C1 unit: an empty collection has no valid start and invalid input throws', () => {
+    assert.equal(resolveStartWordIndex([], '1-1'), -1);
+    assert.throws(() => resolveStartWordIndex('nope', '1-1'), InvalidCefrAudioInputError);
+    assert.throws(() => resolveStartWordIndex(null, '1-1'), InvalidCefrAudioInputError);
+});
+
+test('AUDIO-003-C1 unit: resolution never mutates the card list', () => {
+    const cards = [{ id: '1-1' }, { id: '1-3' }];
+    const snapshot = JSON.parse(JSON.stringify(cards));
+    resolveStartWordIndex(cards, '1-3');
+    resolveStartWordIndex(cards, 'not-in-scope');
+    assert.deepEqual(JSON.parse(JSON.stringify(cards)), snapshot);
 });

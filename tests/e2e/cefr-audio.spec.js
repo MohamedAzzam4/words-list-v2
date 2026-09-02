@@ -97,6 +97,9 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     }
   }
 
+  // AUDIO-003-C1: `start` is the STABLE word id of the Start-At option
+  // (option values are card ids, no longer numeric indexes — one identity
+  // space shared with playback).
   async function configure(page, { repeat, mode, include, start }) {
     await openSettings(page);
     if (repeat !== undefined) await page.locator('#auto-repeat-count').selectOption(String(repeat));
@@ -105,7 +108,7 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
       if (include) await page.locator('#auto-include-en').check();
       else await page.locator('#auto-include-en').uncheck();
     }
-    if (start !== undefined) await page.locator('#auto-start-word').selectOption(String(start));
+    if (start !== undefined) await page.locator('#auto-start-word').selectOption(start);
   }
 
   async function expectWordsCancelled(page) {
@@ -212,7 +215,7 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     });
 
     await initLevel(page, 'b2');
-    await configure(page, { repeat: 1, mode: 'first', include: true, start: 3 });
+    await configure(page, { repeat: 1, mode: 'first', include: true, start: '1-3' });
 
     await page.locator('#btn-play-all-words').click();
     await drive(page, 4);
@@ -338,7 +341,9 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Hallo!');
     await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
-    await configure(page, { start: 2 });
+    // AUDIO-003-C1: Start-At options carry the STABLE word id as their
+    // value; the middle/end selections address the exact card by id.
+    await configure(page, { start: '1-2' });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 2);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe('Guten Tag!');
@@ -346,15 +351,17 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
     // The last card of A1 unit 1 (index 29) is "sehr".
-    await configure(page, { start: 29 });
+    await configure(page, { start: '1-29' });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 3);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[2].text)).toBe('sehr');
     await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
-    // Out-of-range start values clamp to the last card and keep the control
-    // in agreement (synthetic DOM state via a temporary option, disclosed —
-    // a real select cannot hold a value with no matching option).
+    // AUDIO-003-C1 supersedes the former numeric clamp rule: an id that is
+    // no longer in scope (this synthetic value matches no card) resolves
+    // deterministically to the FIRST card of the current scope, and the
+    // control is set to that resolved card so the option shown and the
+    // first utterance always reference the same card.
     await page.evaluate(() => {
       const select = document.getElementById('auto-start-word');
       const synthetic = document.createElement('option');
@@ -364,8 +371,8 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 4);
-    expect(await page.evaluate(() => window.__cefrAudio.utterances[3].text)).toBe('sehr');
-    await expect(page.locator('#auto-start-word')).toHaveValue('29');
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[3].text)).toBe('Hallo!');
+    await expect(page.locator('#auto-start-word')).toHaveValue('1-0');
     await page.locator('#btn-stop-words').click();
   });
 
@@ -669,6 +676,294 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await page.locator('#btn-stop-words').click();
   });
 
+  // ── AUDIO-003-C1 correction cases ──
+  // Owner findings at be5eb38: (1) an active Favorites filter becomes stale
+  // when a favorite is removed while autoplay is playing; (2) Start At and
+  // playback use different index spaces once rows are hidden.
+
+  async function startOptionValues(page) {
+    return page.evaluate(() => Array.from(document.getElementById('auto-start-word').options).map(o => o.value));
+  }
+
+  // Required test A — active Favorites membership removal (Finding 1).
+  test('[AUDIO-003-C1] removing the playing favorite under the Favorites filter cancels autoplay and empties the scope', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+
+    // Favorite card 1-0 through the glossary star, then activate the
+    // Favorites filter: exactly that card is visible (row count and its
+    // row identity are checked below while it speaks).
+    await page.locator('tr[data-id="1-0"] span[title="Toggle Favorite"]').click();
+    await page.locator('#type-filter').selectOption('fav');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 1);
+
+    // Start autoplay: card 1-0 is speaking.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => { window.__cefrAudio.stale = window.__cefrAudio.current; });
+    const speakCountAtRemoval = await page.evaluate(() => window.__cefrAudio.speakCount);
+
+    // Remove the favorite while it is playing: cancellation is immediate.
+    await page.locator('tr[data-id="1-0"] span[title="Toggle Favorite"]').click();
+    await expectWordsCancelled(page);
+
+    // No future utterance may appear for the cancelled session.
+    const speakCountAfter = await page.evaluate(() => window.__cefrAudio.speakCount);
+    expect(speakCountAfter).toBe(speakCountAtRemoval);
+
+    // The glossary rerendered from the updated favorite set: zero rows.
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 0);
+    // Start At is rebuilt from the same (now empty) scope: zero options.
+    expect(await startOptionValues(page)).toEqual([]);
+
+    // Stale callbacks cannot advance or restore the cancelled queue.
+    await page.evaluate(() => {
+      window.__cefrAudio.stale.onend(new Event('end'));
+      window.__cefrAudio.stale.onerror({ error: 'synthesis-failed' });
+    });
+    await expectWordsCancelled(page);
+    const speakCountAfterStale = await page.evaluate(() => window.__cefrAudio.speakCount);
+    expect(speakCountAfterStale).toBe(speakCountAtRemoval);
+    expect(await startOptionValues(page)).toEqual([]);
+  });
+
+  // Stale callbacks cannot disturb the REPLACEMENT queue after a favorites
+  // cancellation either (the replacement scope keeps its own ownership).
+  test('[AUDIO-003-C1] a stale callback cannot disturb the replacement queue after favorites cancellation', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+
+    await page.locator('tr[data-id="1-0"] span[title="Toggle Favorite"]').click();
+    await page.locator('tr[data-id="1-1"] span[title="Toggle Favorite"]').click();
+    await page.locator('#type-filter').selectOption('fav');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 2);
+
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => { window.__cefrAudio.stale = window.__cefrAudio.current; });
+    const speakCountAtRemoval = await page.evaluate(() => window.__cefrAudio.speakCount);
+
+    // Remove the playing favorite: the scope shrinks to card 1-1 and the
+    // queue, table, and Start At all cancel/rebuild together.
+    await page.locator('tr[data-id="1-0"] span[title="Toggle Favorite"]').click();
+    await expectWordsCancelled(page);
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 1);
+    expect(await startOptionValues(page)).toEqual(['1-1']);
+    const speakCountAfter = await page.evaluate(() => window.__cefrAudio.speakCount);
+    expect(speakCountAfter).toBe(speakCountAtRemoval);
+
+    // Restart autoplay on the replacement scope: card 1-1 speaks.
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 2);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe('Guten Morgen!');
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+
+    // The cancelled session's late onend/onerror must not advance, reset,
+    // or otherwise disturb the replacement queue.
+    const staleResult = await page.evaluate(() => {
+      window.__cefrAudio.stale.onend(new Event('end'));
+      window.__cefrAudio.stale.onerror({ error: 'synthesis-failed' });
+      const highlighted = document.querySelector('#glossary-tbody tr.highlighted-speech');
+      return {
+        speakCount: window.__cefrAudio.speakCount,
+        playing: document.getElementById('btn-play-all-words').classList.contains('playing'),
+        highlighted: highlighted ? highlighted.dataset.id : null
+      };
+    });
+    expect(staleResult).toEqual({ speakCount: 2, playing: true, highlighted: '1-1' });
+    await page.locator('#btn-stop-words').click();
+  });
+
+  // Constraint side of Finding 1: toggling a favorite while another filter is
+  // active must NOT unnecessarily change queue membership. This is a
+  // regression guard for the correction (it also passes on the unmodified
+  // base; the fix must keep it passing).
+  test('[AUDIO-003-C1] toggling a favorite under a non-Favorites filter leaves the running queue untouched', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1); // 'Hallo!'
+    await page.evaluate(() => window.__cefrAudio.finishCurrent());
+    await waitForUtterance(page, 2); // 'Guten Morgen!' — card 1-1 speaking
+
+    // Toggling a favorite under the 'all' filter does not alter the queue
+    // scope: the session keeps playing without interruption.
+    await page.locator('tr[data-id="1-5"] span[title="Toggle Favorite"]').click();
+    await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
+    await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
+
+    // The queue keeps advancing on its own scope.
+    await page.evaluate(() => window.__cefrAudio.finishCurrent());
+    await waitForUtterance(page, 3);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[2].text)).toBe('Guten Tag!');
+    // The star now shows favorited and the row itself is unchanged.
+    await expect(page.locator('tr[data-id="1-5"] span[title="Toggle Favorite"]')).toHaveCSS('filter', 'grayscale(0)');
+    await page.locator('#btn-stop-words').click();
+  });
+
+  // Required test B — Favorites membership restoration (empty -> non-empty).
+  test('[AUDIO-003-C1] adding a favorite from the flashcard restores the empty Favorites scope and Start At agrees with playback', async ({ page }) => {
+    await initLevel(page, 'a1');
+
+    // Empty Favorites filter: zero rows, zero Start At options.
+    await page.locator('#type-filter').selectOption('fav');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 0);
+    expect(await startOptionValues(page)).toEqual([]);
+
+    // Add a favorite through an authorized UI path: the shared-card favorite
+    // button (shuffle off first so the card queue order is deterministic).
+    await page.locator('button', { hasText: 'Flashcards' }).click();
+    await page.waitForSelector('#fc-card-mount .verb-flashcard');
+    await page.locator('#shuffle-btn').click();
+    await expect(page.locator('#shuffle-btn')).toHaveText(/Shuffle: OFF/);
+    await page.locator('#fc-card-mount [data-action="fav"]').click();
+
+    // Back on the glossary the Favorites-filter result includes exactly the
+    // new favorite, and Start At was rebuilt from that same scope.
+    await page.locator('#view-flashcard button', { hasText: 'Back to List' }).click();
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 1);
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveCount(1);
+    expect(await startOptionValues(page)).toEqual(['1-0']);
+
+    // Autoplay from that selection speaks exactly the selected card: the
+    // option id, first utterance, highlighted row, and progress identity
+    // all reference the same card.
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Hallo!');
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#words-audio-progress')).toHaveText('1 / 1 · Hallo!');
+    await page.locator('#btn-stop-words').click();
+  });
+
+  // Required test C — Hide Mixed and Start At use one identity space
+  // (Finding 2).
+  test('[AUDIO-003-C1] Hide Mixed rebuilds Start At from the speakable scope and the selected card is the card spoken', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+
+    // Deterministic mixed visibility: the render draws exactly one
+    // Math.random per row, so an alternating override hides the German
+    // column of every EVEN-index card (1-0, 1-2, ...) and leaves every
+    // ODD-index card speakable (15 of 30).
+    await page.evaluate(() => {
+      window.__mixedRandomCalls = 0;
+      Math.random = () => (window.__mixedRandomCalls++ % 2 === 0 ? 0.99 : 0.01);
+    });
+    await page.locator('button', { hasText: 'Hide Mixed' }).click();
+
+    // Start At is rebuilt from the exact speakable-card collection playback
+    // uses: the 15 odd-index card ids, in unit order.
+    const expectedIds = ['1-1', '1-3', '1-5', '1-7', '1-9', '1-11', '1-13', '1-15', '1-17', '1-19', '1-21', '1-23', '1-25', '1-27', '1-29'];
+    expect(await startOptionValues(page)).toEqual(expectedIds);
+    const lastOption = await page.evaluate(() => {
+      const options = document.getElementById('auto-start-word').options;
+      const last = options[options.length - 1];
+      return { value: last.value, label: last.textContent.trim() };
+    });
+    expect(lastOption).toEqual({ value: '1-29', label: '15. sehr' });
+
+    // The final visible/speakable option identifies the exact first card
+    // spoken: same option id, same utterance, same highlighted row, same
+    // progress identity.
+    await configure(page, { start: '1-29' });
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('sehr');
+    await expect(page.locator('tr[data-id="1-29"]')).toHaveClass(/highlighted-speech/);
+    await expect(page.locator('#words-audio-progress')).toHaveText('1 / 1 · sehr');
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
+
+    // A middle selection speaks its own card first, then the next speakable
+    // cards in unit order — no hidden (even-index) German row is ever
+    // spoken and the unit order stays intact.
+    await configure(page, { start: '1-15' });
+    await page.locator('#btn-play-all-words').click();
+    await drive(page, 3);
+    const spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(1).map(u => u.text));
+    expect(spoken).toEqual(['Entschuldigung!', 'sein', 'gehen']);
+    await page.locator('#btn-stop-words').click();
+  });
+
+  // Required test D — context rebuild matrix: Start At and the actual queue
+  // stay on one identical scope across Hide German, Reveal All, a type
+  // filter change, a unit change, and empty-to-non-empty restoration.
+  test('[AUDIO-003-C1] context changes keep Start At and the actual queue on the same scope', async ({ page }) => {
+    await initLevel(page, 'a1');
+    await configure(page, { repeat: 1, mode: 'none', include: false });
+
+    // Baseline: the full unit 1 scope, and the queue starts at its first
+    // card.
+    expect(await startOptionValues(page)).toEqual(Array.from({ length: 30 }, (_, i) => `1-${i}`));
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 1);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Hallo!');
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
+
+    // Hide German empties the speakable scope: zero Start At options and
+    // pressing Play is a clean no-op.
+    await page.locator('button', { hasText: 'Hide German' }).click();
+    expect(await startOptionValues(page)).toEqual([]);
+    await page.locator('#btn-play-all-words').click();
+    await expectWordsCancelled(page);
+
+    // Reveal All restores the same full scope, Start At included.
+    await page.locator('button', { hasText: 'Reveal All' }).click();
+    expect(await startOptionValues(page)).toEqual(Array.from({ length: 30 }, (_, i) => `1-${i}`));
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 2);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe('Hallo!');
+    await expect(page.locator('tr[data-id="1-0"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
+
+    // A type-filter change scopes the table and Start At to the verbs.
+    await page.locator('#type-filter').selectOption('v');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 4);
+    expect(await startOptionValues(page)).toEqual(['1-16', '1-17', '1-18', '1-19']);
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 3);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[2].text)).toBe('heißen');
+    await expect(page.locator('tr[data-id="1-16"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
+
+    // A unit change rebuilds Start At from the new unit's scope.
+    await page.locator('#type-filter').selectOption('all');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 30);
+    await page.evaluate(() => window.app.switchUnit(1));
+    await page.waitForSelector('tr[data-id="2-0"]');
+    const unit2Ids = await startOptionValues(page);
+    expect(unit2Ids.length).toBe(43);
+    expect(unit2Ids[0]).toBe('2-0');
+    expect(unit2Ids[42]).toBe('2-42');
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 4);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[3].text)).toBe('der Beruf');
+    await expect(page.locator('tr[data-id="2-0"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
+
+    // Empty-to-non-empty restoration through the same control path: the
+    // favourites filter empties the scope; returning to 'all' restores it.
+    await page.locator('#type-filter').selectOption('fav');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 0);
+    expect(await startOptionValues(page)).toEqual([]);
+    await page.locator('#type-filter').selectOption('all');
+    await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 43);
+    const restoredIds = await startOptionValues(page);
+    expect(restoredIds.length).toBe(43);
+    expect(restoredIds[0]).toBe('2-0');
+    await page.locator('#btn-play-all-words').click();
+    await waitForUtterance(page, 5);
+    expect(await page.evaluate(() => window.__cefrAudio.utterances[4].text)).toBe('der Beruf');
+    await page.locator('#btn-stop-words').click();
+  });
+
   // Cases 23 + 24 (phrase/conversation/favorites/SRS/shared-card regressions)
   // are covered by their own tracked suites in the verification ladder and
   // are deliberately not duplicated here.
@@ -701,7 +996,8 @@ test.describe('AUDIO-003 no-synthesis fallback (truthful behavior without speech
     await page.locator('#auto-repeat-count').selectOption('1');
     await page.locator('#auto-example-mode').selectOption('none');
     await page.locator('#auto-include-en').uncheck();
-    await page.locator('#auto-start-word').selectOption('29');
+    // AUDIO-003-C1: stable word id of the last card (former numeric '29').
+    await page.locator('#auto-start-word').selectOption('1-29');
 
     await page.locator('#btn-play-all-words').click();
     await expect(page.locator('#btn-play-all-words')).toHaveClass(/playing/);
