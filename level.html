@@ -132,13 +132,52 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; gap: 10px; align-items: center;">
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                             <button class="btn btn-primary" id="btn-play-all-words" onclick="window.app.playUnitAudio()" style="display: flex; align-items: center; gap: 8px;">
                                 <span>▶️</span> Play All
+                            </button>
+                            <!-- AUDIO-003: applicable Verbs autoplay controls for ordinary levels -->
+                            <button class="btn hidden" id="btn-pause-words" onclick="window.app.togglePauseWordsAudio()" style="display: flex; align-items: center; gap: 8px;">
+                                <span>⏸️</span> Pause
                             </button>
                             <button class="btn" id="btn-stop-words" onclick="window.app.stopAudioQueue()" style="display: flex; align-items: center; gap: 8px;">
                                 <span>⏹️</span> Stop
                             </button>
+                            <button class="btn" id="btn-toggle-audio-settings" onclick="window.app.toggleAudioSettingsDrawer()" title="Audio Settings" style="display: flex; align-items: center; gap: 6px;">
+                                <span>⚙️</span> Audio Settings
+                            </button>
+                            <span id="words-audio-progress" class="words-audio-progress hidden" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <!-- AUDIO-003: collapsible autoplay settings drawer (repeat, examples, translation, start-at) -->
+                    <div id="audio-settings-drawer" class="hidden" style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label for="auto-repeat-count" style="font-size: 0.82rem; font-weight: 600;">🔄 Repeat:</label>
+                            <select id="auto-repeat-count" class="filter-select" style="padding: 4px 8px; font-size: 0.82rem;">
+                                <option value="1">1x per word</option>
+                                <option value="2" selected>2x per word</option>
+                                <option value="3">3x per word</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label for="auto-example-mode" style="font-size: 0.82rem; font-weight: 600;">💬 Examples:</label>
+                            <select id="auto-example-mode" class="filter-select" style="padding: 4px 8px; font-size: 0.82rem;">
+                                <option value="first" selected>1st Example Only</option>
+                                <option value="all">All Examples</option>
+                                <option value="none">No Examples (Word Only)</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label style="font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                <input type="checkbox" id="auto-include-en" checked style="accent-color: var(--primary); width: 15px; height: 15px;">
+                                <span>🔊 Speak Translation</span>
+                            </label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <label for="auto-start-word" style="font-size: 0.82rem; font-weight: 600;">📍 Start At:</label>
+                            <!-- Dynamically populated from the current unit's filtered word list -->
+                            <select id="auto-start-word" class="filter-select" style="padding: 4px 8px; font-size: 0.82rem; max-width: 180px;"></select>
                         </div>
                     </div>
 

@@ -8,6 +8,8 @@ import { FlashcardEngine } from './flashcards.js?v=3';
 import { QuizEngine } from './quiz.js?v=3';
 import { TrophyEngine } from './trophies.js?v=3';
 import { speak, cleanTextForAudio, playChime, SpeechQueue, setSpeakHook } from './tts.js?v=3';
+import { planSpeechSequence } from './speech-plan.mjs';
+import { mapCefrSpeechStepsToQueueItems } from './cefr-audio.mjs';
 import { debounce, sanitize } from './utils.js?v=3';
 import { AuthService } from './auth-service.js?v=4';
 import { NavigationService } from './nav-service.js?v=3';
@@ -73,6 +75,11 @@ const engines = {
     quiz: null,
     trophy: null
 };
+
+// AUDIO-003: example-mode values the level Auto-Play settings control can
+// produce. Validated before reaching the planner, which rejects unknown
+// modes (mirrors the AUDIO-002 Verbs controller rule).
+const AUTOPLAY_EXAMPLE_MODES = new Set(['none', 'first', 'all']);
 
 // ── Internal helpers (staying in orchestrator for shared state access) ──
 
@@ -444,6 +451,9 @@ async function _initEngines() {
 
     navService.renderUnitList();
     statsService.updateStats();
+    // AUDIO-003: the Start-At control starts in agreement with the initial
+    // unit's filtered word list.
+    window.app._populateStartWordSelect();
 
     // Ensure the initial view is explicitly unhidden
     navService.switchView(state.view);
@@ -697,17 +707,32 @@ window.app = {
     resetData: () => authService.resetData(),
 
     // ── NAVIGATION ── (delegates to NavigationService)
-    switchView: (v) => {
+    // AUDIO-003: navigating the sidebar away from the glossary autoplay
+    // context explicitly stops the queue — a hidden or non-current view
+    // must never keep speaking (LF-AUDIO queue scope).
+    switchView(v) {
+        this.stopAudioQueue();
         navService.switchView(v);
         if (v === 'leaderboard') leaderboardService.render();
         if (v === 'dashboard') statsService.updateStats();
         if (v === 'dashboard') activityService.render();
     },
-    switchMode: (m) => navService.switchMode(m),
+    // AUDIO-003: switching the study mode (glossary <-> flashcards) leaves
+    // the table autoplay context, so the queue stops here too.
+    switchMode(m) {
+        this.stopAudioQueue();
+        navService.switchMode(m);
+    },
     toggleSidebar: (e) => navService.toggleSidebar(e),
     switchUnit(i) {
         this.revealAllPhrases();
-        return navService.switchUnit(i).then(() => _evaluateTrophies());
+        return navService.switchUnit(i).then(() => {
+            // AUDIO-003: the Start-At control follows the new unit's word
+            // list (navService.switchUnit already cancelled the queue via
+            // switchUnitTab before loading the unit).
+            this._populateStartWordSelect();
+            return _evaluateTrophies();
+        });
     },
     async switchUnitTab(tabName) {
         if (typeof this.stopAudioQueue === 'function') {
@@ -789,8 +814,21 @@ window.app = {
     },
 
     // ── GLOSSARY ──
-    setTypeFilter(v) { engines.glossary?.setFilter(v); },
+    setTypeFilter(v) {
+        // AUDIO-003: the active vocabulary filter scopes the autoplay
+        // queue; changing it stops the running session so the old filter's
+        // rows can never keep speaking (LF-AUDIO).
+        this.stopAudioQueue();
+        engines.glossary?.setFilter(v);
+        this._populateStartWordSelect();
+    },
     hideTableColumn(col) {
+        // AUDIO-003: hiding the German column (or the mixed hide mode)
+        // hides guess answers — a running autoplay queue must stop instead
+        // of speaking now-hidden German.
+        if (col === 'de' || col === 'mixed') {
+            this.stopAudioQueue();
+        }
         engines.glossary?.toggleColumn(col);
         state.data.columnHideCount = (state.data.columnHideCount || 0) + 1;
         _save();
@@ -851,54 +889,136 @@ window.app = {
             _showToast('Audio playback not supported on this tab');
         }
     },
+    // ── WORDS AUTOPLAY (AUDIO-003) ──
+    // The queue scope follows the current glossary context (current level +
+    // unit + active vocabulary filter, owned by the glossary engine), and the
+    // spoken sequence is planned by the AUDIO-001 planner; this controller
+    // only maps cards onto the planner boundary and planned steps back onto
+    // SpeechQueue records (FP-DESIGN-010 — no ordering logic here).
+    _isRowSpeakable(tbody, cardId) {
+        // Keep the historic hide-and-guess guard: autoplay never speaks a
+        // row whose German column is currently hidden.
+        const tr = tbody.querySelector(`tr[data-id="${cardId}"]`);
+        if (!tr || tr.classList.contains('hidden')) return false;
+        const hideables = tr.querySelectorAll('td:first-child .hideable');
+        if (hideables.length > 1 && hideables[1].classList.contains('hidden-word')) return false;
+        return true;
+    },
+    _populateStartWordSelect() {
+        const startSelect = document.getElementById('auto-start-word');
+        if (!startSelect) return;
+        const cards = engines.glossary?.getFilteredWords() || [];
+        startSelect.innerHTML = cards.map((card, i) =>
+            `<option value="${i}">${i + 1}. ${sanitize(card.de)}</option>`
+        ).join('');
+    },
+    toggleAudioSettingsDrawer() {
+        const drawer = document.getElementById('audio-settings-drawer');
+        if (drawer) drawer.classList.toggle('hidden');
+    },
     playAllWords() {
         const tbody = document.getElementById('glossary-tbody');
         if (!tbody) return;
-        
-        const items = Array.from(tbody.querySelectorAll('tr'))
-            .filter(tr => !tr.classList.contains('hidden'))
-            .map(tr => {
-                // Skip if the main German word column is hidden (it's the second .hideable span)
-                const hideables = tr.querySelectorAll('td:first-child .hideable');
-                if (hideables.length > 1 && hideables[1].classList.contains('hidden-word')) {
-                    return { id: null, text: null };
-                }
-                
-                // Extract the full German text from the speak button's onclick attribute
-                const btn = tr.querySelector('.speak-btn');
-                const onclickText = btn ? btn.getAttribute('onclick') : '';
-                const match = onclickText ? onclickText.match(/speakText\('([^']+)'\)/) : null;
-                const text = match ? match[1].replace(/\\'/g, "'") : '';
-                
-                const id = tr.getAttribute('data-id');
-                return { id, de: text };
-            })
-            .filter(item => item && item.de);
-            
-        if (items.length === 0) return;
-        
+
+        const cards = (engines.glossary?.getFilteredWords() || [])
+            .filter(card => this._isRowSpeakable(tbody, card.id));
+
+        // AUDIO-002-C1 lesson: an empty queue scope must stop any session
+        // that still owns playback instead of leaving it alive — pressing
+        // Play on an empty filter result is a clean no-op.
+        if (cards.length === 0) {
+            this.stopAudioQueue();
+            return;
+        }
+
+        const repeatSelect = document.getElementById('auto-repeat-count');
+        const exampleSelect = document.getElementById('auto-example-mode');
+        const includeCheck = document.getElementById('auto-include-en');
+        const startWordSelect = document.getElementById('auto-start-word');
+
+        const repeatCount = repeatSelect ? parseInt(repeatSelect.value, 10) || 1 : 1;
+        const exampleMode = exampleSelect && AUTOPLAY_EXAMPLE_MODES.has(exampleSelect.value) ? exampleSelect.value : 'first';
+        const includeTranslation = includeCheck ? includeCheck.checked : true;
+
+        let startIdx = startWordSelect ? parseInt(startWordSelect.value, 10) || 0 : 0;
+        // Clamp every start source to the last card so the plan can never
+        // begin past the end of the list (the controls stay in agreement
+        // with the playback that actually starts).
+        startIdx = Math.max(0, Math.min(startIdx, cards.length - 1));
+        if (startWordSelect) startWordSelect.value = String(startIdx);
+
+        const plan = planSpeechSequence(cards, {
+            repeatCount,
+            exampleMode,
+            includeTranslation,
+            startIndex: startIdx
+        });
+        if (plan.warnings.length > 0) {
+            // Missing language-specific speech text is skipped and reported,
+            // never silently substituted (LF-AUDIO).
+            console.warn(`[AUDIO-003] ${plan.warnings.length} speech step(s) skipped (missing language text):`, plan.warnings);
+        }
+        const itemsToPlay = mapCefrSpeechStepsToQueueItems(plan.steps, cards, repeatCount);
+
+        // A plan with no speakable steps must not put the controls into a
+        // playing state no utterance queue backs — and must stop whatever
+        // session still owns playback (AUDIO-002-C1).
+        if (itemsToPlay.length === 0) {
+            this.stopAudioQueue();
+            return;
+        }
+
         const playBtn = document.getElementById('btn-play-all-words');
+        const pauseBtn = document.getElementById('btn-pause-words');
+        const progressEl = document.getElementById('words-audio-progress');
+
         if (playBtn) {
             playBtn.classList.add('playing');
             playBtn.innerHTML = '<span>⏹️</span> Stop';
         }
+        if (pauseBtn) {
+            pauseBtn.classList.remove('hidden');
+            pauseBtn.innerHTML = '<span>⏸️</span> Pause';
+        }
+        if (progressEl) {
+            progressEl.classList.remove('hidden');
+            progressEl.textContent = `0 / ${itemsToPlay.length}`;
+        }
+
+        const totalSteps = itemsToPlay.length;
+        const skippedSuffix = plan.warnings.length > 0 ? ` · ${plan.warnings.length} skipped` : '';
 
         SpeechQueue.playAll(
-            items,
+            itemsToPlay,
             (idx, item) => {
-                document.querySelectorAll('#glossary-tbody tr').forEach(tr => {
+                document.querySelectorAll('#glossary-tbody tr.highlighted-speech').forEach(tr => {
                     tr.classList.remove('highlighted-speech');
                 });
-                const activeRow = tbody.querySelector(`tr[data-id="${item.id}"]`);
+                const activeRow = tbody.querySelector(`tr[data-id="${item.wordId}"]`);
                 if (activeRow) {
                     activeRow.classList.add('highlighted-speech');
                     activeRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (progressEl) {
+                    progressEl.textContent = `${idx + 1} / ${totalSteps} · ${item.wordDe}${skippedSuffix}`;
                 }
             },
             () => {
                 this.stopAudioQueue();
             }
         );
+    },
+    togglePauseWordsAudio() {
+        const pauseBtn = document.getElementById('btn-pause-words');
+        if (!pauseBtn) return;
+
+        if (SpeechQueue.isPlaying) {
+            SpeechQueue.pause();
+            pauseBtn.innerHTML = '<span>▶️</span> Resume';
+        } else {
+            SpeechQueue.resume();
+            pauseBtn.innerHTML = '<span>⏸️</span> Pause';
+        }
     },
     playAllPhrases() {
         if (!state.activePhrases || state.activePhrases.length === 0) return;
@@ -937,6 +1057,10 @@ window.app = {
     },
     stopAudioQueue() {
         SpeechQueue.stop();
+        // AUDIO-003: a stopped queue leaves no stale highlight behind — the
+        // same clearing rule the Verbs controller applies (fixes the
+        // words-audio "highlighted row is not cleared after Stop" defect).
+        document.querySelectorAll('.highlighted-speech').forEach(el => el.classList.remove('highlighted-speech'));
         const playPhrasesBtn = document.getElementById('btn-play-all-phrases');
         const pausePhrasesBtn = document.getElementById('btn-pause-phrases');
         if (playPhrasesBtn) {
@@ -950,6 +1074,23 @@ window.app = {
         if (playWordsBtn) {
             playWordsBtn.classList.remove('playing');
             playWordsBtn.innerHTML = '<span>▶️</span> Play All';
+        }
+        // AUDIO-003: the words autoplay controls return to their resting
+        // state: pause hidden with its resting label, progress cleared, and
+        // the Start-At control back in agreement with a fresh session.
+        const pauseWordsBtn = document.getElementById('btn-pause-words');
+        if (pauseWordsBtn) {
+            pauseWordsBtn.classList.add('hidden');
+            pauseWordsBtn.innerHTML = '<span>⏸️</span> Pause';
+        }
+        const progressEl = document.getElementById('words-audio-progress');
+        if (progressEl) {
+            progressEl.textContent = '';
+            progressEl.classList.add('hidden');
+        }
+        const startWordSelect = document.getElementById('auto-start-word');
+        if (startWordSelect) {
+            startWordSelect.value = '0';
         }
     },
     togglePausePhrases() {
@@ -982,8 +1123,11 @@ window.app = {
             }
         }
     },
-    speakText(t) {
-        speak(cleanTextForAudio(t));
+    speakText(t, lang = 'de') {
+        // AUDIO-003: the explicit language chosen by the caller (flashcard
+        // face-aware audio, example sentences) reaches the real utterance
+        // instead of silently falling back to German.
+        speak(cleanTextForAudio(t), lang);
         state.data.ttsCount = (state.data.ttsCount || 0) + 1;
         _save();
     },

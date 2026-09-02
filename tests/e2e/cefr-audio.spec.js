@@ -88,7 +88,13 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
   }
 
   async function openSettings(page) {
-    await page.locator('#btn-toggle-audio-settings').click();
+    // Idempotent: only open the drawer when it is currently hidden, so
+    // repeated configure() calls inside one test never toggle it closed.
+    const isHidden = await page.locator('#audio-settings-drawer')
+      .evaluate(el => el.classList.contains('hidden'));
+    if (isHidden) {
+      await page.locator('#btn-toggle-audio-settings').click();
+    }
   }
 
   async function configure(page, { repeat, mode, include, start }) {
@@ -119,6 +125,16 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     }
   }
 
+  // Drive N utterances of a REPLACEMENT session: utterance counts are
+  // global in the mock, so the new session's utterances start after `base`
+  // (the count captured before the restart).
+  async function driveFrom(page, base, count) {
+    for (let i = 1; i <= count; i++) {
+      await waitForUtterance(page, base + i);
+      await page.evaluate(() => window.__cefrAudio.finishCurrent());
+    }
+  }
+
   // Case 1: exact A1 utterance text and language sequence.
   test('[AUDIO-003] A1 autoplay speaks the exact planned text and language sequence with visible progress', async ({ page }) => {
     await initLevel(page, 'a1');
@@ -131,7 +147,8 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await expect(page.locator('#words-audio-progress')).toHaveText('1 / 240 · Hallo!');
     await expect(page.locator('#btn-pause-words')).not.toHaveClass(/hidden/);
 
-    await drive(page, 9);
+    await drive(page, 8);
+    await waitForUtterance(page, 9);
 
     const spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(0, 9));
     expect(spoken).toEqual([
@@ -146,7 +163,8 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
       { text: 'Guten Morgen!', lang: 'de-DE', voice: 'Mock DE Voice' }
     ]);
 
-    // The second card's row is highlighted now and the progress moved.
+    // The second card's row is highlighted and the progress shows the step
+    // being spoken (step 9 is the second card's German term).
     await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
     await expect(page.locator('#words-audio-progress')).toHaveText('9 / 240 · Guten Morgen!');
     await page.locator('#btn-stop-words').click();
@@ -159,7 +177,8 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await configure(page, { repeat: 1, mode: 'none', include: true });
 
     await page.locator('#btn-play-all-words').click();
-    await drive(page, 6);
+    await drive(page, 5);
+    await waitForUtterance(page, 6);
 
     const spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(0, 6));
     expect(spoken).toEqual([
@@ -171,7 +190,8 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
       { text: 'الاقتباس', lang: 'ar', voice: null }
     ]);
 
-    // Row highlighting followed the German term of each card.
+    // Row highlighting shows the card of the step being spoken (step 6 is
+    // the second card's Arabic translation).
     await expect(page.locator('tr[data-id="1-1"]')).toHaveClass(/highlighted-speech/);
     await page.locator('#btn-stop-words').click();
   });
@@ -254,15 +274,19 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await drive(page, 2);
     let spoken = await page.evaluate(() => window.__cefrAudio.utterances.map(u => u.text));
     expect(spoken).toEqual(['Hallo!', 'Guten Morgen!']);
-    await page.locator('#btn-stop-words').click();
+    // Instant click: on Mobile Chrome a simulated click can take longer
+    // than the 250ms inter-utterance delay, which would let the queue speak
+    // one more item before the stop lands (same reasoning as the phrases
+    // suite's stop-during-delay test).
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
     await expectWordsCancelled(page);
 
     await configure(page, { repeat: 1, mode: 'first', include: false });
     await page.locator('#btn-play-all-words').click();
-    await drive(page, 2);
+    await driveFrom(page, 2, 2);
     spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(2, 4).map(u => u.text));
     expect(spoken).toEqual(['Hallo!', 'Hallo, ich bin Anna.']);
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
     await expectWordsCancelled(page);
 
     // Real A1/B2 cards carry one example each, so "all" speaks the same
@@ -270,10 +294,10 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     // in tests/unit/cefr-audio.test.mjs with a synthetic card.
     await configure(page, { repeat: 1, mode: 'all', include: false });
     await page.locator('#btn-play-all-words').click();
-    await drive(page, 2);
+    await driveFrom(page, 4, 2);
     spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(4, 6).map(u => u.text));
     expect(spoken).toEqual(['Hallo!', 'Hallo, ich bin Anna.']);
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
   });
 
   // Case 7: include-translation on and off.
@@ -288,18 +312,20 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
       { text: 'Hallo!', lang: 'de-DE' },
       { text: 'Hello!', lang: 'en-US' }
     ]);
-    await page.locator('#btn-stop-words').click();
+    // Instant click (see the example-modes test for the Mobile Chrome
+    // click-latency rationale).
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
     await expectWordsCancelled(page);
 
     await configure(page, { repeat: 1, mode: 'none', include: false });
     await page.locator('#btn-play-all-words').click();
-    await drive(page, 2);
+    await driveFrom(page, 2, 2);
     spoken = await page.evaluate(() => window.__cefrAudio.utterances.slice(2, 4).map(u => ({ text: u.text, lang: u.lang })));
     expect(spoken).toEqual([
       { text: 'Hallo!', lang: 'de-DE' },
       { text: 'Guten Morgen!', lang: 'de-DE' }
     ]);
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
   });
 
   // Case 8: start-at beginning / middle / end / out-of-range.
@@ -310,25 +336,32 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 1);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[0].text)).toBe('Hallo!');
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
     await configure(page, { start: 2 });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 2);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[1].text)).toBe('Guten Tag!');
     await expect(page.locator('tr[data-id="1-2"]')).toHaveClass(/highlighted-speech/);
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
     // The last card of A1 unit 1 (index 29) is "sehr".
     await configure(page, { start: 29 });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 3);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[2].text)).toBe('sehr');
-    await page.locator('#btn-stop-words').click();
+    await page.evaluate(() => document.getElementById('btn-stop-words').click());
 
     // Out-of-range start values clamp to the last card and keep the control
-    // in agreement (synthetic DOM value, disclosed).
-    await page.evaluate(() => { document.getElementById('auto-start-word').value = '999'; });
+    // in agreement (synthetic DOM state via a temporary option, disclosed —
+    // a real select cannot hold a value with no matching option).
+    await page.evaluate(() => {
+      const select = document.getElementById('auto-start-word');
+      const synthetic = document.createElement('option');
+      synthetic.value = '999';
+      select.appendChild(synthetic);
+      select.value = '999';
+    });
     await page.locator('#btn-play-all-words').click();
     await waitForUtterance(page, 4);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[3].text)).toBe('sehr');
@@ -378,15 +411,21 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await initLevel(page, 'a1');
     await configure(page, { repeat: 1, mode: 'none', include: false });
 
-    // Verbs-only filter: unit 1 has the verb rows at indices 17-20.
+    // Verbs-only filter: unit 1 has the verb rows at indices 16-19.
     await page.locator('#type-filter').selectOption('v');
     await page.waitForFunction(() => document.querySelectorAll('#glossary-tbody tr[data-id]').length === 4);
 
     await page.locator('#btn-play-all-words').click();
-    await drive(page, 2);
+    await waitForUtterance(page, 1);
+    // Step 1 ("heißen", card 1-16) is highlighted while it is spoken.
+    await expect(page.locator('tr[data-id="1-16"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => window.__cefrAudio.finishCurrent());
+    await waitForUtterance(page, 2);
+    // After the queue advances, the highlight moved to the next verb's row.
+    await expect(page.locator('tr[data-id="1-17"]')).toHaveClass(/highlighted-speech/);
+    await page.evaluate(() => window.__cefrAudio.finishCurrent());
     const verbsSpoken = await page.evaluate(() => window.__cefrAudio.utterances.map(u => u.text));
     expect(verbsSpoken).toEqual(['heißen', 'sein']);
-    await expect(page.locator('tr[data-id="1-17"]')).toHaveClass(/highlighted-speech/);
     await page.locator('#btn-stop-words').click();
 
     // Changing the filter while playing cancels the running queue.
@@ -570,7 +609,7 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
     await page.evaluate(() => window.__cefrAudio.finishCurrent());
     await waitForUtterance(page, 3);
     expect(await page.evaluate(() => window.__cefrAudio.utterances[2].text)).toBe('Guten Morgen! Wie geht es Ihnen?');
-    await page.locator('#btn-stop-words').click();
+    await page.locator('#btn-stop-phrases').click();
   });
 
   // Case 20: a genuine speech error advances the queue.
@@ -596,16 +635,20 @@ test.describe('AUDIO-003 CEFR Level Autoplay (deterministic speech mocks)', () =
   test('[AUDIO-003] the first example and translation remain visible on the flashcard', async ({ page }) => {
     await initLevel(page, 'a1');
 
-    // The shared card shows the first example and its translation after flip.
+    // The shared card shows the first example and its translation after
+    // flip. Shuffle is turned off first so the queue order is deterministic
+    // (the first card is the unit's first word).
     await page.locator('button', { hasText: 'Flashcards' }).click();
     await page.waitForSelector('#fc-card-mount .verb-flashcard');
+    await page.locator('#shuffle-btn').click();
+    await expect(page.locator('#shuffle-btn')).toHaveText(/Shuffle: OFF/);
     await page.locator('#fc-card-mount .verb-flashcard').click();
     await expect(page.locator('.back-example-box .ex-sentence-span')).toHaveText(/Hallo, ich bin Anna\./);
     await expect(page.locator('.back-example-box .ex-translation-line')).toHaveText(/\(Hello, I am Anna\.\)/);
 
     // Back on the glossary, autoplay example mode "first" speaks exactly the
     // example shown on the card (never a duplicate of the vocabulary term).
-    await page.locator('button', { hasText: 'Back to List' }).click();
+    await page.locator('#view-flashcard button', { hasText: 'Back to List' }).click();
     await configure(page, { repeat: 1, mode: 'first', include: false });
     await page.locator('#btn-play-all-words').click();
     await drive(page, 2);

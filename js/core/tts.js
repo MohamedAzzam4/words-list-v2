@@ -19,6 +19,9 @@ export const cleanTextForAudio = (text) => {
 
 let germanVoice = null;
 let englishVoice = null;
+// AUDIO-003: Arabic steps need their own voice slot so Arabic text is
+// never routed through the English or German voice (LF-AUDIO).
+let arabicVoice = null;
 
 export const setVoices = () => {
     if (!window.speechSynthesis) return;
@@ -53,6 +56,13 @@ export const setVoices = () => {
         .filter(x => x.score > 0)
         .sort((a, b) => b.score - a.score);
 
+    // AUDIO-003: select an Arabic voice with the same language-prefix rule
+    // so Arabic utterances get a matching voice when the platform has one.
+    const arabicVoices = voices
+        .map(v => ({ voice: v, score: scoreVoice(v, 'ar') }))
+        .filter(x => x.score > 0)
+        .sort((a, b) => b.score - a.score);
+
     if (englishVoices.length > 0) {
         englishVoice = englishVoices[0].voice;
         console.log('🎙️ Selected English Voice:', englishVoice.name);
@@ -60,6 +70,10 @@ export const setVoices = () => {
     if (germanVoices.length > 0) {
         germanVoice = germanVoices[0].voice;
         console.log('🎙️ Selected German Voice:', germanVoice.name);
+    }
+    if (arabicVoices.length > 0) {
+        arabicVoice = arabicVoices[0].voice;
+        console.log('🎙️ Selected Arabic Voice:', arabicVoice.name);
     }
 };
 
@@ -72,6 +86,12 @@ export const speak = (text, lang = 'de') => {
     if (window.verbsEngine && window.verbsEngine.stopAudioQueue) {
         window.verbsEngine.stopAudioQueue();
     }
+    // AUDIO-003: level pages own their autoplay through window.app — a
+    // single pronunciation replaces any running level autoplay queue,
+    // the same ownership rule the Verbs page applies.
+    if (window.app && typeof window.app.stopAudioQueue === 'function') {
+        window.app.stopAudioQueue();
+    }
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
 
@@ -79,12 +99,16 @@ export const speak = (text, lang = 'de') => {
     if (!clean) return;
 
     const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = lang === 'de' ? 'de-DE' : 'en-US';
-    
+    // AUDIO-003: explicit language tags at the real utterance boundary —
+    // Arabic text is tagged Arabic and never routed to the English voice.
+    utterance.lang = lang === 'de' ? 'de-DE' : (lang === 'ar' ? 'ar' : 'en-US');
+
     if (lang === 'de' && germanVoice) {
         utterance.voice = germanVoice;
     } else if (lang === 'en' && englishVoice) {
         utterance.voice = englishVoice;
+    } else if (lang === 'ar' && arabicVoice) {
+        utterance.voice = arabicVoice;
     }
     utterance.rate = lang === 'en' ? 0.95 : 0.85;
 
@@ -201,11 +225,17 @@ class SpeechQueueClass {
             }
 
             const utterance = new SpeechSynthesisUtterance(clean);
-            utterance.lang = itemLang === 'en' ? 'en-US' : 'de-DE';
+            // AUDIO-003: per-step language tags — 'ar' steps carry an
+            // Arabic tag and are never voiced by the English or German
+            // voice; a platform without an Arabic voice resolves the voice
+            // from the utterance language itself.
+            utterance.lang = itemLang === 'en' ? 'en-US' : (itemLang === 'ar' ? 'ar' : 'de-DE');
 
             if (itemLang === 'en' && englishVoice) {
                 utterance.voice = englishVoice;
-            } else if (itemLang !== 'en' && germanVoice) {
+            } else if (itemLang === 'ar' && arabicVoice) {
+                utterance.voice = arabicVoice;
+            } else if (itemLang !== 'en' && itemLang !== 'ar' && germanVoice) {
                 utterance.voice = germanVoice;
             }
             utterance.rate = itemLang === 'en' ? 0.92 : 0.85;

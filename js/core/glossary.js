@@ -1,4 +1,5 @@
 import { sanitize } from './utils.js?v=3';
+import { matchesVocabularyFilter } from './cefr-audio.mjs';
 
 export class GlossaryEngine {
     constructor(tbodyId, words, knownIds, favoritesIds, onSpeak) {
@@ -20,6 +21,14 @@ export class GlossaryEngine {
     setFilter(type) {
         this.typeFilter = type;
         this.render();
+    }
+
+    // AUDIO-003: the filtered card list in table order, computed with the
+    // shared vocabulary-filter rule (js/core/cefr-audio.mjs) — the same
+    // rule render() uses, so the audio queue scope and the visible table
+    // can never disagree.
+    getFilteredWords() {
+        return this.words.filter(w => matchesVocabularyFilter(w, this.typeFilter, this.favoritesIds));
     }
 
     toggleColumn(col) {
@@ -48,10 +57,7 @@ export class GlossaryEngine {
     }
 
     render() {
-        const filtered = this.words.filter(w => {
-            if (this.typeFilter === 'fav') return this.favoritesIds.has(w.id);
-            return this.typeFilter === 'all' || w.type?.toLowerCase() === this.typeFilter.toLowerCase();
-        });
+        const filtered = this.getFilteredWords();
 
         if (filtered.length === 0) {
             this.tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:2rem;">No words match your current filter</td></tr>`;

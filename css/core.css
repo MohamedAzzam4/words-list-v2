@@ -1573,6 +1573,34 @@ tbody tr:hover td, tbody tr:hover th { background: rgba(79, 70, 229, 0.04); }
     transition: all 0.3s ease;
 }
 
+/* AUDIO-003: glossary row highlight for the active autoplay word (the level
+   page analog of the Verbs table rule — LF-AUDIO active-item indication). */
+#glossary-tbody tr.highlighted-speech {
+    border-left: 4px solid var(--primary) !important;
+    background-color: rgba(79, 70, 229, 0.14) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #glossary-tbody tr.highlighted-speech {
+        transition: none;
+    }
+}
+
+/* AUDIO-003: visible autoplay queue/progress state. */
+.words-audio-progress {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--surface);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-weight: 500;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* SRS Levels Indicator */
 .srs-dots-container {
     display: flex;
