@@ -1,0 +1,3 @@
+MODULE_SYNTAX_OK
+TEST_SYNTAX_OK
+LIVE_IMPORT_OK exports=aggregateCurrentLevelReview

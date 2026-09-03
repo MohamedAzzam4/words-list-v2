@@ -1,0 +1,9 @@
+# Production byte-identity at the RED tests commit b5fcc6f
+# (production must be byte-identical to the required base 1e9d580)
+commit: b5fcc6f08e4580fb9b18809a13b07b041d9b84e5
+sha256(js/core/review-aggregation.mjs @ b5fcc6f): df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0
+sha256(js/core/review-aggregation.mjs @ base 1e9d580): df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0
+diff vs base (js/core, empty = identical):
+0
+changed files at RED commit (must be the test file only):
+M	tests/unit/review-aggregation.test.mjs

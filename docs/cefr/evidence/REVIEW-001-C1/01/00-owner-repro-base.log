@@ -1,0 +1,5 @@
+FINDING-1 CONFIRMED: progress = new Date() does NOT throw.
+FINDING-2 CONFIRMED: no SRS_STATE_MALFORMED diagnostic for srsData = new Date().
+FINDING-3a CONFIRMED (container): 1-0 — diagnostics: 0
+FINDING-3b CONFIRMED (record): 1-0 — diagnostics: 0
+FINDING-4 CONFIRMED (card participates): 1-0 — diagnostics: 0

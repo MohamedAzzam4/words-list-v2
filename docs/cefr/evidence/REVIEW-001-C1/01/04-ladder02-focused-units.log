@@ -1,0 +1,33 @@
+✔ REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts (2.239038ms)
+✔ REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due (0.263478ms)
+✔ REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic (0.362674ms)
+✔ REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock (0.479814ms)
+✔ REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic (0.259811ms)
+✔ REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date (0.209448ms)
+✔ REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported (0.289648ms)
+✔ REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing (0.337729ms)
+✔ REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported (1.288762ms)
+✔ REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources (0.503346ms)
+✔ REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result (0.390841ms)
+✔ REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit (0.244533ms)
+✔ REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources (0.150147ms)
+✔ REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure (0.298996ms)
+✔ REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order (0.465697ms)
+✔ REVIEW-001 case 16 (AC-14): inputs are never mutated (0.423685ms)
+✔ REVIEW-001 case 17 (LR-AGG): invalid top-level arguments and clock values throw TypeError (1.182508ms)
+✔ REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported (0.380241ms)
+✔ REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError (0.564667ms)
+✔ REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED (0.207546ms)
+✔ REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards (0.143122ms)
+✔ REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED (0.245763ms)
+✔ REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED (0.218616ms)
+✔ REVIEW-001-C1 case F (LR-AGG): an ordinary null-prototype dictionary remains supported (0.224682ms)
+✔ REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported (1.345191ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.059384

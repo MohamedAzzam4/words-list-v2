@@ -1,0 +1,15 @@
+DIFF_CHECK_CLEAN_EXIT_0
+0
+--- diff stat vs base ---
+ js/core/review-aggregation.mjs         |  33 ++++--
+ tests/unit/review-aggregation.test.mjs | 204 +++++++++++++++++++++++++++++++++
+ 2 files changed, 227 insertions(+), 10 deletions(-)
+--- name status vs base ---
+M	js/core/review-aggregation.mjs
+M	tests/unit/review-aggregation.test.mjs
+--- production byte-identity at RED commit b5fcc6f ---
+df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0  -
+df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0  -
+--- commit chain ---
+282ddad fix(review): strict cross-realm-compatible plain-record validation (REVIEW-001-C1)
+b5fcc6f test(review): add RED-first strict plain-record validation tests (REVIEW-001-C1)

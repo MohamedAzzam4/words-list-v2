@@ -1,0 +1,64 @@
+worktree: /home/z/my-project/review001c1-probes-worktree at HEAD (detached) = 282ddad03cfc9e76380de8360d4bfcff7ab34a19
+pristine module sha256: b15686f39cf8d9dba608526de17ed3dd1208717458f08f5280d788ccdfab6082
+module line count: 323
+baseline: exit=0 counts={'tests': 25, 'pass': 25, 'fail': 0, 'skipped': 0}
+BASELINE_OK: 25/25 pass, 0 fail
+
+==============================================================================
+probe P1-permissive-predicate-restored
+risk: AC-21: the old permissive non-array-object predicate lets Date/Map/Set/RegExp/class instances bypass record validation
+mutation: isPlainRecord body restored to the old permissive non-array-object predicate: every non-null non-array object is accepted as a record again.
+intended detector test: REVIEW-001 C1 case A
+mutated module sha256: 3acc3e8f3fb12c5f7cd6579b11202bef3122bb1ee91106cf3189ce6523d52ae2
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 25, 'pass': 20, 'fail': 5, 'skipped': 0}
+  failing: REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError
+  failing: REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED
+  failing: REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards
+  failing: REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED
+  failing: REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED
+  failing: REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError
+  failing: REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED
+  failing: REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards
+  failing: REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED
+  failing: REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector C1 case A: detected)
+
+==============================================================================
+probe P2-same-realm-only
+risk: AC-21 / correction requirement: a same-realm-only validator incorrectly rejects genuine cross-realm plain objects
+mutation: The validator only accepts this realm's Object.prototype (or null), so a genuine cross-realm plain object is rejected as non-plain.
+intended detector test: REVIEW-001 C1 case G
+mutated module sha256: 95dde4aa2141c1442c80378299ec64af95e45206570c765c2c8cfdce8d65f19f
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 25, 'pass': 24, 'fail': 1, 'skipped': 0}
+  failing: REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported
+  failing: REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector C1 case G: detected)
+
+==============================================================================
+probe P3-silent-malformed-srsdata
+risk: AC-13 / correction requirement: a malformed (non-plain) srsData container must produce exactly one SRS_STATE_MALFORMED diagnostic, not a silent empty
+mutation: A malformed srsData container is silently treated as empty: the required SRS_STATE_MALFORMED diagnostic is never reported.
+intended detector test: REVIEW-001 C1 case B
+mutated module sha256: d1d6f43ebb99cd84d86f0ff4777133b8d0301ca7200b12d49588f211ff9e8b98
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 25, 'pass': 22, 'fail': 3, 'skipped': 0}
+  failing: REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing
+  failing: REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED
+  failing: REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards
+  failing: REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing
+  failing: REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED
+  failing: REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector C1 case B: detected)
+
+==============================================================================
+PROBE SUMMARY
+  P1-permissive-predicate-restored: KILLED — failing tests: REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError, REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED, REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards, REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED, REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED, REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError, REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED, REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards, REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED, REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED (intended detector: C1 case A)
+  P2-same-realm-only: KILLED — failing tests: REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported, REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported (intended detector: C1 case G)
+  P3-silent-malformed-srsdata: KILLED — failing tests: REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing, REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED, REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards, REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing, REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED, REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards (intended detector: C1 case B)
+KILLED 3/3
+worktree removed: True

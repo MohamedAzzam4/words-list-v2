@@ -1,0 +1,71 @@
+REVIEW-001-C1 / attempt 01 — environment and event record
+=========================================================
+
+Environment
+-----------
+- Sandbox: Debian Linux container; Node v24.19.0; npm 11.17.0; git 2.47.3.
+- Work directory: /home/z/my-project/words-list-v2, branch codex/glm-review-001-c1-01.
+- No browser binaries used: the module remains pure and unintegrated; no existing
+  browser runtime file was modified, so Playwright is not applicable to this
+  correction (per the assignment's verification ladder).
+- Tooling substitution: none needed beyond the previously documented Linux
+  execution of the test scripts (npm run test:units -> node --test "tests/unit/**/*.test.mjs").
+
+Checkpoint gate events (pre-edit)
+---------------------------------
+- First session: the assignment message claimed a PAT would follow the task text,
+  but no PAT value was present; a presence-only scan of env vars, credential files,
+  SSH keys, git config, remote URLs, and the upload directory found no credential.
+  Exactly one non-forced push attempt of the unchanged branch failed with the
+  AUTHENTICATION_BLOCKED signature (exit 128, "could not read Username", terminal
+  prompts disabled). Remote verified unchanged (branch absent, all 25 refs
+  identical). Stopped before editing per the gate instruction.
+- Resume session: the owner re-sent the assignment with the actual PAT. The gate
+  was completed through scripts/review001c1-checkpoint.sh (no PAT embedded in the
+  script): auth pre-check HTTP 200 (login MohamedAzzam4), single non-forced push
+  of the unchanged branch (exit 0, new remote branch), remote checkpoint SHA
+  verified == 1e9d58060052758cda8546637b9689b8ed5867a2 (the required base), only
+  the assigned branch changed among all remote refs (25 -> 26), credential file
+  deleted immediately after the push and deletion verified (EXIT trap plus
+  independent post-run check).
+
+Owner-review reproduction
+-------------------------
+- The four owner findings were reproduced against the uncorrected base before any
+  edit (evidence 00): Date progress does not throw; Date srsData produces no
+  SRS_STATE_MALFORMED; class-instance containers and records are processed as
+  persisted records (admitting due cards); class-instance vocabulary cards
+  participate. All four are resolved by the implementation (verified in-session;
+  the focused test run is the retained proof).
+
+RED capture note
+----------------
+- The RED run (evidence 01) was executed at the tests-only commit b5fcc6f with
+  production byte-identical to the base (proof in evidence 02: identical sha256
+  df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0, zero-line
+  diff, only the test file changed). 25 tests: 20 pass / 5 intentional failures
+  (cases A-E). Cases F and G passed at the base as designed (guards against
+  overcorrection, not RED cases); case H is the retained original 18 cases.
+- The syntax/import (evidence 03), focused (evidence 04), and full-unit
+  (evidence 05) runs were re-executed at the committed implementation revision
+  282ddad03cfc9e76380de8360d4bfcff7ab34a19 with a clean tree, so the tested
+  revision identity is exact. Pre-commit runs on the identical tree content
+  preceded them; no source/test edit occurred between those runs and the commit.
+
+Mutation-probe log note
+-----------------------
+- In evidence 06 the failing-test titles of each mutated run are listed twice:
+  the node test runner prints failing tests once in the live progress stream and
+  once in the end-of-run summary, and the probe parser scans stdout+stderr
+  combined. The counts lines (tests/pass/fail) are the authoritative numbers:
+  P1 20 pass / 5 fail; P2 24 pass / 1 fail; P3 22 pass / 3 fail. The baseline
+  (25/25) and every restore were sha256-verified; the disposable worktree was
+  removed after the run.
+
+Sanitization note
+-----------------
+- Evidence files are sanitized copies of the retained raw captures: carriage
+  returns, ANSI escape sequences, and trailing whitespace were scrubbed (log 01
+  contained trailing whitespace on its summary lines; no other file needed any
+  change, and no content was removed). Zero credential patterns were found in
+  any file; no redactions were necessary.
