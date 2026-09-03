@@ -26,8 +26,21 @@ const SRS_LEVEL_MAX = 6;
 const DUE_LEVEL_MIN = 1;
 const DUE_LEVEL_MAX = 5;
 
-function isPlainObject(value) {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
+// A plain data record is an ordinary object whose inheritance chain has record
+// shape: either no prototype at all (a null-prototype dictionary) or a direct
+// prototype that is itself prototype-less, which is exactly the shape of
+// Object.prototype in every realm. Object literals therefore qualify in any
+// realm, including genuine plain objects created in another JavaScript realm,
+// while Date, Map, Set, and RegExp instances, arrays, functions, and
+// user-defined class instances (whose direct prototype is the class's own
+// prototype object) do not. This is a data-shape check, not a same-realm
+// identity check, so cross-realm plain objects remain valid records.
+function isPlainRecord(value) {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+        return false;
+    }
+    const prototype = Object.getPrototypeOf(value);
+    return prototype === null || Object.getPrototypeOf(prototype) === null;
 }
 
 function isLeapYear(year) {
@@ -88,7 +101,7 @@ function buildDiagnostic(source, code, message, id, unitId) {
 // persisted-data faults: bad arguments fail fast with an actionable
 // TypeError instead of producing a silently wrong aggregation.
 function validateInput(input) {
-    if (!isPlainObject(input)) {
+    if (!isPlainRecord(input)) {
         throw new TypeError('input must be an options object.');
     }
     if (typeof input.levelId !== 'string' || input.levelId.trim() === '') {
@@ -102,7 +115,7 @@ function validateInput(input) {
             throw new TypeError(`input.vocabulary[${unitIndex}] must be an array of cards (unit ${unitIndex + 1}).`);
         }
     });
-    if (!isPlainObject(input.progress)) {
+    if (!isPlainRecord(input.progress)) {
         throw new TypeError('input.progress must be a plain object.');
     }
     if (typeof input.now !== 'number' || !Number.isFinite(input.now) || input.now < 0) {
@@ -128,7 +141,7 @@ function collectParticipatingCards(vocabulary, levelId) {
     vocabulary.forEach((unit, unitIndex) => {
         const unitNumber = unitIndex + 1;
         unit.forEach((card, cardIndex) => {
-            if (!isPlainObject(card) || typeof card.id !== 'string' || card.id.trim() === '') {
+            if (!isPlainRecord(card) || typeof card.id !== 'string' || card.id.trim() === '') {
                 diagnostics.push(buildDiagnostic('vocabulary', 'VOCAB_CARD_MALFORMED',
                     `Unit ${unitNumber} card ${cardIndex + 1} is malformed; a card must be an object with a non-empty string id. The card was ignored.`,
                     null, unitNumber));
@@ -169,7 +182,7 @@ function collectDueCardIds(srsData, cardById, now) {
     const diagnostics = [];
 
     const hasSrsData = srsData !== undefined && srsData !== null;
-    if (!hasSrsData || isPlainObject(srsData)) {
+    if (!hasSrsData || isPlainRecord(srsData)) {
         for (const [id, record] of Object.entries(srsData || {})) {
             const card = cardById.get(id);
             if (!card) {
@@ -178,10 +191,10 @@ function collectDueCardIds(srsData, cardById, now) {
                     id, null));
                 continue;
             }
-            const level = isPlainObject(record) ? record.level : undefined;
-            if (!isPlainObject(record) || !Number.isInteger(level) || level < SRS_LEVEL_MIN || level > SRS_LEVEL_MAX) {
+            const level = isPlainRecord(record) ? record.level : undefined;
+            if (!isPlainRecord(record) || !Number.isInteger(level) || level < SRS_LEVEL_MIN || level > SRS_LEVEL_MAX) {
                 diagnostics.push(buildDiagnostic('srs', 'SRS_RECORD_MALFORMED',
-                    `SRS record for card '${id}' is malformed; level must be an integer between ${SRS_LEVEL_MIN} and ${SRS_LEVEL_MAX}. The card was ignored for due evaluation.`,
+                    `SRS record for card '${id}' is malformed; a record must be a plain object with an integer level between ${SRS_LEVEL_MIN} and ${SRS_LEVEL_MAX}. The card was ignored for due evaluation.`,
                     id, card.unitId));
                 continue;
             }
@@ -200,7 +213,7 @@ function collectDueCardIds(srsData, cardById, now) {
         }
     } else {
         diagnostics.push(buildDiagnostic('srs', 'SRS_STATE_MALFORMED',
-            `progress.srsData must be an object when present (received ${typeof srsData}); it was treated as empty.`,
+            `progress.srsData must be a plain object when present (received ${typeof srsData}); it was treated as empty.`,
             null, null));
     }
 
