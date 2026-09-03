@@ -1,0 +1,53 @@
+# REVIEW-001 / attempt 01 — setup and environment events
+
+## Environment
+
+- Sandbox: Debian Linux (container); Node v24.19.0; npm 11.17.0; git 2.47.3.
+- Working repository: /home/z/my-project/words-list-v2 (branch codex/glm-review-001-01).
+- Base commit: 9c5067b0122d6cfdff61123950584a63e6d95db2 (AUDIO-003-C2 delivery HEAD).
+- Final tested code commit: c956ce41ebf5c0dabeb3f628f355525cdc4875bc.
+- No browser binaries were needed or used: REVIEW-001 is a new, pure, unintegrated
+  module and no existing runtime file was modified, so per the assignment no
+  Playwright run applies (documented decision, not a skip of failing evidence).
+
+## Checkpoint gate (pre-edit)
+
+- Initial checkpoint attempt without a credential: exactly one non-forced push
+  attempt failed with the AUTHENTICATION_BLOCKED signature (exit 128, "could
+  read Username ... terminal prompts disabled"). Remote verified unchanged
+  (24 refs identical; assigned branch absent). Stopped before any editing per
+  the gate instruction.
+- Owner resume message supplied a real GitHub PAT. Revalidated expected state
+  (branch/HEAD/clean tree/remote absent), staged the PAT to a chmod-600 file
+  outside the repository, auth pre-check HTTP 200 (login MohamedAzzam4), one
+  non-forced push of the unchanged branch (exit 0, new remote branch), remote
+  checkpoint SHA verified == 9c5067b0122d6cfdff61123950584a63e6d95db2, only
+  the assigned branch changed among 24 -> 25 remote refs, credential file
+  deleted immediately and deletion verified (EXIT trap + independent check).
+  Script: /home/z/my-project/scripts/review001-checkpoint.sh (no PAT embedded).
+
+## Tooling substitutions and disclosures
+
+- `npm.cmd run test:units` (assignment wording) was executed as
+  `npm run test:units`: npm.cmd is the Windows wrapper of the same npm
+  command; the sandbox is Linux (PX-009). The underlying command
+  `node --test "tests/unit/**/*.test.mjs"` is identical.
+- The RED commit was amended once before any production code existed: the
+  initially committed 17-case test file was extended with an 18th case
+  (defensive vocabulary diagnostics: malformed card, unit mismatch, duplicate
+  card ID) so every implemented diagnostic path has an executable assertion.
+  RED was re-proven at the amended commit (02-red-supplement-module-absent.log);
+  both RED captures are retained. No test was changed after the implementation
+  commit.
+- The fault-probe log lists each failing test title twice per mutated run:
+  node --test prints failures once inline (check-mark lines) and once in the
+  final "failing tests" summary block. This is raw output, not duplicated runs.
+
+## RED methodology note
+
+REVIEW-001 creates a new module. The RED state is the module's absence: at the
+tests-only commit the static import fails with ERR_MODULE_NOT_FOUND and the
+whole test file fails (0 pass / 1 fail at file level, exit 1), proving the
+required behavior does not exist. This follows the AUDIO-001 precedent for
+new-module packages. Granular per-case kill attribution comes from the six
+mutation probes at the implementation commit.

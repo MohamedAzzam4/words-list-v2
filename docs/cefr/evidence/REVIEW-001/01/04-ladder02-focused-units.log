@@ -1,0 +1,26 @@
+✔ REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts (2.061377ms)
+✔ REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due (0.259362ms)
+✔ REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic (0.571347ms)
+✔ REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock (0.76861ms)
+✔ REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic (0.395308ms)
+✔ REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date (0.333036ms)
+✔ REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported (0.757052ms)
+✔ REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing (0.701845ms)
+✔ REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported (0.556184ms)
+✔ REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources (0.61651ms)
+✔ REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result (1.720856ms)
+✔ REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit (0.567201ms)
+✔ REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources (0.387324ms)
+✔ REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure (0.285406ms)
+✔ REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order (0.561602ms)
+✔ REVIEW-001 case 16 (AC-14): inputs are never mutated (0.43608ms)
+✔ REVIEW-001 case 17 (LR-AGG): invalid top-level arguments and clock values throw TypeError (1.332914ms)
+✔ REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported (0.439067ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85.576136

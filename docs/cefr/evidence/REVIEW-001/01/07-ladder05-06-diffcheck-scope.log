@@ -1,0 +1,19 @@
+=== LADDER 5: git diff --check (worktree vs HEAD) ===
+git diff --check: CLEAN (exit 0)
+
+=== LADDER 6: final scope and status inspection ===
+--- git status --porcelain (expect empty) ---
+[end status]
+--- changed files vs base 9c5067b ---
+ js/core/review-aggregation.mjs         | 310 +++++++++++++++++++++
+ tests/unit/review-aggregation.test.mjs | 474 +++++++++++++++++++++++++++++++++
+ 2 files changed, 784 insertions(+)
+--- full file list vs base ---
+A	js/core/review-aggregation.mjs
+A	tests/unit/review-aggregation.test.mjs
+--- HEAD identity ---
+c956ce41ebf5c0dabeb3f628f355525cdc4875bc
+codex/glm-review-001-01
+--- commit chain ---
+c956ce4 feat(review): pure current-level review aggregation module (REVIEW-001)
+37a9664 test(review): add RED-first REVIEW-001 current-level aggregation tests (18 cases: no-progress, unseen/level-0/level-6 exclusion, inclusive levels 1-5 boundary, future/invalid/malformed SRS, duplicate/unknown favorites IDs, cross-level ID isolation, unit filtering, source coupling, empty vocabulary, ordering, immutability, argument validation, defensive vocabulary diagnostics)

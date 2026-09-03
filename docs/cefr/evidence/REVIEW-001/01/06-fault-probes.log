@@ -1,0 +1,142 @@
+worktree: /home/z/my-project/review001-probes-worktree at HEAD (detached)
+pristine module sha256: df122bb545ff5b23165ae8e6e6ba2931dbc824b8a92e5ea0c8e540b1317ea9b0
+module line count: 310
+baseline: exit=0 counts={'tests': 18, 'pass': 18, 'fail': 0, 'skipped': 0}
+BASELINE_OK: 18/18 pass, 0 fail
+
+==============================================================================
+probe P1-unseen-as-due
+risk: AC-13: unseen cards must never be due review cards
+mutation: collectDueCardIds additionally marks every participating card without a stored SRS record as due (unseen-as-due).
+intended detector test: REVIEW-001 case 2
+mutated module sha256: 64cef9d5b057609d2a55bb4668f35de4808848b5afa5e4dc7cbf2f9984e1db7e
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 3, 'fail': 15, 'skipped': 0}
+  failing: REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts
+  failing: REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due
+  failing: REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic
+  failing: REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock
+  failing: REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic
+  failing: REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date
+  failing: REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported
+  failing: REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result
+  failing: REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit
+  failing: REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+  failing: REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts
+  failing: REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due
+  failing: REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic
+  failing: REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock
+  failing: REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic
+  failing: REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date
+  failing: REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported
+  failing: REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result
+  failing: REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit
+  failing: REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 2: detected)
+
+==============================================================================
+probe P2-level-guard-removed
+risk: AC-13: only the requested current level may participate
+mutation: The foreign-level guard can never trigger, so cards of another level participate.
+intended detector test: REVIEW-001 case 11
+mutated module sha256: 25f58b89ea93192baf0f7ce111e07efb51018417c8150a085797aefc0fcfb6c9
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 17, 'fail': 1, 'skipped': 0}
+  failing: REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result
+  failing: REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 11: detected)
+
+==============================================================================
+probe P3-duplicate-favorites-counted
+risk: AC-14: duplicate stored favorite IDs count once
+mutation: Favorites candidates are built from raw stored occurrences instead of deduplicated membership, so duplicate stored IDs count more than once.
+intended detector test: REVIEW-001 case 9
+mutated module sha256: bb5c58ea2c46494c2d9b06f2411462d93a1eae49a7374d97e8bf2fd90e655df4
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 15, 'fail': 3, 'skipped': 0}
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 9: detected)
+
+==============================================================================
+probe P4-boundary-exclusive
+risk: AC-13: the due boundary is inclusive (exactly equal to the clock is due)
+mutation: The inclusive due boundary becomes exclusive: a nextReviewDate exactly equal to the injected clock is no longer due.
+intended detector test: REVIEW-001 case 4
+mutated module sha256: e13ee588a0a4bf466cde4d7cf60d2f9276443a54cc6f43f39cc0b7b2737e3425
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 17, 'fail': 1, 'skipped': 0}
+  failing: REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock
+  failing: REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 4: detected)
+
+==============================================================================
+probe P5-favorites-coupled-to-due
+risk: AC-14: favorites membership is independent of due membership
+mutation: Favorites candidates are additionally filtered by due membership, coupling the two sources.
+intended detector test: REVIEW-001 case 13
+mutated module sha256: 4b2ddc99f63e622ae2bddd48a18ab713120a8f8db82b716e9444e1f892890ddc
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 11, 'fail': 7, 'skipped': 0}
+  failing: REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit
+  failing: REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+  failing: REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit
+  failing: REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources
+  failing: REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order
+  failing: REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 13: detected)
+
+==============================================================================
+probe P6-unknown-ids-admitted
+risk: AC-14: unknown/stale stored IDs must be ignored, never admitted as candidates
+mutation: Unknown stored favorite IDs are admitted as synthesized phantom candidates instead of being ignored.
+intended detector test: REVIEW-001 case 10
+mutated module sha256: e081d890f2673b6ef7616e741617e12258207291526bfe2b4ad487e1a185c13b
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 18, 'pass': 15, 'fail': 3, 'skipped': 0}
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure
+  failing: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported
+  failing: REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources
+  failing: REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector case 10: detected)
+
+==============================================================================
+PROBE SUMMARY
+  P1-unseen-as-due: KILLED — failing tests: REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts, REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due, REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic, REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock, REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic, REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date, REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported, REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result, REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit, REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported, REVIEW-001 case 1 (LR-AGG): no progress yields empty due and favorites with all-unit zero counts, REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due, REVIEW-001 case 3 (AC-13): a well-formed level-0 record is not due and reports no diagnostic, REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock, REVIEW-001 case 5 (AC-13): future nextReviewDate cards are not due and report no diagnostic, REVIEW-001 case 6 (AC-13): mastered level-6 records are not due even with a past date, REVIEW-001 case 7 (AC-13): invalid or missing nextReviewDate values are ignored and reported, REVIEW-001 case 8 (AC-13): malformed SRS state is ignored and reported without crashing, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result, REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit, REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported (intended detector: case 2)
+  P2-level-guard-removed: KILLED — failing tests: REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result, REVIEW-001 case 11 (AC-13): the same local ID in two different levels cannot cross into the result (intended detector: case 11)
+  P3-duplicate-favorites-counted: KILLED — failing tests: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported (intended detector: case 9)
+  P4-boundary-exclusive: KILLED — failing tests: REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock, REVIEW-001 case 4 (AC-13): levels 1-5 are due when nextReviewDate is exactly equal to the injected clock (intended detector: case 4)
+  P5-favorites-coupled-to-due: KILLED — failing tests: REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit, REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported, REVIEW-001 case 2 (AC-13): unseen cards without any SRS record are never due, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 12 (AC-14): optional unit filtering contains only the requested unit, REVIEW-001 case 13 (AC-14): due and favorites overlap without coupling the sources, REVIEW-001 case 15 (AC-14): candidate order follows vocabulary source order, not stored order, REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate vocabulary cards are ignored and reported (intended detector: case 13)
+  P6-unknown-ids-admitted: KILLED — failing tests: REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure, REVIEW-001 case 9 (AC-14): duplicate stored favorite IDs count once and are reported, REVIEW-001 case 10 (AC-14): unknown and stale IDs are ignored and reported in both sources, REVIEW-001 case 14 (LR-AGG): empty vocabulary yields empty results without diagnostics for structure (intended detector: case 10)
+KILLED 6/6
+worktree removed: True

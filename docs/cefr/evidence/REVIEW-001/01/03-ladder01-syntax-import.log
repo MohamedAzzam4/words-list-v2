@@ -1,0 +1,3 @@
+node --check js/core/review-aggregation.mjs: OK
+node --check tests/unit/review-aggregation.test.mjs: OK
+live ESM import: OK (single function export)
