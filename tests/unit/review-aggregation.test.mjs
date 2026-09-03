@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import vm from 'node:vm';
 
 // REVIEW-001 — pure current-level review aggregation tests (LR-AGG / AC-13 / AC-14).
 // Every expected outcome below is an independently specified literal; the module
@@ -471,4 +472,207 @@ test('REVIEW-001 case 18 (LR-AGG): malformed, unit-mismatched, and duplicate voc
     assert.deepEqual(result.favorites.diagnostics.map(d => d.code),
         ['VOCAB_CARD_MALFORMED', 'VOCAB_CARD_MALFORMED', 'VOCAB_CARD_UNIT_MISMATCH', 'VOCAB_CARD_ID_DUPLICATE']);
     assert.deepEqual(result.favorites.diagnostics.map(d => d.id), [null, null, '1-0', '1-0']);
+});
+
+// REVIEW-001-C1 — strict plain-record validation tests (LR-AGG / AC-21).
+// A plain data record is an ordinary object with a record-shaped inheritance
+// chain: no prototype at all (a null-prototype dictionary) or a direct
+// prototype that is itself prototype-less (the shape of Object.prototype in
+// every realm). Date, Map, Set, and RegExp instances, arrays, functions, and
+// user-defined class instances are not plain records and must never be
+// processed as persisted records. Cases A-E are the intentional RED failures
+// against the uncorrected permissive predicate; cases F and G guard against
+// overcorrection (null-prototype and cross-realm dictionaries must remain
+// valid records). The original 18 cases above must remain green unchanged.
+
+test('REVIEW-001-C1 case A (LR-AGG): a class-instance progress object throws TypeError', () => {
+    class ProgressRecord {
+        constructor() {
+            // The instance is object-shaped and carries valid-looking fields,
+            // but it is not a plain data record and must fail fast.
+            this.srsData = { '1-0': srsRecord(2, PAST_ISO) };
+            this.favorites = ['1-0'];
+        }
+    }
+    assert.throws(() => run(baseInput({ progress: new ProgressRecord() })), (err) => {
+        assert.ok(err instanceof TypeError);
+        assert.match(err.message, /progress/);
+        return true;
+    });
+
+    // Other non-plain progress containers throw the same way.
+    for (const nonPlain of [new Date(), new Map(), new Set(), /pattern/]) {
+        assert.throws(() => run(baseInput({ progress: nonPlain })), (err) => {
+            assert.ok(err instanceof TypeError);
+            assert.match(err.message, /progress/);
+            return true;
+        });
+    }
+
+    // A non-plain top-level input object fails fast even when every field
+    // inside it is valid.
+    class OptionsRecord {
+        constructor() {
+            this.levelId = 'a1';
+            this.vocabulary = baseVocabulary();
+            this.progress = { srsData: {}, favorites: [] };
+            this.now = CLOCK;
+        }
+    }
+    assert.throws(() => run(new OptionsRecord()), TypeError);
+    assert.throws(() => run(new Date()), TypeError);
+});
+
+test('REVIEW-001-C1 case B (LR-AGG): Date and Map used as srsData produce SRS_STATE_MALFORMED', () => {
+    for (const nonPlainContainer of [new Date(), new Map(), new Set(), /pattern/]) {
+        const result = run(baseInput({ progress: { srsData: nonPlainContainer, favorites: [] } }));
+
+        // The non-plain container is treated as empty with exactly one diagnostic.
+        assert.equal(result.due.total, 0);
+        assert.deepEqual(result.due.candidates, []);
+        assert.equal(result.due.diagnostics.length, 1);
+        assert.equal(result.due.diagnostics[0].source, 'srs');
+        assert.equal(result.due.diagnostics[0].code, 'SRS_STATE_MALFORMED');
+        assert.equal(result.due.diagnostics[0].id, null);
+        // The favorites side is untouched by an srsData container fault.
+        assert.deepEqual(result.favorites.diagnostics, []);
+    }
+});
+
+test('REVIEW-001-C1 case C (LR-AGG): a class-instance srsData container with own enumerable SRS entries cannot admit due cards', () => {
+    class SrsDataContainer {
+        constructor() {
+            // Own enumerable entries that look exactly like due-ready records.
+            this['1-0'] = srsRecord(2, PAST_ISO);
+            this['3-0'] = srsRecord(3, PAST_ISO);
+        }
+    }
+    const result = run(baseInput({ progress: { srsData: new SrsDataContainer(), favorites: ['1-0'] } }));
+
+    // The class instance is not a plain record container: no entry can admit a card.
+    assert.equal(result.due.total, 0);
+    assert.deepEqual(result.due.candidates, []);
+    assert.equal(result.due.diagnostics.length, 1);
+    assert.equal(result.due.diagnostics[0].code, 'SRS_STATE_MALFORMED');
+    // The favorite still resolves normally: the container fault is srs-side only.
+    assert.deepEqual(result.favorites.candidates.map(c => c.id), ['1-0']);
+    assert.deepEqual(result.favorites.diagnostics, []);
+});
+
+test('REVIEW-001-C1 case D (LR-AGG): a class-instance SRS record produces SRS_RECORD_MALFORMED', () => {
+    class SrsRecordEntry {
+        constructor(level, nextReviewDate) {
+            this.level = level;
+            this.nextReviewDate = nextReviewDate;
+            this.lastReviewed = 1780000000000;
+        }
+    }
+    const progress = {
+        srsData: {
+            '1-0': new SrsRecordEntry(2, PAST_ISO),
+            '2-0': new Date()
+        },
+        favorites: []
+    };
+    const result = run(baseInput({ progress }));
+
+    // Neither a class-instance record nor a Date record can make its card due.
+    assert.equal(result.due.total, 0);
+    assert.deepEqual(result.due.candidates, []);
+    assert.equal(result.due.diagnostics.length, 2);
+    for (const diag of result.due.diagnostics) {
+        assert.equal(diag.source, 'srs');
+        assert.equal(diag.code, 'SRS_RECORD_MALFORMED');
+    }
+    assert.deepEqual(result.due.diagnostics.map(d => d.id), ['1-0', '2-0']);
+});
+
+test('REVIEW-001-C1 case E (LR-AGG): a class-instance vocabulary card produces VOCAB_CARD_MALFORMED', () => {
+    class VocabularyCard {
+        constructor(id, unitId) {
+            this.id = id;
+            this.levelId = 'a1';
+            this.unitId = unitId;
+            this.de = 'Wort';
+            this.en = 'word';
+        }
+    }
+    const vocabulary = [
+        [new VocabularyCard('1-0', 1), cardFixture('1-1', 1)],
+        []
+    ];
+    const progress = { srsData: { '1-0': srsRecord(2, PAST_ISO) }, favorites: ['1-0', '1-1'] };
+    const result = run({ levelId: 'a1', vocabulary, progress, now: CLOCK });
+
+    // Only the plain card participates; the class-instance card is ignored and reported.
+    assert.deepEqual(result.due.candidates.map(c => c.id), []);
+    assert.deepEqual(result.favorites.candidates.map(c => c.id), ['1-1']);
+    assert.equal(result.favorites.diagnostics.length, 2);
+    assert.equal(result.favorites.diagnostics[0].code, 'VOCAB_CARD_MALFORMED');
+    assert.equal(result.favorites.diagnostics[0].id, null);
+    assert.equal(result.favorites.diagnostics[0].unitId, 1);
+    assert.equal(result.favorites.diagnostics[1].code, 'FAVORITES_ID_UNKNOWN');
+    assert.equal(result.favorites.diagnostics[1].id, '1-0');
+    // The stored record for the rejected card cannot make anything due either.
+    assert.equal(result.due.diagnostics.length, 2);
+    assert.equal(result.due.diagnostics[0].code, 'VOCAB_CARD_MALFORMED');
+    assert.equal(result.due.diagnostics[1].code, 'SRS_ID_UNKNOWN');
+});
+
+test('REVIEW-001-C1 case F (LR-AGG): an ordinary null-prototype dictionary remains supported', () => {
+    // Every plain-object validation site accepts a null-prototype dictionary.
+    const nullProtoCard = Object.assign(Object.create(null), {
+        id: '1-0', levelId: 'a1', unitId: 1, de: 'Wort', en: 'word'
+    });
+    const nullProtoRecord = Object.assign(Object.create(null), srsRecord(2, PAST_ISO));
+    const nullProtoSrsData = Object.assign(Object.create(null), { '1-0': nullProtoRecord });
+    const nullProtoProgress = Object.assign(Object.create(null), { srsData: nullProtoSrsData, favorites: ['1-0'] });
+    const nullProtoInput = Object.assign(Object.create(null), {
+        levelId: 'a1',
+        vocabulary: [[nullProtoCard], [cardFixture('2-0', 2)]],
+        progress: nullProtoProgress,
+        now: CLOCK
+    });
+
+    const result = run(nullProtoInput);
+
+    assert.deepEqual(result.due.candidates.map(c => c.id), ['1-0']);
+    assert.deepEqual(result.favorites.candidates.map(c => c.id), ['1-0']);
+    assert.deepEqual(result.due.diagnostics, []);
+    assert.deepEqual(result.favorites.diagnostics, []);
+    assert.deepEqual(result.favorites.countsByUnit, { '1': 1, '2': 0 });
+});
+
+test('REVIEW-001-C1 case G (LR-AGG): a genuine cross-realm plain object remains supported', () => {
+    // The whole input graph (options object, progress, srsData container, SRS
+    // record, and vocabulary cards) is created inside a separate JavaScript
+    // realm, so every prototype is that realm's Object.prototype.
+    const crossRealmInput = vm.runInNewContext(
+        '({' +
+        '    levelId: "a1",' +
+        '    vocabulary: [' +
+        '        [({ id: "1-0", levelId: "a1", unitId: 1, de: "Wort", en: "word" })],' +
+        '        [({ id: "2-0", levelId: "a1", unitId: 2, de: "Wort", en: "word" })]' +
+        '    ],' +
+        '    progress: { srsData: { "1-0": { level: 2, nextReviewDate: past, lastReviewed: 1780000000000 } }, favorites: ["1-0"] },' +
+        '    now: clock' +
+        '})',
+        vm.createContext({ past: PAST_ISO, clock: CLOCK })
+    );
+
+    // Prove the objects are genuinely cross-realm: their prototypes are not
+    // this realm's Object.prototype, so a same-realm-only check would fail.
+    assert.notEqual(Object.getPrototypeOf(crossRealmInput), Object.prototype);
+    assert.notEqual(Object.getPrototypeOf(crossRealmInput.progress), Object.prototype);
+    assert.notEqual(Object.getPrototypeOf(crossRealmInput.progress.srsData), Object.prototype);
+    assert.notEqual(Object.getPrototypeOf(crossRealmInput.progress.srsData['1-0']), Object.prototype);
+    assert.notEqual(Object.getPrototypeOf(crossRealmInput.vocabulary[0][0]), Object.prototype);
+
+    const result = run(crossRealmInput);
+
+    assert.deepEqual(result.due.candidates.map(c => c.id), ['1-0']);
+    assert.deepEqual(result.favorites.candidates.map(c => c.id), ['1-0']);
+    assert.deepEqual(result.due.diagnostics, []);
+    assert.deepEqual(result.favorites.diagnostics, []);
+    assert.deepEqual(result.favorites.countsByUnit, { '1': 1, '2': 0 });
 });
