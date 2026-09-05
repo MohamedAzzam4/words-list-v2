@@ -1,0 +1,70 @@
+worktree: /home/z/my-project/review002-probes-worktree at HEAD (detached) = fa14a982f83228f5a26b54578997c1f20e852c85
+pristine module sha256: 32736cac427a1e9651896a652a1944726ca2985fff260649033d44ea6df9e89b
+module line count: 207
+baseline: exit=0 counts={'tests': 21, 'pass': 21, 'fail': 0, 'skipped': 0}
+BASELINE_OK: 21/21 pass, 0 fail
+
+==============================================================================
+probe P1-oversize-balance-defect
+risk: AC-15: greedy chunk filling breaks the balance rule and leaves a tiny final chunk (51 -> 50+1)
+mutation: Balanced sizing replaced by greedy sequential filling: 51 candidates become one 50-card chunk plus a tiny 1-card final chunk instead of 26+25.
+intended detector test: REVIEW-002 case 2
+mutated module sha256: 4fc4b0a496258c6be1d613a4946f97df79d2be0a5a6c8e04191dd7ad6d8af266 (differs from pristine: True)
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 21, 'pass': 17, 'fail': 4, 'skipped': 0}
+  failing: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates
+  failing: REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete
+  failing: REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+  failing: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates
+  failing: REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete
+  failing: REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector REVIEW-002 case 2: detected)
+
+==============================================================================
+probe P2-membership-boundary-defect
+risk: AC-15: a candidate is duplicated at each chunk boundary and the array tail is dropped
+mutation: Off-by-one at chunk boundaries: every chunk after the first starts one element early (boundary duplicate) and the final element of the shuffled order is never admitted (tail drop).
+intended detector test: REVIEW-002 case 2
+mutated module sha256: 146d88fb26aa6a2973c715f58f2195bb89ee27e7dec6be1543511461817e9e1b (differs from pristine: True)
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 21, 'pass': 17, 'fail': 4, 'skipped': 0}
+  failing: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates
+  failing: REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete
+  failing: REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+  failing: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates
+  failing: REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete
+  failing: REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector REVIEW-002 case 2: detected)
+
+==============================================================================
+probe P3-determinism-defect
+risk: AC-16: the seeded shuffle is replaced by the identity order, so the seed is ignored
+mutation: Fisher-Yates swap index pinned to i (self-swap): the candidate order stays the input order regardless of the seed, so neither pinned permutation is produced.
+intended detector test: REVIEW-002 case 5
+mutated module sha256: e4327c09f9d2c3b44d5fe08db2fa424bee51fb0244886dd7c092645de14c5e5e (differs from pristine: True)
+mutated syntax check: OK
+mutated test run: exit=1 counts={'tests': 21, 'pass': 17, 'fail': 4, 'skipped': 0}
+  failing: REVIEW-002 case 5 (AC-16): the pinned alpha and beta reference permutations are reproduced exactly
+  failing: REVIEW-002 case 7 (AC-16): the chosen alpha and beta seeds produce their separately pinned distinct permutations
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+  failing: REVIEW-002 case 9 (LR-SESSION): exact duplicate descriptors count once using their first occurrence
+  failing: REVIEW-002 case 5 (AC-16): the pinned alpha and beta reference permutations are reproduced exactly
+  failing: REVIEW-002 case 7 (AC-16): the chosen alpha and beta seeds produce their separately pinned distinct permutations
+  failing: REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order
+  failing: REVIEW-002 case 9 (LR-SESSION): exact duplicate descriptors count once using their first occurrence
+restore: module rewritten to pristine; sha256 match: True; git status empty: True
+classification: KILLED (intended detector REVIEW-002 case 5: detected)
+
+==============================================================================
+PROBE SUMMARY
+  P1-oversize-balance-defect: KILLED — failing tests: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates, REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete, REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order, REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates, REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete, REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order (intended detector: REVIEW-002 case 2)
+  P2-membership-boundary-defect: KILLED — failing tests: REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates, REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete, REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order, REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates, REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete, REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order (intended detector: REVIEW-002 case 2)
+  P3-determinism-defect: KILLED — failing tests: REVIEW-002 case 5 (AC-16): the pinned alpha and beta reference permutations are reproduced exactly, REVIEW-002 case 7 (AC-16): the chosen alpha and beta seeds produce their separately pinned distinct permutations, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order, REVIEW-002 case 9 (LR-SESSION): exact duplicate descriptors count once using their first occurrence, REVIEW-002 case 5 (AC-16): the pinned alpha and beta reference permutations are reproduced exactly, REVIEW-002 case 7 (AC-16): the chosen alpha and beta seeds produce their separately pinned distinct permutations, REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order, REVIEW-002 case 9 (LR-SESSION): exact duplicate descriptors count once using their first occurrence (intended detector: REVIEW-002 case 5)
+KILLED 3/3
+worktree removed: True

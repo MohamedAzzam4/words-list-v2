@@ -1,0 +1,36 @@
+# Ladder steps 5-8 at revision fa14a982f83228f5a26b54578997c1f20e852c85
+--- git diff --check base..HEAD ---
+diff-check exit: 0
+--- git status --porcelain (expect empty) ---
+(end status)
+--- changed-file scope vs base ---
+A	js/core/review-session-plan.mjs
+A	tests/unit/review-session-plan.test.mjs
+--- diff stat vs base ---
+ js/core/review-session-plan.mjs         | 207 ++++++++++++
+ tests/unit/review-session-plan.test.mjs | 571 ++++++++++++++++++++++++++++++++
+ 2 files changed, 778 insertions(+)
+--- purity: forbidden references in the new module (expect zero matches) ---
+rg 'Math\.random' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'Date\.' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'crypto' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'performance\.now' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'setTimeout' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'setInterval' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'document\.' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'window\.' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'localStorage' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'sessionStorage' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'indexedDB' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'fetch\(' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'XMLHttpRequest' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'navigator' js/core/review-session-plan.mjs -> 0 match(es)
+rg 'firebase' js/core/review-session-plan.mjs -> 0 match(es)
+--- purity: import statements in the new module (expect zero) ---
+0
+0 import statements
+--- purity: hidden clock/random across the new module (expect zero) ---
+0
+0 hidden clock/random references
+--- dead-code: other references to review-session-plan outside its own module/tests (expect only the test file) ---
+tests/unit/review-session-plan.test.mjs

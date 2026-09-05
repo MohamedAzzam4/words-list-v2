@@ -1,0 +1,5 @@
+# Ladder 1: syntax checks + live ESM import (revision fa14a982f83228f5a26b54578997c1f20e852c85)
+node --check js/core/review-session-plan.mjs: OK (exit 0)
+node --check tests/unit/review-session-plan.test.mjs: OK (exit 0)
+live ESM import: OK; exports = ["createReviewSessionPlan"]
+import-exit=0

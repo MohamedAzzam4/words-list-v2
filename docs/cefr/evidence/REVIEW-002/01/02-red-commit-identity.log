@@ -1,0 +1,30 @@
+# Production byte-identity at the RED tests commit
+red_commit: c43787644e6cb683c01e4ab60eb8bd3e79d0f439
+--- diff vs base under js/ (0 lines = production byte-identical) ---
+0
+--- changed files at the RED commit (must be the test file only) ---
+A	tests/unit/review-session-plan.test.mjs
+--- sha256 of every existing production module at HEAD vs base (equal pairs) ---
+IDENTICAL js/core/activity-service.js
+IDENTICAL js/core/app.js
+IDENTICAL js/core/auth-service.js
+IDENTICAL js/core/cefr-audio.mjs
+IDENTICAL js/core/content-parser.js
+IDENTICAL js/core/firebase.js
+IDENTICAL js/core/flashcards.js
+IDENTICAL js/core/glossary.js
+IDENTICAL js/core/leaderboard-service.js
+IDENTICAL js/core/level-data-validator.mjs
+IDENTICAL js/core/nav-service.js
+IDENTICAL js/core/quiz.js
+IDENTICAL js/core/review-aggregation.mjs
+IDENTICAL js/core/shared-card.js
+IDENTICAL js/core/speech-plan.mjs
+IDENTICAL js/core/srs-logic.js
+IDENTICAL js/core/stats-service.js
+IDENTICAL js/core/storage.js
+IDENTICAL js/core/trophies.js
+IDENTICAL js/core/tts.js
+IDENTICAL js/core/utils.js
+IDENTICAL js/core/verb-challenge-engine.js
+IDENTICAL js/core/verbs-engine.js

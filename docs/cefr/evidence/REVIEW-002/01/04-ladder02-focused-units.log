@@ -1,0 +1,29 @@
+✔ REVIEW-002 case 1 (LR-SESSION): empty input produces zero chunks, not one empty chunk (1.814027ms)
+✔ REVIEW-002 case 2 (AC-15): exact chunk sizes for 1, 49, 50, 51, 99, 100, and 101 candidates (2.068653ms)
+✔ REVIEW-002 case 3 (AC-15): a large synthetic set stays bounded, balanced, and complete (3.232563ms)
+✔ REVIEW-002 case 4 (AC-15): custom maxSessionSize values including 1 and a value below 50 (0.406123ms)
+✔ REVIEW-002 case 5 (AC-16): the pinned alpha and beta reference permutations are reproduced exactly (0.282458ms)
+✔ REVIEW-002 case 6 (AC-16): repeated calls with identical input and seed return deeply equal plans (0.330886ms)
+✔ REVIEW-002 case 7 (AC-16): the chosen alpha and beta seeds produce their separately pinned distinct permutations (0.221883ms)
+✔ REVIEW-002 case 8 (AC-16): the flattened chunks equal the complete shuffled order (0.155865ms)
+✔ REVIEW-002 case 9 (LR-SESSION): exact duplicate descriptors count once using their first occurrence (0.217042ms)
+✔ REVIEW-002 case 10 (LR-SESSION): duplicate IDs with conflicting metadata throw TypeError (0.676891ms)
+✔ REVIEW-002 case 11 (LR-SESSION): foreign-level candidates throw TypeError (0.262744ms)
+✔ REVIEW-002 case 12 (LR-SESSION): a candidate outside the requested unit scope throws TypeError (0.238583ms)
+✔ REVIEW-002 case 13 (LR-SESSION): all-unit scope accepts candidates from multiple units (0.272174ms)
+✔ REVIEW-002 case 14 (LR-SESSION): source and scope are preserved exactly in the result (0.155017ms)
+✔ REVIEW-002 case 15 (LR-SESSION): input arrays, candidate objects, and the options object remain unchanged (0.211231ms)
+✔ REVIEW-002 case 16 (AC-16): mutating input objects after plan creation cannot change the returned plan (0.22261ms)
+✔ REVIEW-002 case 17 (LR-SESSION): returned candidate descriptors do not alias input candidates (0.253907ms)
+✔ REVIEW-002 case 18 (LR-SESSION): invalid source, levelId, unitId, seed, candidates, and candidate fields throw TypeError (1.00342ms)
+✔ REVIEW-002 case 19 (AC-15): maxSessionSize values 0, 51, negative, fractional, NaN, Infinity, and strings are rejected (0.387502ms)
+✔ REVIEW-002 case 20 (AC-16): no hidden randomness or clock dependency is used (0.509725ms)
+✔ REVIEW-002 case 21 (LR-SESSION): the module has no DOM, storage, network, or controller dependency (0.48816ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.942046

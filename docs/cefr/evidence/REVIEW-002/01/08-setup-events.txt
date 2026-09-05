@@ -1,0 +1,107 @@
+REVIEW-002 / attempt 01 — setup and environment events (narrative record)
+
+Environment
+- Sandbox: Debian Linux container; Node v24.19.0; npm 11.17.0; git 2.47.3.
+- Repository: /home/z/my-project/words-list-v2, branch codex/glm-review-002-01.
+- No browser binaries used: the package creates a pure module with no browser
+  integration; the assignment's ladder explicitly omits Playwright for
+  REVIEW-002 (REVIEW-003 owns browser integration).
+
+Checkpoint-gate events
+- First assignment message (prior session segment) ended with the literal
+  unfilled PAT placeholder "<PASTE THE ACTUAL PAT HERE>" instead of a real
+  token; the supplied string was staged through the established transient
+  procedure and the auth pre-check returned HTTP 401. Stopped with
+  AUTHENTICATION_BLOCKED before editing; no push attempt; remote verified
+  unchanged (all 26 refs identical); worklog entry REVIEW-002-CHECKPOINT.
+- Resume message supplied the actual PAT. Revalidation: branch
+  codex/glm-review-002-01, HEAD == 7481c74d848f49274e10dc8017d1a44ad8664b77
+  (the accepted base and the delivered REVIEW-001-C1 tip), clean tree, remote
+  branch absent.
+- scripts/review002-checkpoint.sh: PAT staged to a chmod-600 file outside the
+  repo (value never printed, never in a URL, never committed, never in git
+  config); auth pre-check HTTP 200 (login MohamedAzzam4, repo owner); single
+  non-forced push of the unchanged branch (exit 0, new remote branch);
+  remote checkpoint SHA verified == 7481c74; refs 26 -> 27 with the only diff
+  being the new target branch; credential deleted immediately and deletion
+  verified (EXIT trap plus independent checks).
+
+Pre-edit work
+- Mandatory reading completed before editing: AGENTS.md; contracts/README.md,
+  PORTABLE_AGENT_EXECUTION.md (PX), CHANGE_MANAGEMENT.md (CM),
+  CODE_FINGERPRINT.md (FP), TESTING_AND_SUCCESS.md (TS),
+  DEAD_CODE_AND_REFACTORING.md (DC), DELIVERY_REPORTING.md (DR),
+  LEVEL_FLASHCARD_STANDARD.md (LF/LR); docs/cefr/BASELINE.md,
+  WORK_PACKAGES.md (REVIEW-001/002/003 entries), ACCEPTANCE_MATRIX.md
+  (AC-15/16/21/22), GITHUB_DELIVERY.md; "Refactoring
+  documentation/plans/CEFR_LEVEL_FLASHCARD_STANDARD_AND_REVIEW_CENTER_ROADMAP.md";
+  js/core/review-aggregation.mjs; tests/unit/review-aggregation.test.mjs;
+  docs/cefr/reports/REVIEW-001-C1-01.md; docs/cefr/evidence/REVIEW-001-C1/01/INDEX.md.
+  No conflicts found between the assignment and the contracts.
+- Baseline: full unit suite at the base 7481c74 run twice (once before the
+  required-reading report, once captured in a disposable git worktree at the
+  exact base commit AFTER the RED test file existed in the working tree, so
+  the capture is the true pre-edit baseline): 184/184 pass, 0 fail, 0 skipped
+  both times (evidence 00). Focused review-aggregation suite 25/25 (verified
+  this session). No inherited failures.
+- Reference-vector verification BEFORE tests were authored: sandbox scratch
+  script /home/z/my-project/scripts/review002-vector-probe.mjs (outside the
+  repository; not part of the deliverable) implemented the assignment's
+  algorithm text verbatim and confirmed that seed "review-seed-alpha" over
+  card-0..card-9 yields exactly the pinned literal [card-5, card-1, card-9,
+  card-0, card-6, card-4, card-2, card-8, card-3, card-7], seed
+  "review-seed-beta" yields exactly [card-8, card-9, card-3, card-2, card-0,
+  card-4, card-6, card-5, card-7, card-1], and the balanced-chunk sizes for
+  0/1/49/50/51/99/100/101/473/500 candidates and maxSessionSize 1/10 match
+  the assignment examples. This verified the pinned literals are consistent
+  with the specified algorithm before they were pinned in the RED tests.
+- Pre-edit design report issued in-session before any edit (full API and
+  result schema, documented interpretations — unitId required with null
+  meaning all units; no Object.freeze with justification —, validation and
+  duplicate rules, shuffle and chunk formulas, 21-case RED matrix, three
+  planned probes, baseline results, browser-test inapplicability).
+
+RED provenance
+- The RED run (evidence 01) executed the focused test file against the
+  missing production module at the tests-only commit c437876: node --test
+  exit 1 with ERR_MODULE_NOT_FOUND for js/core/review-session-plan.mjs.
+  This is the intentional RED: the test file imports the module that does
+  not exist yet, so every case fails at load. No assertion was weakened or
+  deleted afterwards; the same file passes 21/21 at the implementation
+  revision fa14a98.
+- Production byte-identity at the RED commit (evidence 02): the diff vs the
+  base under js/ is 0 lines, the only changed file is
+  tests/unit/review-session-plan.test.mjs, and every production module under
+  js/core/ at the RED commit is sha256-identical to the base (23/23 files).
+
+Verification-ladder provenance and reruns
+- The syntax/import, focused, and full-unit runs were each executed once on
+  the working tree immediately after the implementation edit (all green) and
+  re-run at the identical committed revision fa14a98 after commit; the
+  committed re-run logs (evidence 03/04/05) are the retained evidence, per
+  DR-007. No source or test edit occurred between the runs and the commit.
+- Mutation probes (evidence 06) ran in a disposable git worktree at fa14a98
+  (never the owner's tree): baseline 21/21 before every probe, sha256-verified
+  module restore after every probe, worktree removed afterwards; the probe
+  log double-lists each failing test title because the node:test runner
+  prints its failing-test summary section twice; this is a display artifact
+  of the runner output, not a duplicate execution.
+- No background test runs, no canceled runs, no zero-selection checks
+  (full files run; no --grep filtering).
+
+Sanitization note
+- Every published log was checked for carriage returns, ANSI escape
+  sequences, and trailing whitespace (scripts/review002-sanitize.py): all
+  raw captures were already clean (zero of each), so the published copies
+  are byte-identical to the raw captures. Credential-pattern scan on every
+  published file: zero hits for github_pat_, ghp_, gho_, ghs_, ghu_,
+  GITHUB_PAT, and Authorization header patterns. No redactions were
+  necessary; nothing was removed from any log.
+
+Missing evidence
+- None. Every executed command of the package is represented in this
+  directory or in the report's command ledger (section 5). The failed
+  401-placeholder auth pre-check of the blocked first attempt is recorded
+  above and in the prior session's worklog; the raw one-line HTTP code
+  output was not retained as a file (the code and its consequence are
+  recorded here verbatim).
